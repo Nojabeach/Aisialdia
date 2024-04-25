@@ -1,0 +1,30 @@
+
+.about-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 50px;
+    background-color: var(--fondo-secundario);
+}
+
+.image-container {
+  flex: 1;
+}
+
+.image-container img {
+  max-width: 50%;
+  height: auto;
+  border-radius: 20px;
+ margin-left: 20%;
+}
+
+.text-container {
+  flex: 1;
+}
+
+.rounded-box {
+  background-color:var(--fondo-terciario);
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}

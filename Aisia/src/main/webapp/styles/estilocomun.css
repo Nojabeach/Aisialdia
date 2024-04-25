@@ -1,0 +1,254 @@
+/* Importación de la paleta de colores */
+@import url("./paletacolores.css");
+/* Importación de fuentes */
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap");
+
+/* Estilos generales */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Lato", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  background-color: var(--fondo-principal);
+  color: var(--texto-principal);
+}
+
+a {
+  color: var(--enlace-primario);
+  text-decoration: none;
+}
+
+/* Encabezado */
+#cabecera {
+  background-color: var(--color-primario);
+  color: var(--texto-blanco);
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#divTitulo h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+  color: var(--titulo-blanco);
+}
+
+#divTitulo p {
+  font-size: 18px;
+  margin-bottom: 0;
+}
+
+/* Menú de navegación */
+#navbar {
+  background-color: var(--color-secundario);
+  padding: 20px;
+  text-align: right;
+}
+
+#navbar ul {
+  list-style: none;
+}
+
+#navbar ul li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+#navbar ul li a {
+  color: var(--texto-principal);
+  text-decoration: none;
+}
+
+/* Estilo para el enlace activo en la navbar */
+#navbar ul li a.active {
+  background-color: var(--web-activa);
+  color: var(--texto-principal);
+}
+
+/* Subnavbar */
+#subnavbar {
+  background-color: var(--color-acento);
+  color: var(--color-primario);
+  padding: 10px 20px;
+  border-top: 1px solid var(--borde-principal);
+  box-shadow: 0 2px 4px var(--sombra-principal);
+  position: fixed;
+  top: 100px;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+#subnavbar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+#subnavbar ul li {
+  margin-right: 20px;
+}
+
+#subnavbar ul li a {
+  color: var(--texto-principal);
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+#subnavbar ul li a:hover {
+  background-color: var(--color-secundario);
+  color: var(--texto-principal);
+}
+
+/* Secciones principales */
+section {
+  padding: 20px;
+  border: 1px solid var(--borde-principal);
+  border-radius: 5px;
+  box-shadow: 0 2px 4px var(--sombra-principal);
+  background-color: var(--fondo-terciario);
+  margin-bottom: 30px;
+}
+
+section h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: var(--titulo-principal);
+}
+
+section p {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Formularios */
+form {
+  margin-bottom: 20px;
+  background-color: var(--form-fondo);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px var(--sombra-principal);
+}
+
+form label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: var(--form-texto);
+}
+
+form input[type="text"],
+form input[type="file"],
+form button {
+  width: calc(100% - 40px);
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid var(--form-borde);
+  border-radius: 5px;
+  background-color: var(--form-fondo);
+  color: var(--form-texto);
+  transition: border-color 0.3s ease;
+}
+
+form input[type="text"]:focus,
+form input[type="file"]:focus,
+form button:focus {
+  outline: none;
+  border-color: var(--boton-primario-hover);
+}
+
+form input[type="file"]::-webkit-file-upload-button {
+  background: var(--boton-primario-fondo);
+  color: var(--boton-primario-texto);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form input[type="file"]::-webkit-file-upload-button:hover {
+  background-color: var(--boton-primario-hover);
+}
+
+/* Estilos adicionales para botones */
+form button {
+  border: none;
+  border-radius: 5px;
+  background-color: var(--boton-primario-fondo);
+  color: var(--boton-primario-texto);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: var(--boton-primario-hover);
+}
+
+/* Pie de página */
+footer {
+  background-color: var(--color-primario);
+  color: var(--texto-secundario);
+  padding: 20px;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+footer ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+footer ul li {
+  margin-right: 20px;
+}
+
+footer form {
+  display: flex;
+}
+
+footer input[type="email"],
+footer input[type="submit"] {
+  padding: 10px;
+  border: 1px solid var(--borde-secundario);
+  border-radius: 5px;
+}
+
+footer input[type="submit"] {
+  padding: 10px 20px;
+  background-color: var(--boton-primario-fondo);
+  color: var(--boton-primario-texto);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+footer input[type="submit"]:hover {
+  background-color: var(--boton-primario-hover);
+}
+
+/* Estilos para los enlaces del footer */
+footer ul li a {
+  color: var(--texto-terciario);
+  text-decoration: none;
+}
+
+footer ul li a:hover {
+  color: var(--texto-blanco);
+}

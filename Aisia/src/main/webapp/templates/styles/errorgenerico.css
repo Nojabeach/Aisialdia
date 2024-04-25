@@ -1,0 +1,26 @@
+body {
+  font-family: "Lato", sans-serif;
+  background-color: var(--fondo-secundario);
+  color: var(--texto-principal);
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 50%;
+  margin: 50px auto;
+  background-color: var(--fondo-terciario);
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px var(--sombra-principal);
+}
+
+h1 {
+  text-align: center;
+  color: var(--titulo-principal);
+}
+
+p.error-message {
+  text-align: center;
+  color: var(--texto-secundario);
+}

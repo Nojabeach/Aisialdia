@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividades | AisiAldia</title>
+    <!-- Icono de la pestaña -->
+    <link rel="shortcut icon" href="./img/Logos/logo_transparent - noText.png" type="image/x-icon" />
+    <!-- Enlace de estilos -->
+    <link rel="stylesheet" href="./styles/actividad.css">
+    <!-- Enlace de fonts,iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Enlace de scripts -->
+    <script src="./js/actividad.js"></script>
+</head>
+
+<body>
+
+    <div id="contenedor">
+        <header id="cabecera">
+            <div id="divTitulo">
+                <h1>AisiAldia</h1>
+                <p>Ocio para todos</p>
+            </div>
+            <form id="LoginForm" action="#" method="post">
+                <div>
+                    <input type="text" id="usuario" name="usuario" placeholder="Usuario o Email">
+                </div>
+                <div>
+                    <input type="password" id="contraseña" name="contraseña" placeholder="Contraseña">
+                </div>
+                <div>
+                    <input type="submit" value="Iniciar sesión">
+                </div>
+            </form>
+        </header>
+
+        <nav id="navbar">
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="#">Eventos</a></li>
+                <li><a href="perfilusuario.html">Perfil</a></li>
+                <li><a href="actividad.html" id="actividadLink" class="active">Actividad</a></li>
+            </ul>
+        </nav>
+        <!-- Subnavbar -->
+        <nav id="subnavbar">
+            <ul>
+                <li><a href="#" id="crearActividadLink">Crear Actividad</a></li>
+                <li><a href="#" id="visualizarActividadesLink">Visualizar Actividades</a></li>
+            </ul>
+        </nav>
+        <main id="seccionCuerpo">
+            <!-- Aquí se mostrarán las opciones de actividad -->
+            <div id="crearForm">
+                <form action="GestorActividad" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="crearActividad">
+                    <label for="tipoActividad">Tipo de Actividad:</label>
+                    <input type="text" id="tipoActividad" name="tipoActividad" required>
+                    <label for="fotoActividad">Foto:</label>
+                    <input type="file" id="fotoActividad" name="fotoActividad" required>
+                    <button type="submit">Crear Actividad</button>
+                </form>
+            </div>
+
+            <div id="editarForm">
+                <form action="GestorActividad" method="POST">
+                    <input type="hidden" name="action" value="editarActividad">
+                    <label for="idActividad">ID de Actividad:</label>
+                    <input type="text" id="idActividad" name="idActividad" required>
+                    <button type="submit">Editar Actividad</button>
+                </form>
+            </div>
+
+            <div id="visualizarActividadesDiv">
+                <!-- Aquí se mostrarán las actividades existentes -->
+                <table id="actividadesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tipo de Actividad</th>
+                            <th>Foto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="actividadesTableBody">
+                        <!-- Aquí se insertarán las filas de la tabla con JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <footer>
+            <ul>
+                <li><a href="ayuda.html">Ayuda</a></li>
+                <li><a href="politicadeprivacidad.html">Política de privacidad</a></li>
+                <li><a href="condicionesdeuso.html">Condiciones de uso</a></li>
+                <li><a href="accesibilidad.html">Accesibilidad</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+            </ul>
+
+        </footer>
+    </div>
+
+</body>
+
+</html>

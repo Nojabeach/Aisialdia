@@ -1,0 +1,230 @@
+/* Importación de la paleta de colores */
+@import url({rutaProyecto} + "/paletacolores.css");
+
+/* Tipografía principal */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Lato", sans-serif;
+}
+
+/* Estilos generales */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Lato", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+a {
+  color: var(--enlace-primario);
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Encabezado */
+#cabecera {
+  background-color: var(--header);
+  color: var(--texto-blanco);
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#divTitulo h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+  color: var(--titulo-blanco);
+}
+
+#divTitulo p {
+  font-size: 18px;
+  margin-bottom: 0;
+}
+
+#LoginForm {
+  display: flex;
+}
+
+#LoginForm div {
+  margin-right: 10px;
+}
+
+#LoginForm input[type="text"],
+#LoginForm input[type="password"] {
+  padding: 10px;
+  border: 1px solid var(--borde-principal);
+  border-radius: 5px;
+  width: 200px;
+}
+
+#LoginForm input[type="submit"] {
+  padding: 10px 20px;
+  background-color: var(--boton-primario-fondo);
+  color: var(--boton-primario-texto);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#LoginForm input[type="submit"]:hover {
+  background-color: var(--boton-primario-hover);
+}
+
+/* Menú de navegación */
+#navbar {
+  background-color: var(--fondo-principal);
+  padding: 20px;
+  text-align: right;
+}
+
+#navbar ul {
+  list-style: none;
+}
+
+#navbar ul li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+#navbar ul li a {
+  color: var(--texto-principal);
+  text-decoration: none;
+}
+
+/* Secciones principales */
+#seccionCuerpo {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+article {
+  flex: 1;
+  padding: 20px;
+}
+
+section {
+  padding: 20px;
+  border: 1px solid var(--borde-principal);
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+section h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: var(--titulo-principal);
+}
+
+section p {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Pie de página */
+footer {
+  background-color: var(--footer);
+  color: var(--texto-secundario);
+  padding: 20px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+footer ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+footer ul li {
+  margin-right: 20px;
+}
+
+footer form {
+  display: flex;
+}
+
+footer input[type="email"],
+footer input[type="submit"] {
+  padding: 10px;
+  border: 1px solid var(--borde-secundario);
+  border-radius: 5px;
+}
+
+footer input[type="submit"] {
+  padding: 10px 20px;
+  background-color: var(--boton-primario-fondo);
+  color: var(--boton-primario-texto);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+footer input[type="submit"]:hover {
+  background-color: var(--boton-primario-hover);
+}
+
+/* Estilos para los enlaces del footer */
+footer ul li a {
+  color: var(--texto-terciario);
+  text-decoration: none;
+}
+
+footer ul li a:hover {
+  color: var(--texto-blanco);
+}
+
+/* Estilos adicionales para el evento */
+.evento {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 40px;
+}
+
+.evento img {
+  width: 200px;
+  height: auto;
+  margin-right: 20px;
+}
+
+.evento-detalle {
+  flex: 1;
+}
+
+.etiquetas {
+  margin-top: 10px;
+}
+
+.etiqueta {
+  background-color: #f1f1f1;
+  color: #333;
+  padding: 5px 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+/* Estilos para los mini mapas */
+.mini-mapa {
+  height: 200px;
+  margin-top: 10px;
+}

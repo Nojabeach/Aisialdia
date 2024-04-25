@@ -1,0 +1,59 @@
+/* Importación de fuentes (opcional) */
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap");
+
+/* Colores de la paleta */
+:root {
+  /* Colores principales */
+  --color-primario: #233b31; /* Verde pastel oscuro */
+  --color-secundario: #4c7d66; /* Verde pastel */
+  --color-terciario: #99bca9; /* Gris verdoso */
+  --color-acento: #f2f7f4; /* Blanco verdoso */
+  --amarillo-naranja: #f2b134; /* Amarillo naranja */
+  /* Colores de fondo */
+  --fondo-principal: var(--color-secundario); /* Verde pastel */
+  --fondo-secundario: var(--color-terciario); /* Gris verdoso */
+  --fondo-terciario: var(--color-acento); /* Blanco verdoso */
+  --fondo-oscuro: var(--color-primario); /* Verde pastel oscuro */
+  --web-activa: var(--amarillo-naranja); /* Amarillo naranja */
+  /* Colores de texto */
+  --texto-principal: var(--color-primario); /* Verde pastel oscuro */
+  --texto-secundario: var(--color-secundario); /* Verde pastel */
+  --texto-terciario: var(--color-terciario); /* Gris verdoso */
+  --texto-blanco: var(--color-acento); /* Blanco verdoso */
+
+  /* Colores de títulos */
+  --titulo-principal: var(--color-primario); /* Verde pastel oscuro */
+  --titulo-secundario: var(--color-secundario); /* Verde pastel */
+  --titulo-terciario: var(--color-terciario); /* Gris verdoso */
+  --titulo-blanco: var(--color-acento); /* Blanco verdoso */
+
+  /* Colores de formularios */
+  --form-fondo: var(--color-terciario); /* Gris verdoso */
+  --form-borde: var(--color-secundario); /* Verde pastel */
+  --form-texto: var(--texto-principal); /* Verde pastel oscuro */
+
+  /* Colores de botones */
+  --boton-primario-fondo: var(--color-primario); /* Verde pastel oscuro */
+  --boton-primario-texto: var(--color-acento); /* Blanco verdoso */
+  --boton-primario-hover: var(--color-secundario); /* Verde pastel */
+  --boton-secundario-fondo: var(--color-terciario); /* Gris verdoso */
+  --boton-secundario-texto: var(--texto-principal); /* Verde pastel oscuro */
+  --boton-secundario-hover: var(--color-secundario); /* Verde pastel */
+
+  /* Colores de bordes */
+  --borde-principal: var(--color-secundario); /* Verde pastel */
+  --borde-secundario: var(--color-terciario); /* Gris verdoso */
+
+  /* Colores de sombras */
+  --sombra-principal: rgba(0, 0, 0, 0.2);
+  --sombra-secundaria: rgba(0, 0, 0, 0.1);
+
+  /* Colores de enlaces */
+  --enlace-primario: var(--color-primario); /* Verde pastel oscuro */
+  --enlace-secundario: var(--color-secundario); /* Verde pastel */
+  --enlace-primario-hover: var(--color-terciario); /* Gris verdoso */
+
+  /* Colores de zonas */
+  --header: var(--color-primario); /* Verde pastel oscuro */
+  --footer: var(--color-primario); /* Verde pastel oscuro */
+}

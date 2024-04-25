@@ -1,0 +1,67 @@
+/* Estilos específicos para el perfil */
+#perfil-section {
+  padding: 20px;
+}
+
+#perfil-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#perfil-info {
+  width: 30%;
+  text-align: center;
+}
+
+#foto-container {
+  margin-bottom: 20px;
+}
+
+#foto {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#nombre {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+#form-container {
+  width: 60%;
+}
+
+#perfil-form {
+  display: flex;
+  flex-direction: column;
+}
+
+#perfil-form label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+#perfil-form input {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#perfil-form button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#perfil-form button:hover {
+  background-color: #45a049;
+}

@@ -1,0 +1,324 @@
+package dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.servlet.http.HttpServletRequest;
+import modelo.Evento;
+import modelo.Usuario;
+import modelo.Usuario.Rol;
+
+public class DaoUsuario {
+
+	private Connection con = null;
+	private static DaoUsuario instance;
+
+	/**
+	 * Clase de Acceso a Datos (DAO) para la gestión de usuarios en el sistema.
+	 * Implementa el patrón Singleton y utiliza controladores mediante Servlets para
+	 * la interacción con la base de datos.
+	 * 
+	 * @author Maitane Ibañez Irazabal
+	 * @version 1.0
+	 */
+	public DaoUsuario() throws SQLException {
+
+		con = DBConection.getConection();
+
+	}
+
+	/**
+	 * Este metodo es el que se utiliza para aplicar el patron SINGLETON
+	 * 
+	 * @return
+	 * @throws SQLException
+	 */
+
+	public static DaoUsuario getInstance() throws SQLException {
+		if (instance == null) {
+			instance = new DaoUsuario();
+		}
+		return instance;
+	}
+
+	/**
+	 * Registra un nuevo usuario en la base de datos.
+	 * 
+	 * @param usuario Objeto Usuario con la información del nuevo usuario.
+	 * @throws SQLException             Si ocurre un error SQL al registrar el
+	 *                                  usuario.
+	 * @throws IllegalArgumentException Si el objeto usuario es nulo o contiene
+	 *                                  valores nulos.
+	 */
+	public void registrarUsuario(Usuario usuario) throws SQLException, IllegalArgumentException {
+		if (usuario == null || usuario.getNombre() == null || usuario.getEmail() == null
+				|| usuario.getcontrasena() == null) {
+			throw new IllegalArgumentException("El objeto usuario o sus campos no pueden ser nulos");
+		}
+
+		String sql = "INSERT INTO usuarios (nombre, email, contrasena) VALUES (?, ?, ?)";
+
+		PreparedStatement ps = con.prepareStatement(sql);
+		ps.setString(1, usuario.getNombre());
+		ps.setString(2, usuario.getEmail());
+		ps.setString(3, usuario.getcontrasena());
+		ps.executeUpdate();
+	}
+
+	/**
+	 * Valida el usuario y contraseña, y devuelve un objeto Usuario si la
+	 * autenticación es correcta.
+	 * 
+	 * @param email      Correo electrónico del usuario.
+	 * @param contrasena Contraseña del usuario.
+	 * @return Objeto Usuario si la autenticación es correcta, null si no lo es.
+	 * @throws Exception Si ocurre un error al iniciar sesión.
+	 */
+	public Usuario iniciarSesion(String email, String contrasena) throws Exception {
+		// Preparar la consulta SQL para validar el usuario y contraseña
+		String sql = "SELECT * FROM usuarios WHERE email = ? AND contrasena = ?";
+		try (PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setString(1, email);
+			stmt.setString(2, contrasena);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				return new Usuario(rs.getInt("idUsuario"), rs.getString("nombre"), rs.getString("email"),
+						rs.getString("Contrasena"));
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Obtiene un usuario por su ID.
+	 * 
+	 * @param idUsuario Identificador del usuario.
+	 * @return Objeto Usuario con la información del usuario, o null si no se
+	 *         encuentra.
+	 * @throws Exception Si ocurre un error al obtener el usuario.
+	 */
+	public Usuario obtenerINFOUsuarioPorID(int idUsuario) throws Exception {
+		// Preparar la consulta SQL para obtener el usuario por ID
+		String sql = "SELECT * FROM usuarios WHERE idUsuario = ?";
+		try (PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setInt(1, idUsuario);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				return new Usuario(rs.getInt("idUsuario"), rs.getString("nombre"), rs.getString("email"),
+						rs.getString("hashContrasena"));
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Actualiza la información de un usuario en la base de datos.
+	 * 
+	 * @param usuario Objeto Usuario con la información actualizada del usuario.
+	 * @throws Exception Si ocurre un error al editar el usuario.
+	 */
+	public void editarUsuario(Usuario usuario) throws Exception {
+		// Preparar la consulta SQL para actualizar el usuario
+		String sql = "UPDATE usuarios SET nombre = ?, email = ? WHERE idUsuario = ?";
+		try (PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setString(1, usuario.getNombre());
+			stmt.setString(2, usuario.getEmail());
+			stmt.setInt(3, usuario.getIdUsuario());
+			stmt.executeUpdate();
+		}
+	}
+
+	/**
+	 * Elimina un usuario de la base de datos.
+	 * 
+	 * @param idUsuario Identificador del usuario.
+	 * @throws Exception Si ocurre un error al eliminar el usuario.
+	 */
+	public void eliminarUsuario(int idUsuario) throws Exception {
+		// Preparar la consulta SQL para eliminar el usuario
+		String sql = "DELETE FROM usuarios WHERE idUsuario = ?";
+		try (PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setInt(1, idUsuario);
+			stmt.executeUpdate();
+		}
+	}
+
+	/**
+	 * Obtiene la lista de eventos a los que está asistiendo un usuario.
+	 * 
+	 * @param idUsuario Identificador del usuario.
+	 * @return Lista de objetos Evento con la información de los eventos.
+	 * @throws Exception Si ocurre un error al obtener los eventos.
+	 */
+	public List<Evento> obtenerEventos(int idUsuario) throws Exception {
+		// Preparar la consulta SQL para obtener los eventos del usuario
+		String sql = "SELECT e.* FROM eventos e JOIN asistencia a ON e.idEvento = a.idEvento WHERE a.idUsuario = ?";
+		try (PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setInt(1, idUsuario);
+			ResultSet rs = stmt.executeQuery();
+			List<Evento> eventos = new ArrayList<>();
+			while (rs.next()) {
+				eventos.add(new Evento(rs.getInt("idEvento"), rs.getString("nombre"), rs.getString("detalles")));
+			}
+			return eventos;
+		}
+	}
+
+	/**
+	 * Busca eventos por un criterio de búsqueda.
+	 * 
+	 * @param criterio Criterio de búsqueda (nombre, fecha, etc.).
+	 * @return Lista de objetos Evento con la información de los eventos
+	 *         coincidentes.
+	 * @throws Exception Si ocurre un error al buscar los eventos.
+	 */
+	public List<Evento> buscarEventos(String criterio) throws Exception {
+		// Preparar la consulta SQL para buscar eventos con el criterio especificado
+		String sql = "SELECT * FROM eventos WHERE nombre LIKE ? OR descripcion LIKE ?";
+		try (PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setString(1, "%" + criterio + "%");
+			stmt.setString(2, "%" + criterio + "%");
+			ResultSet rs = stmt.executeQuery();
+			List<Evento> eventos = new ArrayList<>();
+			while (rs.next()) {
+				eventos.add(new Evento(rs.getInt("idEvento"), rs.getString("nombre"), rs.getString("detalles")));
+			}
+			return eventos;
+		}
+	}
+
+	/**
+	 * Obtiene la información de un evento por su ID.
+	 * 
+	 * @param idEvento Identificador del evento.
+	 * @return Objeto Evento con la información del evento, o null si no se
+	 *         encuentra.
+	 * @throws Exception Si ocurre un error al obtener el evento.
+	 */
+	public Evento verEvento(int idEvento) throws Exception {
+		// Preparar la consulta SQL para obtener el evento por ID
+		String sql = "SELECT * FROM eventos WHERE idEvento = ?";
+		try (PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setInt(1, idEvento);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				return new Evento(rs.getInt("idEvento"), rs.getString("nombre"), rs.getString("detalles"));
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Marca un evento como favorito para un usuario.
+	 * 
+	 * @param idUsuario Identificador del usuario.
+	 * @param idEvento  Identificador del evento.
+	 * @throws Exception Si ocurre un error al marcar el evento como favorito.
+	 */
+	public void marcarEventoFavorito(int idUsuario, int idEvento) throws Exception {
+		// Preparar la consulta SQL para marcar el evento como favorito
+		String sql = "INSERT INTO favoritos (idUsuario, idEvento) VALUES (?, ?)";
+		try (PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setInt(1, idUsuario);
+			stmt.setInt(2, idEvento);
+			stmt.executeUpdate();
+		}
+	}
+
+	/**
+	 * Elimina un evento de la lista de favoritos de un usuario.
+	 * 
+	 * @param idUsuario Identificador del usuario.
+	 * @param idEvento  Identificador del evento.
+	 * @throws Exception Si ocurre un error al desmarcar el evento como favorito.
+	 */
+	public void desmarcarEventoFavorito(int idUsuario, int idEvento) throws Exception {
+		// Preparar la consulta SQL para desmarcar el evento como favorito
+		String sql = "DELETE FROM favoritos WHERE idUsuario = ? AND idEvento = ?";
+		try (PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setInt(1, idUsuario);
+			stmt.setInt(2, idEvento);
+			stmt.executeUpdate();
+		}
+
+	}
+
+	/**
+	 * Permite a un usuario cambiar su contraseña.
+	 * 
+	 * @param idUsuario        Identificador del usuario.
+	 * @param contrasenaActual Contraseña actual del usuario.
+	 * @param contrasenaNueva  Nueva contraseña del usuario.
+	 * @throws Exception Si ocurre un error al cambiar la contraseña.
+	 */
+	public void cambiarContrasena(int idUsuario, String contrasenaActual, String contrasenaNueva) throws Exception {
+		// Validar la contraseña actual
+		Usuario usuarioActual = obtenerINFOUsuarioPorID(idUsuario);
+		if (usuarioActual == null || !usuarioActual.getcontrasena().equals(contrasenaActual)) {
+			throw new Exception("Contraseña actual incorrecta.");
+		}
+
+		// Actualizar la contraseña en la base de datos
+		String sql = "UPDATE usuarios SET contrasena = ? WHERE idUsuario = ?";
+		try (PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setString(1, contrasenaNueva);
+			stmt.setInt(2, idUsuario);
+			stmt.executeUpdate();
+		}
+	}
+
+	/**
+	 * Obtiene una lista de todos los usuarios.
+	 * 
+	 * Este método consulta la tabla `usuarios` de la base de datos y devuelve una
+	 * lista de objetos `Usuario` que representan a todos los usuarios registrados.
+	 * 
+	 * @return La lista de usuarios o una lista vacía si no se encuentran usuarios.
+	 * @throws SQLException Si ocurre un error al consultar la base de datos.
+	 */
+	public List<Usuario> obtenerUsuarios() throws SQLException {
+		String sql = "SELECT * FROM usuarios";
+		List<Usuario> usuarios = new ArrayList<>();
+
+		try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+			while (rs.next()) {
+				int idUsuario = rs.getInt("idUsuario");
+				String nombre = rs.getString("nombre");
+				String email = rs.getString("email");
+				String hashContrasena = rs.getString("hashContrasena");
+				String fechaNacimiento = rs.getString("fechaNacimiento");
+				String intereses = rs.getString("intereses");
+				int permiso = rs.getInt("permiso");
+				Rol rol = Rol.valueOf(rs.getString("rol")); // Convertir String a Rol
+
+				Usuario usuario = new Usuario(idUsuario, nombre, email, hashContrasena, fechaNacimiento, intereses,
+						permiso, rol);
+				usuarios.add(usuario);
+			}
+		}
+
+		return usuarios;
+	}
+
+	/**
+	 * Obtiene el ID del usuario actual de la sesión HTTP.
+	 * 
+	 * @param request Objeto HttpServletRequest para obtener la información de la
+	 *                sesión.
+	 * @return El ID del usuario actual, o -1 si no se encuentra el usuario en la
+	 *         sesión.
+	 */
+	public static int obtenerIdUsuarioActual(HttpServletRequest request) {
+		Usuario usuarioSesion = (Usuario) request.getSession().getAttribute("usuario");
+		if (usuarioSesion != null) {
+			return usuarioSesion.getIdUsuario();
+		}
+		return -1;
+	}
+
+}

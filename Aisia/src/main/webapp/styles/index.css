@@ -1,0 +1,376 @@
+/* Importación de la paleta de colores */
+@import url("./paletacolores.css");
+/* Importación de fuentes */
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap");
+
+/* Tipografía principal */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Lato", sans-serif;
+}
+/* Estilos generales */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Lato", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+a {
+  color: var(--enlace-primario);
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Encabezado */
+#cabecera {
+  background-color: var(--header);
+  color: var(--texto-blanco);
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#divTitulo h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+  color: var(--titulo-blanco); /* Cambio de color del título */
+}
+
+#divTitulo p {
+  font-size: 18px;
+  margin-bottom: 0;
+}
+
+#loginFormContainer {
+  display: flex;
+  align-items: center;
+}
+
+/* Estilos para el formulario de login */
+#LoginForm {
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+}
+
+#LoginForm input[type="text"],
+#LoginForm input[type="password"] {
+  padding: 10px;
+  border: 1px solid var(--borde-principal);
+  border-radius: 5px;
+  width: 200px;
+  margin-bottom: 10px; /* Agrega un margen inferior */
+}
+
+#LoginForm input[type="submit"] {
+  padding: 10px 20px;
+  background-color: var(--boton-primario-fondo);
+  color: var(--boton-primario-texto);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#LoginForm input[type="submit"]:hover {
+  background-color: var(--boton-primario-hover);
+}
+
+.registroLink {
+  text-align: center; /* Centra el texto */
+}
+
+.registroLink a {
+  color: var(--enlace-primario);
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.registroLink a:hover {
+  text-decoration: underline;
+}
+/* Menú de navegación */
+#navbar {
+  background-color: var(--fondo-principal);
+  padding: 20px;
+  text-align: right;
+}
+
+#navbar ul {
+  list-style: none;
+}
+
+#navbar ul li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+#navbar ul li a {
+  color: var(--texto-principal);
+  text-decoration: none;
+}
+
+/* Secciones principales */
+#seccionCuerpo {
+  display: flex;
+  flex-wrap: wrap; /* Permitir que los elementos se envuelvan */
+  background-image: url("./img/home-bg.jpg"); /* Imagen de fondo para el main */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  padding: 20px; /* Espacio interior */
+  min-height: calc(
+    100vh - 250px
+  ); /* Altura mínima menos el espacio del encabezado */
+}
+
+article {
+  flex: 1; /* Que el article tome todo el espacio disponible */
+  padding: 20px;
+}
+
+section {
+  padding: 20px;
+  border: 1px solid var(--borde-principal);
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.6); /* Fondo transparente */
+  margin-bottom: 30px; /* Espacio entre secciones */
+}
+
+section h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: var(--titulo-principal);
+}
+
+section p {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Barra lateral */
+#aside {
+  width: 280px;
+  background-color: var(--fondo-secundario);
+  margin-left: 20px;
+  overflow-y: auto; /* Agregamos scroll vertical */
+  flex: 0 0 280px;
+  max-height: 570px; /* Altura máxima para el aside */
+  border-radius: 10px; /* Esquinas redondeadas */
+}
+#aside h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: var(--titulo-terciario);
+  background-color: var(--fondo-oscuro); /* Color de fondo para el título */
+  padding: 10px; /* Espacio alrededor del título */
+}
+#aside ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#aside li {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+#aside li img {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+#aside li a {
+  display: block;
+  padding: 10px 15px;
+  background-color: var(--boton-secundario-fondo);
+  color: var(--boton-secundario-texto);
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  flex: 1;
+}
+
+#aside li a:hover {
+  background-color: var(--boton-secundario-hover);
+}
+
+/* Personalizar scrollbar */
+#aside::-webkit-scrollbar {
+  width: 10px;
+}
+
+#aside::-webkit-scrollbar-thumb {
+  background-color: var(--borde-principal);
+  border-radius: 10px;
+}
+
+#aside::-webkit-scrollbar-track {
+  background-color: var(--fondo-secundario);
+}
+/* Formularios */
+form {
+  margin-bottom: 20px;
+  background-color: var(--form-fondo); /* Color de fondo */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: var(--form-texto); /* Color del texto */
+}
+
+form input[type="text"],
+form input[type="file"],
+form button {
+  width: calc(100% - 40px); /* Ancho con margen izquierdo y derecho */
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid var(--form-borde); /* Borde */
+  border-radius: 5px;
+  background-color: var(--form-fondo); /* Color de fondo */
+  color: var(--form-texto); /* Color del texto */
+  transition: border-color 0.3s ease; /* Transición suave del borde */
+}
+
+form input[type="text"]:focus,
+form input[type="file"]:focus,
+form button:focus {
+  outline: none; /* Quita el contorno al enfocar */
+  border-color: var(--boton-primario-hover); /* Color del borde al enfocar */
+}
+
+form input[type="file"]::-webkit-file-upload-button {
+  background: var(
+    --boton-primario-fondo
+  ); /* Color de fondo del botón de archivo */
+  color: var(--boton-primario-texto); /* Color del texto del botón de archivo */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Transición suave del color de fondo */
+}
+
+form input[type="file"]::-webkit-file-upload-button:hover {
+  background-color: var(
+    --boton-primario-hover
+  ); /* Color de fondo del botón de archivo al pasar el ratón */
+}
+
+/* Estilos para mensajes de validación */
+input:invalid {
+  border-color: red;
+}
+
+input:invalid + label:before {
+  content: "⚠ "; /* Icono de advertencia */
+  color: red;
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+/* Estilos adicionales para botones */
+form button {
+  border: none;
+  border-radius: 5px;
+  background-color: var(--boton-primario-fondo); /* Color de fondo */
+  color: var(--boton-primario-texto); /* Color del texto */
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Transición suave del color de fondo */
+}
+
+form button:hover {
+  background-color: var(
+    --boton-primario-hover
+  ); /* Color de fondo al pasar el ratón */
+}
+
+/* Pie de página */
+footer {
+  background-color: var(--footer);
+  color: var(--texto-secundario);
+  padding: 20px;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+footer ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+footer ul li {
+  margin-right: 20px;
+}
+
+footer form {
+  display: flex;
+}
+
+footer input[type="email"],
+footer input[type="submit"] {
+  padding: 10px;
+  border: 1px solid var(--borde-secundario);
+  border-radius: 5px;
+}
+
+footer input[type="submit"] {
+  padding: 10px 20px;
+  background-color: var(--boton-primario-fondo);
+  color: var(--boton-primario-texto);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+footer input[type="submit"]:hover {
+  background-color: var(--boton-primario-hover);
+}
+
+/* Estilos para los enlaces del footer */
+footer ul li a {
+  color: var(--texto-terciario);
+  text-decoration: none;
+}
+
+footer ul li a:hover {
+  color: var(--texto-blanco);
+}
+
+/* Tamaño de los iconos de eventos */
+#aside li img {
+  width: 48px;
+  height: 48px;
+  margin-right: 10px;
+}
