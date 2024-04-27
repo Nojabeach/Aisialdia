@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registro | AisiAldia</title>
+    <!-- Icono de la pestaña -->
+    <link rel="shortcut icon" href="./img/Logos/logo_transparent - noText.png" type="image/x-icon" />
+    <!-- Enlace de estilos -->
+    <link rel="stylesheet" href="./styles/registro.css">
+    <!-- Enlace de fonts,  iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Enlace de scripts -->
+    <script src="./js/registro.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Registro</h1>
+        <form action="#" method="post">
+            <input type="text" name="nombre" placeholder="Nombre" required>
+            <input type="email" name="email" placeholder="Correo electrónico" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <label for="consentimiento-datos">
+                <input type="checkbox" id="consentimiento-datos" name="consentimiento-datos" required>
+                Acepto el consentimiento de uso de datos
+            </label>
+            <label for="terminos-condiciones">
+                <input type="checkbox" id="terminos-condiciones" name="terminos-condiciones" required>
+                He leído y acepto los <a href="#">términos y condiciones</a> de la web
+            </label>
+            <input type="submit" value="Registrarse">
+        </form>
+        <div class="login-link">
+            ¿Ya tienes una cuenta? <a href="#">Inicia sesión aquí</a>
+        </div>
+    </div>
+
+    <section class="user">
+        <div class="user_options-container">
+            <div class="user_options-text">
+                <div class="user_options-unregistered">
+                    <h2 class="user_unregistered-title">¿No tienes una cuenta?</h2>
+                    <p class="user_unregistered-text">Bolsa tote de banjo derechos de bicicleta, High Life cray de
+                        sartorial cerveza artesanal lo que sea arte callejero fap.</p>
+                    <button class="user_unregistered-signup" id="signup-button">Registrarse</button>
+                </div>
+
+                <div class="user_options-registered">
+                    <h2 class="user_registered-title">¿Ya tienes una cuenta?</h2>
+                    <p class="user_registered-text">Bolsa tote de banjo derechos de bicicleta, High Life cray de
+                        sartorial cerveza artesanal lo que sea arte callejero fap.</p>
+                    <button class="user_registered-login" id="login-button">Iniciar sesión</button>
+                </div>
+            </div>
+
+            <div class="user_options-forms" id="user_options-forms">
+                <div class="user_forms-login">
+                    <h2 class="forms_title">Iniciar sesión</h2>
+                    <form class="forms_form">
+                        <fieldset class="forms_fieldset">
+                            <div class="forms_field">
+                                <input type="email" placeholder="Correo electrónico" class="forms_field-input" required
+                                    autofocus />
+                            </div>
+                            <div class="forms_field">
+                                <input type="password" placeholder="Contraseña" class="forms_field-input" required />
+                            </div>
+                        </fieldset>
+                        <div class="forms_buttons">
+                            <button type="button" class="forms_buttons-forgot">¿Olvidaste la contraseña?</button>
+                            <input type="submit" value="Iniciar sesión" class="forms_buttons-action">
+                        </div>
+                    </form>
+                </div>
+                <div class="user_forms-signup">
+                    <h2 class="forms_title">Registrarse</h2>
+                    <form class="forms_form">
+                        <fieldset class="forms_fieldset">
+                            <div class="forms_field">
+                                <input type="text" placeholder="Nombre completo" class="forms_field-input" required />
+                            </div>
+                            <div class="forms_field">
+                                <input type="email" placeholder="Correo electrónico" class="forms_field-input"
+                                    required />
+                            </div>
+                            <div class="forms_field">
+                                <input type="password" placeholder="Contraseña" class="forms_field-input" required />
+                            </div>
+                            <div class="forms_field">
+                                <label for="consentimiento-datos">
+                                    <input type="checkbox" id="consentimiento-datos" name="consentimiento-datos"
+                                        required>
+                                    Acepto el consentimiento de uso de datos
+                                </label>
+                            </div>
+                            <div class="forms_field">
+                                <label for="terminos-condiciones">
+                                    <input type="checkbox" id="terminos-condiciones" name="terminos-condiciones"
+                                        required>
+                                    He leído y acepto los <a href="#condicionesdeuso.html">términos y condiciones</a> de
+                                    la web
+                                </label>
+                            </div>
+                        </fieldset>
+                        <div class="forms_buttons">
+                            <input type="submit" value="Registrarse" class="forms_buttons-action">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
