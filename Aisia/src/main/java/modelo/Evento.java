@@ -2,6 +2,7 @@ package modelo;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 
 import dao.DaoEvento;
@@ -86,17 +87,22 @@ public class Evento {
 		/**
 		 * El evento ha finalizado por falta de visibilidad.
 		 */
-		FIN_VISIBILIDAD,
+		FinVisibilidad,
 
+		/**
+		 * El evento ha finalizado por un rechazo de publicación de algun moderador o
+		 * administrador
+		 */
+		Rechazado,
 		/**
 		 * El evento ha finalizado por un reporte negativo.
 		 */
-		REPORTE_NEGATIVO,
+		ReporteNegativo,
 
 		/**
 		 * El evento ha finalizado por otros motivos.
 		 */
-		OTROS
+		Otros
 	}
 
 	// CONSTRUCTORES
@@ -180,11 +186,12 @@ public class Evento {
 	 * @param detalles         Detalles o descripción del evento.
 	 * @param idUsuarioCreador Id del usuario creador del evento
 	 */
-	public Evento(String nombre, String detalles, int idUsuarioCreador) {
+	public Evento(String nombre, String detalles, int idUsuarioCreador, String ubicacion) {
 		super();
 		this.nombre = nombre;
 		this.detalles = detalles;
 		this.idUsuarioCreador = idUsuarioCreador;
+		this.ubicacion = ubicacion;
 	}
 
 	/**
@@ -477,8 +484,8 @@ public class Evento {
 	 * @param evento El evento a crear.
 	 * @throws SQLException Si ocurre un error al crear el evento.
 	 */
-	public void crearEvento(Evento evento) throws SQLException {
-		DaoEvento.getInstance().crearEvento(this);
+	public void crearEvento(Evento evento, Timestamp timestamp) throws SQLException {
+		DaoEvento.getInstance().crearEvento(evento, timestamp);
 	}
 
 	/**

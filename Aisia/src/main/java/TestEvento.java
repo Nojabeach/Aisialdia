@@ -1,7 +1,10 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
+
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
@@ -40,29 +43,45 @@ class TestEvento {
 	}
 
 
-    @Test
-    @Order(1)
-    void testCrearEvento() throws SQLException {
-        // Crear un nuevo evento
-        Evento evento = new Evento();
-        evento.setNombre("Evento de prueba");
-        evento.setDetalles("Detalles del evento de prueba");
-        evento.setIdUsuarioCreador(1);
-        evento.setUbicacion("Ubicación de prueba");
+	@Test
+	@Order(1)
+	void testCrearEvento() throws SQLException {
+	    // Crear un nuevo evento
+	    Evento evento = new Evento();
+	    evento.setNombre("Evento de prueba");
+	    evento.setDetalles("Detalles del evento de prueba");
+	    evento.setIdUsuarioCreador(1);
+	    evento.setUbicacion("Ubicación de prueba");
 
-        // Insertar el evento en la base de datos
-        dao.crearEvento(evento);
+	    // Obtener la fecha actual
+	    Timestamp fechaActual = new Timestamp(System.currentTimeMillis());
 
-        // Verificar que el evento se haya creado correctamente
-        Evento eventoCreado = dao.obtenerEventoPorId(evento.getIdEvento());
-        assertNotNull(eventoCreado);
-        assertEquals("Evento de prueba", eventoCreado.getNombre());
-        assertEquals("Detalles del evento de prueba", eventoCreado.getDetalles());
-        assertEquals(1, eventoCreado.getIdUsuarioCreador());
-        assertEquals("Ubicación de prueba", eventoCreado.getUbicacion());
-    }
+	    // Insertar el evento en la base de datos
+	    int idEventoCreado = dao.crearEvento(evento, fechaActual);
+
+	    // Verificar que el evento se haya creado correctamente
+	    Evento eventoCreado = dao.obtenerEventoPorId(idEventoCreado);
+	    assertNotNull(eventoCreado);
+	    assertEquals("Evento de prueba", eventoCreado.getNombre());
+	    assertEquals("Detalles del evento de prueba", eventoCreado.getDetalles());
+	    assertEquals(1, eventoCreado.getIdUsuarioCreador());
+	    assertEquals("Ubicación de prueba", eventoCreado.getUbicacion());
+	    assertEquals(idEventoCreado, eventoCreado.getIdEvento());
+	}
+	@Test
+	@Order(2)
+	void testObtenerEventoPorId() throws SQLException {
+	    // Obtener el ID del último evento creado
+	    int ultimoIdEvento = dao.obtenerUltimoIdEvento();
+
+	    // Obtener el evento con el ID especificado
+	    Evento evento = dao.obtenerEventoPorId(ultimoIdEvento);
+
+	    // Verificar que el evento se haya obtenido correctamente
+	    assertNotNull(evento);
+	}
     @Test
-    @Order(2)
+    @Order(3)
     void testObtenerEventosPendientesAprobacion() throws SQLException {
         List<Evento> eventos = dao.obtenerEventosPendientesAprobacion();
         assertFalse(eventos.isEmpty());
@@ -70,7 +89,7 @@ class TestEvento {
         assertNull(eventoObtenido.getFechaPublicacion());
     }
     @Test
-    @Order(3)
+    @Order(4)
     void testAprobarPublicacionEventos() throws SQLException {
         // Obtener los eventos pendientes de aprobación
         List<Evento> eventosPendientes = dao.obtenerEventosPendientesAprobacion();
@@ -84,21 +103,7 @@ class TestEvento {
         Evento eventoAprobado = dao.obtenerEventoPorId(eventoPendiente.getIdEvento());
         assertNotNull(eventoAprobado.getFechaAprobacion());
     }
-    @Test
-    @Order(4)
-    void testRechazarEvento() throws SQLException {
-        // Obtener los eventos pendientes de aprobación
-        List<Evento> eventosPendientes = dao.obtenerEventosPendientesAprobacion();
-        assertFalse(eventosPendientes.isEmpty());
 
-        // Rechazar el último evento pendiente
-        Evento eventoPendiente = eventosPendientes.get(eventosPendientes.size() - 1);
-        dao.rechazarEvento(eventoPendiente.getIdEvento(), null);
-
-        // Verificar que el evento rechazado tenga un motivo de finalización
-        Evento eventoRechazado = dao.obtenerEventoPorId(eventoPendiente.getIdEvento());
-        assertEquals(MotivoFinalizacion.REPORTE_NEGATIVO, eventoRechazado.getMotivoFinalizacion());
-    }
     @Test
     @Order(5)
     void testPublicarEvento() throws SQLException {
@@ -117,19 +122,18 @@ class TestEvento {
 
     @Test
     @Order(6)
-    void testObtenerEventoPorId() throws SQLException {
-    	 // Obtener el último evento creado
-        List<Evento> eventos = dao.obtenerTodosLosEventos();
-        Evento ultimoEvento = eventos.get(eventos.size() - 1);
-        int idEvento = ultimoEvento.getIdEvento();
-        // Obtener el evento por ID
-        Evento eventoObtenido = dao.obtenerEventoPorId(idEvento);
-        assertNotNull(eventoObtenido);
+    void testRechazarEvento() throws SQLException {
+        // Obtener los eventos pendientes de aprobación
+        List<Evento> eventosPendientes = dao.obtenerEventosPendientesAprobacion();
+        assertFalse(eventosPendientes.isEmpty());
 
-        // Verificar que los datos del evento sean correctos
-        assertEquals("Evento de prueba", eventoObtenido.getNombre());
-        assertEquals("Detalles del evento de prueba", eventoObtenido.getDetalles());
-        assertEquals(1, eventoObtenido.getIdUsuarioCreador());
+        // Rechazar el último evento pendiente
+        Evento eventoPendiente = eventosPendientes.get(eventosPendientes.size() - 1);
+        dao.rechazarEvento(eventoPendiente.getIdEvento(), null);
+
+        // Verificar que el evento rechazado tenga un motivo de finalización
+        Evento eventoRechazado = dao.obtenerEventoPorId(eventoPendiente.getIdEvento());
+        assertEquals(MotivoFinalizacion.Rechazado, eventoRechazado.getMotivoFinalizacion());
     }
 
     @Test

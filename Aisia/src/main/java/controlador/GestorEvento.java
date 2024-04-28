@@ -9,6 +9,7 @@ import modelo.Evento;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import dao.DaoEvento;
 
@@ -100,9 +101,11 @@ public class GestorEvento extends HttpServlet {
 		String nombre = request.getParameter("nombre");
 		String detalles = request.getParameter("detalles");
 		int idUsuarioCreador = Integer.parseInt(request.getParameter("idUsuarioCreador"));
-		Evento evento = new Evento(nombre, detalles, idUsuarioCreador);
+		String ubicacion = request.getParameter("ubicacion");
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		Evento evento = new Evento(nombre, detalles, idUsuarioCreador, ubicacion);
 		try {
-			DaoEvento.getInstance().crearEvento(evento);
+			DaoEvento.getInstance().crearEvento(evento, timestamp);
 			response.setStatus(HttpServletResponse.SC_CREATED);
 			response.getWriter().println("Evento creado exitosamente!");
 		} catch (SQLException e) {

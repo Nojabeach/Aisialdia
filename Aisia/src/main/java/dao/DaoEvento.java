@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ public class DaoEvento {
 	 * la interacción con la base de datos.
 	 * 
 	 * @author Maitane Ibañez Irazabal
-	 * @version 1.0
+	 * @version 1.5
 	 */
 	public DaoEvento() throws SQLException {
 		con = DBConection.getConection();
@@ -49,16 +50,23 @@ public class DaoEvento {
 	 * @throws SQLException Si ocurre un error al crear el evento en la base de
 	 *                      datos
 	 */
-	public void crearEvento(Evento evento) throws SQLException {
-		String sql = "INSERT INTO eventos (nombre, detalles, idUsuariocreador,fechaUltimaModificacion,ubicacion) VALUES (?, ?, ?, ?)";
-		PreparedStatement ps = con.prepareStatement(sql);
-		ps.setString(1, evento.getNombre());
-		ps.setString(2, evento.getDetalles());
-		ps.setInt(3, evento.getIdUsuarioCreador());
-		ps.setTimestamp(4, new Timestamp(System.currentTimeMillis())); // Actualizar la fecha de última modificación
-		ps.setString(5, evento.getUbicacion());
-		ps.executeUpdate();
+	public int crearEvento(Evento evento, Timestamp fechaUltimaModificacion) throws SQLException {
+	    String sql = "INSERT INTO eventos (nombre, detalles, idUsuariocreador, fechaUltimaModificacion, ubicacion) VALUES (?, ?, ?, ?, ?)";
+	    PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+	    ps.setString(1, evento.getNombre());
+	    ps.setString(2, evento.getDetalles());
+	    ps.setInt(3, evento.getIdUsuarioCreador());
+	    ps.setTimestamp(4, fechaUltimaModificacion);
+	    ps.setString(5, evento.getUbicacion());
+	    ps.executeUpdate();
 
+	    ResultSet rs = ps.getGeneratedKeys();
+	    if (rs.next()) {
+	        int idEvento = rs.getInt(1);
+	        return idEvento;
+	    } else {
+	        throw new SQLException("No se pudo obtener el ID del evento creado.");
+	    }
 	}
 
 	/**
@@ -85,8 +93,8 @@ public class DaoEvento {
 		ps.setString(8, evento.getMotivoFinalizacion().toString());
 		ps.setString(9, evento.getUbicacion());
 		ps.setInt(10, evento.getIdEvento());
-		ps.executeUpdate(); 
-
+		ps.executeUpdate();
+		ps.close();
 	}
 
 	/**
@@ -122,7 +130,7 @@ public class DaoEvento {
 		ps.setInt(1, idUsuarioActual);
 		ps.setInt(2, idEvento);
 		ps.executeUpdate();
-
+		ps.close();
 	}
 
 	/**
@@ -137,14 +145,14 @@ public class DaoEvento {
 	public void rechazarEvento(int idEvento, HttpServletRequest request) throws SQLException {
 		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
 
-		String sql = "UPDATE eventos SET motivoFinalizacion = 'REPORTE_NEGATIVO',fechaFinalizacion=current_date,"
+		String sql = "UPDATE eventos SET motivoFinalizacion = 'Rechazado',fechaFinalizacion=current_date,"
 				+ "fechaUltimaModificacion=current_date,idModeradorFinalizacion=? WHERE idEvento = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
 
 		ps.setInt(1, idUsuarioActual);
 		ps.setInt(2, idEvento);
 		ps.executeUpdate();
-
+		ps.close();
 	}
 
 	/**
@@ -163,7 +171,23 @@ public class DaoEvento {
 		ps.setInt(1, idUsuarioActual);
 		ps.setInt(2, idEvento);
 		ps.executeUpdate();
-
+		ps.close();
+	}
+	/**
+	 * Finaliza la publicación de un evento en la base de datos.
+	 *
+	 * @param idEvento           El ID del evento que se desea finalizar.
+	 * @param idModerador        El ID del moderador que finaliza el evento.
+	 * @throws SQLException      si ocurre algún error al interactuar con la base de datos.
+	 */
+	public void finalizarPublicacionEvento(int idEvento, int idModerador) throws SQLException {
+	    String sql = "UPDATE eventos SET motivoFinalizacion = 'FinVisibilidad', fechaFinalizacion = current_date, "
+	                + "fechaUltimaModificacion = current_date, idModeradorFinalizacion = ? WHERE idEvento = ?";
+	    PreparedStatement ps = con.prepareStatement(sql);
+	    ps.setInt(1, idModerador);
+	    ps.setInt(2, idEvento);
+	    ps.executeUpdate();
+		ps.close();
 	}
 
 	/**
@@ -199,8 +223,6 @@ public class DaoEvento {
 
 		return evento;
 	}
-
-
 
 	/**
 	 * Obtiene la lista de eventos organizados por un usuario específico.
@@ -261,27 +283,47 @@ public class DaoEvento {
 
 		return eventos;
 	}
+
 	/**
 	 * Obtiene todos los eventos de la base de datos.
 	 *
-	 * @return Una lista de objetos Evento que representan todos los eventos en la base de datos.
+	 * @return Una lista de objetos Evento que representan todos los eventos en la
+	 *         base de datos.
 	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
 	 */
 	public List<Evento> obtenerTodosLosEventos() throws SQLException {
-	    List<Evento> eventos = new ArrayList<>();
-	    String sql = "SELECT * FROM eventos order by id";
-	    PreparedStatement stmt = con.prepareStatement(sql);
-	    ResultSet rs = stmt.executeQuery();
-	    while (rs.next()) {
-	        Evento evento = new Evento();
-	        evento.setIdEvento(rs.getInt("id"));
-	        evento.setNombre(rs.getString("nombre"));
-	        evento.setDetalles(rs.getString("detalles"));
-	        evento.setIdUsuarioCreador(rs.getInt("idUsuarioCreador"));
+		List<Evento> eventos = new ArrayList<>();
+		String sql = "SELECT * FROM eventos order by id";
+		PreparedStatement stmt = con.prepareStatement(sql);
+		ResultSet rs = stmt.executeQuery();
+		while (rs.next()) {
+			Evento evento = new Evento();
+			evento.setIdEvento(rs.getInt("id"));
+			evento.setNombre(rs.getString("nombre"));
+			evento.setDetalles(rs.getString("detalles"));
+			evento.setIdUsuarioCreador(rs.getInt("idUsuarioCreador"));
 			evento.setFechaUltimaModificacion(rs.getDate("fechaUltimaModificacion"));
-	        evento.setUbicacion(rs.getString("ubicacion"));
-	        eventos.add(evento);
-	    }
-	    return eventos;
+			evento.setUbicacion(rs.getString("ubicacion"));
+			eventos.add(evento);
+		}
+		return eventos;
+	}
+
+	/**
+	 * Obtiene el último ID de evento almacenado en la base de datos.
+	 *
+	 * @return El último ID de evento almacenado.
+	 * @throws SQLException si ocurre algún error al interactuar con la base de
+	 *                      datos.
+	 */
+	public int obtenerUltimoIdEvento() throws SQLException {
+		String sql = "SELECT MAX(idEvento) FROM eventos";
+		PreparedStatement ps = con.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()) {
+			return rs.getInt(1);
+		} else {
+			throw new SQLException("No se encontró ningún evento en la base de datos.");
+		}
 	}
 }
