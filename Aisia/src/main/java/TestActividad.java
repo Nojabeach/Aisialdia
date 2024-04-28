@@ -29,7 +29,7 @@ class TestActividad {
 	 * Instancia de la clase DaoActividad utilizada para realizar las pruebas.
 	 */
 	private DaoActividad dao;
-	private int idNuevaActividad; // Variable miembro para almacenar el ID de la nueva actividad
+
 
 	/**
 	 * Método que se ejecuta antes de cada prueba para inicializar la instancia de

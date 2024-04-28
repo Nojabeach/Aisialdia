@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,14 +50,13 @@ public class DaoEvento {
 	 *                      datos
 	 */
 	public void crearEvento(Evento evento) throws SQLException {
-		String sql = "INSERT INTO eventos (nombre, detalles, idUsuariocreador,fechaUltimaModificacion) VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO eventos (nombre, detalles, idUsuariocreador,fechaUltimaModificacion,ubicacion) VALUES (?, ?, ?, ?)";
 		PreparedStatement ps = con.prepareStatement(sql);
-
-		ps = con.prepareStatement(sql);
 		ps.setString(1, evento.getNombre());
 		ps.setString(2, evento.getDetalles());
 		ps.setInt(3, evento.getIdUsuarioCreador());
-		ps.setDate(4, evento.getFechaUltimaModificacion());
+		ps.setTimestamp(4, new Timestamp(System.currentTimeMillis())); // Actualizar la fecha de última modificación
+		ps.setString(5, evento.getUbicacion());
 		ps.executeUpdate();
 
 	}
@@ -75,10 +75,9 @@ public class DaoEvento {
 				+ " ubicacion = ? WHERE idEvento = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
 
-		ps = con.prepareStatement(sql);
 		ps.setString(1, evento.getNombre());
 		ps.setString(2, evento.getDetalles());
-		ps.setDate(3, evento.getFechaUltimaModificacion());
+		ps.setTimestamp(3, new Timestamp(System.currentTimeMillis())); // Actualizar la fecha de última modificación
 		ps.setDate(4, evento.getFechaPublicacion());
 		ps.setInt(5, evento.getIdModeradorPublicacion());
 		ps.setDate(6, evento.getFechaFinalizacion());
@@ -86,7 +85,7 @@ public class DaoEvento {
 		ps.setString(8, evento.getMotivoFinalizacion().toString());
 		ps.setString(9, evento.getUbicacion());
 		ps.setInt(10, evento.getIdEvento());
-		ps.executeUpdate();
+		ps.executeUpdate(); 
 
 	}
 
@@ -101,7 +100,6 @@ public class DaoEvento {
 		String sql = "DELETE FROM eventos WHERE idEvento = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
 
-		ps = con.prepareStatement(sql);
 		ps.setInt(1, evento.getIdEvento());
 		ps.executeUpdate();
 
@@ -121,7 +119,6 @@ public class DaoEvento {
 				+ "idModeradorPublicacion = ? WHERE idEvento = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
 		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
-		ps = con.prepareStatement(sql);
 		ps.setInt(1, idUsuarioActual);
 		ps.setInt(2, idEvento);
 		ps.executeUpdate();
@@ -144,7 +141,6 @@ public class DaoEvento {
 				+ "fechaUltimaModificacion=current_date,idModeradorFinalizacion=? WHERE idEvento = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
 
-		ps = con.prepareStatement(sql);
 		ps.setInt(1, idUsuarioActual);
 		ps.setInt(2, idEvento);
 		ps.executeUpdate();
@@ -164,7 +160,6 @@ public class DaoEvento {
 				+ " idModeradorAprobacion = ? WHERE idEvento = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
 
-		ps = con.prepareStatement(sql);
 		ps.setInt(1, idUsuarioActual);
 		ps.setInt(2, idEvento);
 		ps.executeUpdate();
@@ -266,5 +261,27 @@ public class DaoEvento {
 
 		return eventos;
 	}
-
+	/**
+	 * Obtiene todos los eventos de la base de datos.
+	 *
+	 * @return Una lista de objetos Evento que representan todos los eventos en la base de datos.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public List<Evento> obtenerTodosLosEventos() throws SQLException {
+	    List<Evento> eventos = new ArrayList<>();
+	    String sql = "SELECT * FROM eventos order by id";
+	    PreparedStatement stmt = con.prepareStatement(sql);
+	    ResultSet rs = stmt.executeQuery();
+	    while (rs.next()) {
+	        Evento evento = new Evento();
+	        evento.setIdEvento(rs.getInt("id"));
+	        evento.setNombre(rs.getString("nombre"));
+	        evento.setDetalles(rs.getString("detalles"));
+	        evento.setIdUsuarioCreador(rs.getInt("idUsuarioCreador"));
+			evento.setFechaUltimaModificacion(rs.getDate("fechaUltimaModificacion"));
+	        evento.setUbicacion(rs.getString("ubicacion"));
+	        eventos.add(evento);
+	    }
+	    return eventos;
+	}
 }
