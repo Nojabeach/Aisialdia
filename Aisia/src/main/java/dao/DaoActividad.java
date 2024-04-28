@@ -71,7 +71,7 @@ public class DaoActividad {
 	 */
 	public void editarActividad(Actividad actividad) throws SQLException {
 		// Preparar la consulta SQL para modificar la actividad
-		String sql = "UPDATE actividades SET tipoActividad = ? WHERE ID_actividad = ?";
+		String sql = "UPDATE actividades SET tipoActividad = ? WHERE idactividad = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
 		ps.setString(1, actividad.getTipoActividad());
 		ps.setInt(2, actividad.getIdActividad());
@@ -88,7 +88,7 @@ public class DaoActividad {
 	 */
 	public void eliminarActividad(Actividad actividad) throws SQLException {
 		// Preparar la consulta SQL para eliminar la actividad
-		String sql = "DELETE FROM actividades WHERE ID_actividad = ?";
+		String sql = "DELETE FROM actividades WHERE idactividad = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
 		ps.setInt(1, actividad.getIdActividad());
 		ps.executeUpdate();
@@ -108,7 +108,7 @@ public class DaoActividad {
 		try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				Actividad actividad = new Actividad();
-				actividad.setIdActividad(rs.getInt("ID_actividad"));
+				actividad.setIdActividad(rs.getInt("idactividad"));
 				actividad.setTipoActividad(rs.getString("TipoActividad"));
 				actividad.setFotoActividad(rs.getString("fotoActividad"));
 
@@ -116,6 +116,58 @@ public class DaoActividad {
 			}
 		}
 		return actividades;
+	}
+	/**
+	 * Obtiene una actividad de la base de datos por su ID.. Metodo usado en JUNIT
+	 *
+	 * @param idActividad El ID de la actividad que se desea obtener.
+	 * @return La actividad con el ID especificado, o null si no se encuentra.
+	 * @throws SQLException Si ocurre un error al obtener la actividad.
+	 */
+	public Actividad obtenerActividadPorId(int idActividad) throws SQLException {
+	    Actividad actividad = null;
+	    String sql = "SELECT * FROM actividades WHERE idactividad = ?";
+	    
+	    try (PreparedStatement ps = con.prepareStatement(sql)) {
+	        ps.setInt(1, idActividad);
+	        
+	        try (ResultSet rs = ps.executeQuery()) {
+	            if (rs.next()) {
+	                actividad = new Actividad();
+	                actividad.setIdActividad(rs.getInt("idactividad"));
+	                actividad.setTipoActividad(rs.getString("tipoActividad"));
+	                actividad.setFotoActividad(rs.getString("fotoActividad"));
+	            }
+	        }
+	    }
+	    
+	    return actividad;
+	}
+
+	/**
+	 * Obtiene toda la información de la última actividad creada en la base de datos. Metodo usado en JUNIT
+	 *
+	 * @return La última actividad creada.
+	 * @throws SQLException Si ocurre un error al obtener la actividad.
+	 */
+	public Actividad obtenerUltimaActividad() throws SQLException {
+	    // Consulta SQL para obtener la última actividad creada
+	    String sql = "SELECT * FROM actividades WHERE idactividad = (SELECT MAX(idactividad) FROM actividades)";
+	    Actividad actividad = null;
+
+	    try (PreparedStatement ps = con.prepareStatement(sql);
+	         ResultSet rs = ps.executeQuery()) {
+	        // Si hay resultados en el conjunto de resultados
+	        if (rs.next()) {
+	            // Crear una nueva actividad con los datos obtenidos
+	            actividad = new Actividad();
+	            actividad.setIdActividad(rs.getInt("idactividad"));
+	            actividad.setTipoActividad(rs.getString("tipoactividad"));
+	            actividad.setFotoActividad(rs.getString("fotoactividad"));
+	        }
+	    }
+	    // Devolver la actividad obtenida
+	    return actividad;
 	}
 
 }
