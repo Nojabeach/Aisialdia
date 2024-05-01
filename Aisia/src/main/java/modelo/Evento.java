@@ -105,6 +105,15 @@ public class Evento {
 		Otros
 	}
 
+	/**
+	 * Este atributo representa la instancia de HttpServletRequest que se pasa al
+	 * constructor de la clase Evento. La solicitud HTTP contiene información sobre
+	 * la petición del cliente, como la URL, los encabezados, los parámetros y el
+	 * cuerpo de la petición. El atributo request puede ser utilizado para acceder a
+	 * esta información dentro de la clase Evento.
+	 */
+	private HttpServletRequest request;
+
 	// CONSTRUCTORES
 	// --------------------------------------------------------------------------------------------
 
@@ -208,6 +217,16 @@ public class Evento {
 		this.nombre = nombre;
 		this.detalles = detalles;
 		this.ubicacion = ubicacion;
+	}
+/**
+ * Constructor de la clase Evento que se usa en el JUNIT
+ * 
+ * @param idEvento El identificador único del evento (entero)
+ * @param request La instancia de HttpServletRequest que contiene información sobre la petición del cliente.
+ */
+	public Evento(int idEvento, HttpServletRequest request) {
+		this.idEvento = idEvento;
+		this.request = request;
 	}
 
 	// GETTERS Y SETTERS

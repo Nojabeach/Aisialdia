@@ -1,3 +1,5 @@
+package pruebas;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.SQLException;
@@ -29,7 +31,6 @@ class TestActividad {
 	 * Instancia de la clase DaoActividad utilizada para realizar las pruebas.
 	 */
 	private DaoActividad dao;
-
 
 	/**
 	 * Método que se ejecuta antes de cada prueba para inicializar la instancia de

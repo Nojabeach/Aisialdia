@@ -131,7 +131,7 @@ public class DaoFavorito {
 	 *                   { System.out.println("Evento Favorito: " +
 	 *                   evento.getNombre()); } } ```
 	 */
-	public List<Evento> obtenerEventosFavoritosUsuario(int idUsuario) throws Exception {
+	public List<Evento> obtenerEventosFavoritosUsuario(int idUsuario) throws SQLException {
 
 		String sql = "SELECT e.* FROM Evento e " // Consulta SQL para obtener eventos favoritos
 				+ "JOIN Favorito f ON e.idEvento = f.idEvento " + "JOIN Usuario u ON f.idUsuario = u.idUsuario "
