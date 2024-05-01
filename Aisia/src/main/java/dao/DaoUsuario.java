@@ -9,6 +9,7 @@ import java.util.List;
 
 import jakarta.servlet.http.HttpServletRequest;
 import modelo.Evento;
+import modelo.PermisoUsuario;
 import modelo.Usuario;
 import modelo.Usuario.Rol;
 
@@ -264,10 +265,10 @@ public class DaoUsuario {
 
 		// Actualizar la contraseña en la base de datos
 		String sql = "UPDATE usuarios SET contrasena = ? WHERE idUsuario = ?";
-		try (PreparedStatement stmt = con.prepareStatement(sql)) {
-			stmt.setString(1, contrasenaNueva);
-			stmt.setInt(2, idUsuario);
-			stmt.executeUpdate();
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, contrasenaNueva);
+			ps.setInt(2, idUsuario);
+			ps.executeUpdate();
 		}
 	}
 
@@ -319,6 +320,31 @@ public class DaoUsuario {
 			return usuarioSesion.getIdUsuario();
 		}
 		return -1;
+	}
+
+	/**
+	 * Busca el permiso de un usuario en la base de datos según su ID.
+	 *
+	 * @param idUsuario ID del usuario del cual se desea obtener el permiso.
+	 * @return Objeto PermisoUsuario que representa el permiso del usuario.
+	 */
+	public PermisoUsuario buscarPermisoUsuario(int idUsuario) {
+		PermisoUsuario permiso = null;
+
+		String sql = "SELECT permiso FROM usuario WHERE id = ?";
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, idUsuario);
+			ResultSet rs = ps.executeQuery();
+
+			if (rs.next()) {
+				int permisoNumero = rs.getInt("permiso");
+				permiso = new PermisoUsuario(permisoNumero);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return permiso;
 	}
 
 }

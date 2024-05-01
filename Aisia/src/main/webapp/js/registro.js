@@ -1,13 +1,41 @@
-const signupButton = document.getElementById('signup-button');
-const loginButton = document.getElementById('login-button');
-const userForms = document.getElementById('user_options-forms');
+        // Redireccionar al servlet GestorUsuario con action iniciarSesion
+        // Una vez el usuario se registra
+        window.location.href = "GestorUsuario?action=iniciarSesion";
 
-signupButton.addEventListener('click', () => {
-    userForms.classList.remove('bounceRight');
-    userForms.classList.add('bounceLeft');
-});
+        // Se ejecutan las acciones comprobarLogin y verificarPermiso
+        // Estas acciones deben estar implementadas en el servlet GestorUsuario
+        // Llamar a comprobarLogin
+        fetch("GestorUsuario?action=comprobarLogin")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("No se pudo iniciar sesión.");
+                }
+                return response.text();
+            })
+            .then(data => console.log(data))
+            .catch(error => console.error(error));
 
-loginButton.addEventListener('click', () => {
-    userForms.classList.remove('bounceLeft');
-    userForms.classList.add('bounceRight');
-});
+        // Llamar a verificarPermiso con permiso=1
+        fetch("GestorUsuario?action=verificarPermiso&permiso=" + encodeURIComponent(permisoDeUsuarioDesdeBD))")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("No tienes permiso para acceder.");
+                }
+                return response.text();
+            })
+            .then(data => console.log(data))
+            .catch(error => console.error(error));
+
+// Obtener permiso del usuario desde la base de datos
+int permisoDeUsuarioDesdeBD = DaoUsuario.getInstance().buscarPermisoUsuario(usuario.getId());
+
+// Llamar a verificarPermiso con el permiso del usuario obtenido de la BD
+fetch("/GestorUsuario?action=verificarPermiso&permiso=" + encodeURIComponent(permisoDeUsuarioDesdeBD))
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("No tienes permiso para acceder.");
+        }
+        return response.text();
+    })
+    .then(data => console.log(data))
+    .catch(error => console.error(error));

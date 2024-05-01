@@ -559,4 +559,26 @@ public class Usuario {
 		return DaoUsuario.getInstance().obtenerUsuarios();
 	}
 
+	/**
+	 * Verifica si el usuario tiene permiso para realizar cierta acción.
+	 *
+	 * @param permisoNecesario El nivel de permiso necesario para realizar la
+	 *                         acción.
+	 * @return true si el usuario tiene permiso, false de lo contrario.
+	 */
+	public boolean tienePermiso(int permisoNecesario) {
+		PermisoUsuario permisoUsuario = buscarPermisoUsuario(idUsuario);
+		return permisoUsuario != null && permisoUsuario.getPermiso() >= permisoNecesario;
+	}
+
+	// OTROS MÉTODOS
+	// --------------------------------------------------------------------------------------------
+	private PermisoUsuario buscarPermisoUsuario(int idUsuario) {
+		try {
+			return DaoUsuario.getInstance().buscarPermisoUsuario(idUsuario);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

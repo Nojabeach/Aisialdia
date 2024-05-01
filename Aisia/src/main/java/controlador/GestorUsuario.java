@@ -5,10 +5,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import modelo.Evento;
 import modelo.Usuario;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -68,14 +72,23 @@ public class GestorUsuario extends HttpServlet {
 			case "verEventoUsuario":
 				verEventoUsuario(request, response);
 				break;
+			case "cerrarSesion":
+				cerrarSesion(request, response);
+				break;
+			case "comprobarLogin":
+				comprobarLogin(request, response);
+				break;
+			case "verificarPermiso":
+				verificarPermiso(request, response);
+				break;
 			default:
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().write("{\"error\": \"Acción no válida\"}");
+				ControlErrores.mostrarErrorGenerico("{\"error\": \"Acción no válida\"}", response);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().write("{\"error\": \"" + e.getMessage() + "\"}");
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
 		}
 	}
 
@@ -130,12 +143,12 @@ public class GestorUsuario extends HttpServlet {
 				break;
 			default:
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().write("{\"error\": \"Acción no válida\"}");
+				ControlErrores.mostrarErrorGenerico("{\"error\": \"Acción no válida\"}", response);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().write("{\"error\": \"" + e.getMessage() + "\"}");
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
 		}
 	}
 
@@ -181,13 +194,14 @@ public class GestorUsuario extends HttpServlet {
 			throws IOException, SQLException {
 		// Obtener parámetros del formulario
 		String email = request.getParameter("email");
-		String contrasena = request.getParameter("contrasena");
 
 		// Iniciar sesión
 		try {
-			Usuario usuario = DaoUsuario.getInstance().iniciarSesion(email, contrasena);
+			// Verificamos el inicio de sesión con la contraseña cifrada
+			Usuario usuario = DaoUsuario.getInstance().iniciarSesion(email, getMD5(request.getParameter("contrasena")));
 			if (usuario != null) {
-				request.getSession().setAttribute("usuario", usuario);
+				HttpSession session = request.getSession();
+				session.setAttribute("usuario", usuario);
 				response.getWriter().println("Inicio de sesión exitoso!");
 			} else {
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -195,6 +209,89 @@ public class GestorUsuario extends HttpServlet {
 			}
 		} catch (Exception e) {
 			ControlErrores.mostrarErrorGenerico("Error al iniciar sesión. Intente de nuevo.", response);
+		}
+	}
+
+	public static String getMD5(String input) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] messageDigest = md.digest(input.getBytes());
+			BigInteger number = new BigInteger(1, messageDigest);
+			String hashtext = number.toString(16);
+
+			while (hashtext.length() < 32) {
+				hashtext = "0" + hashtext;
+			}
+			return hashtext;
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Cierra la sesión del usuario.
+	 *
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
+	 * @throws IOException Si se produce un error de entrada/salida.
+	 */
+	private void cerrarSesion(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		session.invalidate();
+		response.setStatus(HttpServletResponse.SC_OK);
+		response.getWriter().println("Sesión cerrada exitosamente!");
+	}
+
+	/**
+	 * Comprueba si el usuario ha iniciado sesión.
+	 *
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
+	 * @throws IOException Si se produce un error de entrada/salida.
+	 */
+	private void comprobarLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Usuario usuario = (Usuario) session.getAttribute("usuario");
+		if (usuario != null) {
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().println("Estás logueado!");
+		} else {
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			response.getWriter().println("No estás logueado.");
+		}
+	}
+
+	/**
+	 * Verifica si el usuario tiene permiso para acceder a cierta funcionalidad.
+	 *
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
+	 * @throws IOException Si se produce un error de entrada/salida.
+	 */
+	private void verificarPermiso(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		Usuario usuario = (Usuario) session.getAttribute("usuario");
+		if (usuario != null) {
+			String permisoStr = request.getParameter("permiso");
+			if (permisoStr != null) {
+				int permiso = Integer.parseInt(permisoStr);
+				if (usuario.tienePermiso(permiso)) {
+					response.setStatus(HttpServletResponse.SC_OK);
+					response.getWriter().println("Tienes permiso para acceder.");
+				} else {
+					response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+					response.getWriter().println("No tienes permiso para acceder.");
+				}
+			} else {
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println("Falta el parámetro 'permiso'.");
+			}
+		} else {
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			response.getWriter().println("No estás logueado.");
 		}
 	}
 
