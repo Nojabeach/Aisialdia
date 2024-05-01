@@ -33,6 +33,7 @@
   --form-fondo: var(--color-terciario); /* Gris verdoso */
   --form-borde: var(--color-secundario); /* Verde pastel */
   --form-texto: var(--texto-principal); /* Verde pastel oscuro */
+  --form-texto2: var(--color-acento); /* Blanco verdoso */
 
   /* Colores de botones */
   --boton-primario-fondo: var(--color-primario); /* Verde pastel oscuro */
@@ -45,6 +46,8 @@
   /* Colores de bordes */
   --borde-principal: var(--color-secundario); /* Verde pastel */
   --borde-secundario: var(--color-terciario); /* Gris verdoso */
+  --borde-terciario: var(--color-acento); /* Blanco verdoso */
+  --borde-cuaternario: var(--color-primario); /* Verde pastel oscuro */
 
   /* Colores de sombras */
   --sombra-principal: rgba(0, 0, 0, 0.2);

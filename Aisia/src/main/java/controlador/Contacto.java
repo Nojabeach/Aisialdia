@@ -71,8 +71,8 @@ public class Contacto extends HttpServlet {
 		properties.put("mail.smtp.port", "587");
 
 		// Configurar credenciales de autenticación
-		final String username = "Aisialdia@gmail.com";
-		final String password = "tucontraseña"; // Cambiar por tu contraseña
+		final String username = "ProyectoAisialdia@gmail.com";
+		final String password = "A.12341234";
 
 		// Obtener parámetros del formulario
 		String email_from = request.getParameter("email");
