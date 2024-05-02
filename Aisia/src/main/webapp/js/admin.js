@@ -17,116 +17,87 @@ const usuariosSection = document.getElementById("usuarios");
 //**************************************************************************
 // Función para obtener las actividades y mostrarlas en la sección correspondiente
 function obtenerActividades() {
-  // Realizar una solicitud GET al servlet para obtener las actividades
-  fetch("GestorActividad?action=visualizarActividades")
+  fetch("GestorActividad?action=visualizarActividades") // Realizar una solicitud GET al servlet para obtener las actividades
     .then((response) => response.json())
     .then((data) => {
-      // Crear una tabla para mostrar las actividades
-      const table = document.createElement("table");
-      table.classList.add("table", "table-bordered", "table-striped");
-
-      // Crear una fila para los encabezados de la tabla
-      const headerRow = document.createElement("tr");
-      headerRow.innerHTML =
-        "<th>ID</th><th>Nombre</th><th>Descripción</th><th>Foto</th><th>Acciones</th>";
-      table.appendChild(headerRow);
-
-      // Recorrer las actividades y crear una fila para cada una en la tabla
-      data.forEach((actividad) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${actividad.id}</td>
-          <td>${actividad.nombre}</td>
-          <td>${actividad.descripcion}</td>
-          <td><img src="${actividad.foto}" alt="${actividad.nombre}" width="100"></td>
-          <td>
-            <a href="#" class="btn btn-primary" onclick="editarActividad(${actividad.id})">Editar</a>
-            <a href="#" class="btn btn-danger" onclick="eliminarActividad(${actividad.id})">Eliminar</a>
-          </td>
-        `;
-        table.appendChild(row);
-      });
-
-      // Agregar la tabla a la sección de actividades
-      actividadesSection.appendChild(table);
+      const headers = ["ID", "Nombre", "Descripción", "Foto", "Acciones"]; // Encabezados de la tabla
+      const table = crearTabla(
+        // Crear la tabla con los datos recibidos
+        // Se muestra el ID, nombre, descripción, foto y botones para editar y eliminar
+        data.map((actividad) => [
+          actividad.id,
+          actividad.nombre,
+          actividad.descripcion,
+          `<img src="${actividad.foto}" alt="${actividad.nombre}" width="100">`,
+          `
+              <a href="#" class="btn btn-primary" onclick="editarActividad(${actividad.id})">Editar</a>
+              <a href="#" class="btn btn-danger" onclick="eliminarActividad(${actividad.id})">Eliminar</a>
+            `,
+        ]),
+        headers
+      );
+      actividadesSection.appendChild(table); // Agregar la tabla a la sección de actividades
     })
     .catch((error) => console.error(error));
 }
-
 // Función para obtener los eventos y mostrarlos en la sección correspondiente
 function obtenerEventos() {
-  // Realizar una solicitud GET al servlet para obtener los eventos
-  fetch("GestorEventos?action=visualizarEventos")
+  fetch("GestorEventos?action=visualizarEventos") // Realizar una solicitud GET al servlet para obtener los eventos
     .then((response) => response.json())
     .then((data) => {
-      // Crear una tabla para mostrar los eventos
-      const table = document.createElement("table");
-      table.classList.add("table", "table-bordered", "table-striped");
-
-      // Crear una fila para los encabezados de la tabla
-      const headerRow = document.createElement("tr");
-      headerRow.innerHTML =
-        "<th>ID</th><th>Nombre</th><th>Descripción</th><th>Fecha</th><th>Hora</th><th>Lugar</th><th>Acciones</th>";
-      table.appendChild(headerRow);
-
-      // Recorrer los eventos y crear una fila para cada uno en la tabla
-      data.forEach((evento) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${evento.id}</td>
-          <td>${evento.nombre}</td>
-          <td>${evento.descripcion}</td>
-          <td>${evento.fecha}</td>
-          <td>${evento.hora}</td>
-          <td>${evento.lugar}</td>
-          <td>
-            <a href="#" class="btn btn-primary" onclick="editarEvento(${evento.id})">Editar</a>
-            <a href="#" class="btn btn-danger" onclick="eliminarEvento(${evento.id})">Eliminar</a>
-          </td>
-        `;
-        table.appendChild(row);
-      });
-
-      // Agregar la tabla a la sección de eventos
-      eventosSection.appendChild(table);
+      const headers = [
+        "ID",
+        "Nombre",
+        "Descripción",
+        "Fecha",
+        "Hora",
+        "Lugar",
+        "Acciones",
+      ]; // Encabezados de la tabla
+      const table = crearTabla(
+        // Crear la tabla con los datos recibidos
+        // Se muestra el ID, nombre, descripción, fecha, hora, lugar y botones para editar y eliminar
+        data.map((evento) => [
+          evento.id,
+          evento.nombre,
+          evento.descripcion,
+          evento.fecha,
+          evento.hora,
+          evento.lugar,
+          `
+              <a href="#" class="btn btn-primary" onclick="editarEvento(${evento.id})">Editar</a>
+              <a href="#" class="btn btn-danger" onclick="eliminarEvento(${evento.id})">Eliminar</a>
+            `,
+        ]),
+        headers
+      );
+      eventosSection.appendChild(table); // Agregar la tabla a la sección de eventos
     })
     .catch((error) => console.error(error));
 }
 
 // Función para obtener los usuarios y mostrarlos en la sección correspondiente
 function obtenerUsuarios() {
-  // Realizar una solicitud GET al servlet para obtener los usuarios
-  fetch("GestorUsuario?action=visualizarUsuarios")
+  fetch("GestorUsuario?action=visualizarUsuarios") // Realizar una solicitud GET al servlet para obtener los usuarios
     .then((response) => response.json())
     .then((data) => {
-      // Crear una tabla para mostrar los usuarios
-      const table = document.createElement("table");
-      table.classList.add("table", "table-bordered", "table-striped");
-
-      // Crear una fila para los encabezados de la tabla
-      const headerRow = document.createElement("tr");
-      headerRow.innerHTML =
-        "<th>ID</th><th>Nombre</th><th>Email</th><th>Permiso</th><th>Acciones</th>";
-      table.appendChild(headerRow);
-
-      // Recorrer los usuarios y crear una fila para cada uno en la tabla
-      data.forEach((usuario) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${usuario.id}</td>
-          <td>${usuario.nombre}</td>
-          <td>${usuario.email}</td>
-          <td>${usuario.permiso}</td>
-          <td>
-            <a href="#" class="btn btn-primary" onclick="editarUsuario(${usuario.id})">Editar</a>
-            <a href="#" class="btn btn-danger" onclick="eliminarUsuario(${usuario.id})">Eliminar</a>
-          </td>
-        `;
-        table.appendChild(row);
-      });
-
-      // Agregar la tabla a la sección de usuarios
-      usuariosSection.appendChild(table);
+      const headers = ["ID", "Nombre", "Email", "Permiso", "Acciones"]; // Encabezados de la tabla
+      const table = crearTabla(
+        // Crear la tabla con los datos recibidos
+        // Se muestra el ID, nombre, email, permiso y botones para editar y eliminar
+        data.map((usuario) => [
+          usuario.id,
+          usuario.nombre,
+          usuario.email,
+          usuario.permiso,
+          `
+              <a href="#" class="btn btn-primary" onclick="editarUsuario(${usuario.id})">Editar</a>
+              <a href="#" class="btn btn-danger" onclick="eliminarUsuario(${usuario.id})">Eliminar</a>
+            `,
+        ]),
+        headers
+      );
+      usuariosSection.appendChild(table); // Agregar la tabla a la sección de usuarios
     })
     .catch((error) => console.error(error));
 }
@@ -150,9 +121,12 @@ function crearActividad() {
   xhr.open("POST", "gestorActividad", true);
   xhr.onreadystatechange = function () {
     if (xhr.readyState == 4) {
+      // La solicitud ha sido completada
       if (xhr.status == 201) {
+        // La solicitud ha sido completada con éxito
         alert(xhr.responseText);
-        // Aquí podrías redirigir a otra página o hacer alguna otra acción
+        // Llamar a la función obtenerActividades() para actualizar la lista
+        obtenerActividades();
       } else {
         alert("Error al crear la actividad. Intente de nuevo.");
       }
@@ -168,7 +142,9 @@ function editarActividad(idActividad) {
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   xhr.onreadystatechange = function () {
     if (xhr.readyState == 4) {
+      // La solicitud ha sido completada
       if (xhr.status == 200) {
+        // La solicitud ha sido completada con éxito
         alert(xhr.responseText);
         // Aquí podrías redirigir a otra página o hacer alguna otra acción
       } else {
@@ -215,7 +191,8 @@ function crearEvento() {
     if (xhr.readyState == 4) {
       if (xhr.status == 201) {
         alert(xhr.responseText);
-        // Aquí podrías redirigir a otra página o hacer alguna otra acción
+        // Llamar a la función obtenerEventos() para actualizar la lista
+        obtenerEventos();
       } else {
         alert("Error al crear el evento. Intente de nuevo.");
       }
@@ -287,28 +264,30 @@ function crearUsuario() {
   // Obtener los valores de los campos de entrada
   const nombre = document.getElementById("nombre").value;
   const email = document.getElementById("email").value;
-  const contrasena = document.getElementById("contrasena").value; // Obtener la contraseña
+  const contrasena = document.getElementById("contrasena").value;
 
   // Crear un nuevo objeto FormData para enviar los datos al servlet
   const formData = new FormData();
   formData.append("nombre", nombre);
   formData.append("email", email);
-  formData.append("contrasena", contrasena); // Agregar la contraseña al formulario
+  formData.append("contrasena", contrasena);
 
   // Realizar una solicitud POST al servlet para crear el nuevo usuario
-  fetch("GestorUsuario?action=registrarUsuario", {
-    method: "POST",
-    body: formData,
-  })
-    .then((response) => response.text())
-    .then((data) => {
-      // Mostrar el mensaje de éxito y actualizar la lista de usuarios
-      alert(data);
-      obtenerUsuarios();
-    })
-    .catch((error) => console.error(error));
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "GestorUsuario?action=registrarUsuario", true);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4) {
+      if (xhr.status == 201) {
+        alert(xhr.responseText);
+        // Aquí podrías redirigir a otra página o hacer alguna otra acción
+        obtenerUsuarios(); // Actualizar la lista de usuarios
+      } else {
+        alert("Error al crear el usuario. Intente de nuevo.");
+      }
+    }
+  };
+  xhr.send(formData);
 }
-
 // Función para editar un usuario existente
 function editarUsuario(id) {
   // Obtener los valores de los campos de entrada
@@ -411,4 +390,30 @@ function aprobarPublicacionEvento(idEvento) {
   xhr.send(
     "action=aprobarPublicacionEvento&idEvento=" + encodeURIComponent(idEvento)
   );
+}
+
+// Función para crear una tabla con los datos proporcionados
+function crearTabla(data, headers) {
+  const table = document.createElement("table");
+  table.classList.add("table", "table-bordered", "table-striped");
+
+  const headerRow = document.createElement("tr");
+  headers.forEach((header) => {
+    const th = document.createElement("th");
+    th.textContent = header;
+    headerRow.appendChild(th);
+  });
+  table.appendChild(headerRow);
+
+  data.forEach((item) => {
+    const row = document.createElement("tr");
+    headers.forEach((header, index) => {
+      const td = document.createElement("td");
+      td.textContent = item[index];
+      row.appendChild(td);
+    });
+    table.appendChild(row);
+  });
+
+  return table;
 }
