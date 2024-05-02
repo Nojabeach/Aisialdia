@@ -163,7 +163,7 @@ function editarActividad(idActividad) {
     .then((data) => {
       alert(data); // Se muestra
 
- un mensaje de alerta con la respuesta del servidor
+      //un mensaje de alerta con la respuesta del servidor
     })
     .catch((error) => console.error(error)); // Se maneja cualquier error
 }
@@ -354,9 +354,7 @@ function eliminarUsuario(id) {
 //**************************************************************************
 // PUBLICAR, RECHAZAR Y APROBAR EVENTOS
 //**************************************************************************
-// Función para publicar
-
- un evento
+// Función para publicar un evento
 function publicarEvento(idEvento) {
   // Se realiza una petición fetch para enviar la solicitud de publicación del evento al servidor
   fetch("gestorEvento", {
@@ -457,4 +455,3 @@ function crearTabla(data, headers) {
 obtenerActividades();
 obtenerEventos();
 obtenerUsuarios();
-
