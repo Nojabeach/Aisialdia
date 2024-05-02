@@ -343,15 +343,13 @@ public class GestorUsuario extends HttpServlet {
 	}
 
 	/**
-	 * Clase que gestiona la edición, eliminación y visualización de usuarios, así
-	 * como la marcación y desmarcación de eventos como favoritos y el cambio de
-	 * contraseña. Implementa métodos para editar, eliminar, ver eventos de un
-	 * usuario, ver información de un evento, marcar y desmarcar eventos como
-	 * favoritos, y cambiar la contraseña.
-	 *
-	 * Autor: Maitane Ibañez Irazabal
+	 * Método para editar un usuario en la base de datos.
 	 * 
-	 * @version 1.0
+	 * @param request  Objeto HttpServletRequest que contiene los parámetros del formulario.
+	 * @param response Objeto HttpServletResponse utilizado para enviar la respuesta al cliente.
+	 * 
+	 * @throws IOException  Si ocurre un error de entrada/salida al escribir la respuesta.
+	 * @throws SQLException Si ocurre un error de base de datos al editar el usuario.
 	 */
 	private void editarUsuario(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, SQLException {

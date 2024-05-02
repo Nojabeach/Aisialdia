@@ -27,15 +27,21 @@
                 <form id="LoginForm" action="Login" method="post">
                     <div class="input-group">
                         <input type="text" id="usuario" name="usuario" placeholder="Usuario o Email">
-                    
+
                         <input type="password" id="contraseña" name="contraseña" placeholder="Contraseña">
-                    
+
                         <input type="submit" value="Iniciar sesión">
                     </div>
                     <div class="input-group registroLink">
                         <p>¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a></p>
                     </div>
                 </form>
+                <!-- Contenedor para el nombre del usuario y botón de cerrar sesión -->
+                <div id="userInfoContainer" style="display: none;">
+                    <p id="userName"></p>
+                    <p id="userPermiso"></p>
+                    <button id="logoutButton">Cerrar sesión</button>
+                </div>
             </div>
         </header>
 

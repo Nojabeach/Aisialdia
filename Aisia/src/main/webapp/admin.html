@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AisiAldia | Administrador</title>
+    <!-- Icono de la pestaña -->
+    <link rel="shortcut icon" href="./img/Logos/logo_transparent - noText.png" type="image/x-icon" />
+    <!-- Enlace de estilos -->
+    <link rel="stylesheet" href="./styles/estilocomun.css">
+    <!-- Enlace de fonts, iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Enlace de scripts -->
+    <script src="./js/admin.js" defer></script>
+</head>
+
+<body>
+    <div id="contenedor">
+        <header id="cabecera">
+            <div id="divTitulo">
+                <h1>AisiAldia</h1>
+                <p>Ocio para todos</p>
+            </div>
+            <div id="divUsuario">
+                <p>Administrador</p>
+                <button id="btnCerrarSesion">Cerrar sesión</button>
+        </header>
+        <nav id="navbar">
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="admin.html">Actividades</a></li>
+                <li><a href="admin.html">Eventos</a></li>
+                <li><a href="admin.html">Usuarios</a></li>
+            </ul>
+        </nav>
+        <main id="seccionCuerpo">
+            <section id="actividades">
+                <h2>Actividades</h2>
+                <button onclick="crearActividad()">Crear actividad</button>
+                <button onclick="editarActividad()">Editar actividad</button>
+                <button onclick="eliminarActividad()">Eliminar actividad</button>
+                <div id="actividadesSection"></div>
+            </section>
+            <section id="eventos">
+                <h2>Eventos</h2>
+                <button onclick="crearEvento()">Crear evento</button>
+                <button onclick="editarEvento()">Editar evento</button>
+                <button onclick="eliminarEvento()">Eliminar evento</button>
+                <div id="eventosSection"></div>
+            </section>
+            <section id="usuarios">
+                <h2>Usuarios</h2>
+                <button onclick="crearUsuario()">Crear usuario</button>
+                <button onclick="editarUsuario()">Editar usuario</button>
+                <button onclick="eliminarUsuario()">Eliminar usuario</button>
+                <div id="usuariosSection"></div>
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>
