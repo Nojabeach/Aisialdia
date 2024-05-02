@@ -12,37 +12,35 @@
 const actividadesSection = document.getElementById("actividades");
 const eventosSection = document.getElementById("eventos");
 const usuariosSection = document.getElementById("usuarios");
+
 //**************************************************************************
 // OBTENER ACTIVIDADES, EVENTOS Y USUARIOS
 //**************************************************************************
 // Función para obtener las actividades y mostrarlas en la sección correspondiente
 function obtenerActividades() {
-  fetch("GestorActividad?action=visualizarActividades") // Realizar una solicitud GET al servlet para obtener las actividades
+  fetch("GestorActividad?action=visualizarActividades")
     .then((response) => response.json())
     .then((data) => {
-      const headers = ["ID", "Nombre", "Descripción", "Foto", "Acciones"]; // Encabezados de la tabla
+      const headers = ["ID", "Nombre", "Descripción", "Foto", "Acciones"];
       const table = crearTabla(
-        // Crear la tabla con los datos recibidos
-        // Se muestra el ID, nombre, descripción, foto y botones para editar y eliminar
         data.map((actividad) => [
           actividad.id,
           actividad.nombre,
           actividad.descripcion,
           `<img src="${actividad.foto}" alt="${actividad.nombre}" width="100">`,
-          `
-              <a href="#" class="btn btn-primary" onclick="editarActividad(${actividad.id})">Editar</a>
-              <a href="#" class="btn btn-danger" onclick="eliminarActividad(${actividad.id})">Eliminar</a>
-            `,
+          `<button class="btn btn-editar" onclick="editar('actividad', ${actividad.id})">Editar</button>
+           <button class="btn btn-eliminar" onclick="eliminar('actividad', ${actividad.id})">Eliminar</button>`,
         ]),
         headers
       );
-      actividadesSection.appendChild(table); // Agregar la tabla a la sección de actividades
+      actividadesSection.appendChild(table);
     })
     .catch((error) => console.error(error));
 }
+
 // Función para obtener los eventos y mostrarlos en la sección correspondiente
 function obtenerEventos() {
-  fetch("GestorEventos?action=visualizarEventos") // Realizar una solicitud GET al servlet para obtener los eventos
+  fetch("GestorEventos?action=visualizarEventos")
     .then((response) => response.json())
     .then((data) => {
       const headers = [
@@ -53,10 +51,8 @@ function obtenerEventos() {
         "Hora",
         "Lugar",
         "Acciones",
-      ]; // Encabezados de la tabla
+      ];
       const table = crearTabla(
-        // Crear la tabla con los datos recibidos
-        // Se muestra el ID, nombre, descripción, fecha, hora, lugar y botones para editar y eliminar
         data.map((evento) => [
           evento.id,
           evento.nombre,
@@ -64,43 +60,41 @@ function obtenerEventos() {
           evento.fecha,
           evento.hora,
           evento.lugar,
-          `
-              <a href="#" class="btn btn-primary" onclick="editarEvento(${evento.id})">Editar</a>
-              <a href="#" class="btn btn-danger" onclick="eliminarEvento(${evento.id})">Eliminar</a>
-            `,
+          `<button class="btn btn-editar" onclick="editarEvento(${evento.id})">Editar</button>
+           <button class="btn btn-eliminar" onclick="eliminarEvento(${evento.id})">Eliminar</button>
+           <button class="btn btn-publicar" onclick="publicarEvento(${evento.id})">Publicar</button>
+           <button class="btn btn-rechazar" onclick="rechazarEvento(${evento.id})">Rechazar</button>
+           <button class="btn btn-publicar" onclick="aprobarPublicacionEvento(${evento.id})">Aprobar Publicación</button>`,
         ]),
         headers
       );
-      eventosSection.appendChild(table); // Agregar la tabla a la sección de eventos
+      eventosSection.appendChild(table);
     })
     .catch((error) => console.error(error));
 }
 
 // Función para obtener los usuarios y mostrarlos en la sección correspondiente
 function obtenerUsuarios() {
-  fetch("GestorUsuario?action=visualizarUsuarios") // Realizar una solicitud GET al servlet para obtener los usuarios
+  fetch("GestorUsuario?action=visualizarUsuarios")
     .then((response) => response.json())
     .then((data) => {
-      const headers = ["ID", "Nombre", "Email", "Permiso", "Acciones"]; // Encabezados de la tabla
+      const headers = ["ID", "Nombre", "Email", "Permiso", "Acciones"];
       const table = crearTabla(
-        // Crear la tabla con los datos recibidos
-        // Se muestra el ID, nombre, email, permiso y botones para editar y eliminar
         data.map((usuario) => [
           usuario.id,
           usuario.nombre,
           usuario.email,
           usuario.permiso,
-          `
-              <a href="#" class="btn btn-primary" onclick="editarUsuario(${usuario.id})">Editar</a>
-              <a href="#" class="btn btn-danger" onclick="eliminarUsuario(${usuario.id})">Eliminar</a>
-            `,
+          `<button class="btn btn-editar" onclick="editar('usuario', ${usuario.id})">Editar</button>
+           <button class="btn btn-eliminar" onclick="eliminar('usuario', ${usuario.id})">Eliminar</button>`,
         ]),
         headers
       );
-      usuariosSection.appendChild(table); // Agregar la tabla a la sección de usuarios
+      usuariosSection.appendChild(table);
     })
     .catch((error) => console.error(error));
 }
+
 //**************************************************************************
 // CREAR, EDITAR Y ELIMINAR ACTIVIDADES, EVENTOS Y USUARIOS
 //**************************************************************************
@@ -117,64 +111,67 @@ function crearActividad() {
     document.getElementById("fotoActividad").files[0]
   );
 
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "gestorActividad", true);
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState == 4) {
-      // La solicitud ha sido completada
-      if (xhr.status == 201) {
-        // La solicitud ha sido completada con éxito
-        alert(xhr.responseText);
-        // Llamar a la función obtenerActividades() para actualizar la lista
-        obtenerActividades();
-      } else {
-        alert("Error al crear la actividad. Intente de nuevo.");
+  fetch("gestorActividad", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.text();
       }
-    }
-  };
-  xhr.send(formData);
+      throw new Error("Error al crear la actividad. Intente de nuevo.");
+    })
+    .then((data) => {
+      alert(data);
+      obtenerActividades();
+    })
+    .catch((error) => console.error(error));
 }
 
 // Función para editar una actividad
 function editarActividad(idActividad) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "gestorActividad", true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState == 4) {
-      // La solicitud ha sido completada
-      if (xhr.status == 200) {
-        // La solicitud ha sido completada con éxito
-        alert(xhr.responseText);
-        // Aquí podrías redirigir a otra página o hacer alguna otra acción
-      } else {
-        alert("Error al editar la actividad. Intente de nuevo.");
+  fetch("gestorActividad", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: `action=editarActividad&idActividad=${encodeURIComponent(
+      idActividad
+    )}`,
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.text();
       }
-    }
-  };
-  xhr.send(
-    "action=editarActividad&idActividad=" + encodeURIComponent(idActividad)
-  );
+      throw new Error("Error al editar la actividad. Intente de nuevo.");
+    })
+    .then((data) => {
+      alert(data);
+    })
+    .catch((error) => console.error(error));
 }
 
 // Función para eliminar una actividad
 function eliminarActividad(idActividad) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "gestorActividad", true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState == 4) {
-      if (xhr.status == 200) {
-        alert(xhr.responseText);
-        // Aquí podrías redirigir a otra página o hacer alguna otra acción
-      } else {
-        alert("Error al eliminar la actividad. Intente de nuevo.");
+  fetch("gestorActividad", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: `action=eliminarActividad&idActividad=${encodeURIComponent(
+      idActividad
+    )}`,
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.text();
       }
-    }
-  };
-  xhr.send(
-    "action=eliminarActividad&idActividad=" + encodeURIComponent(idActividad)
-  );
+      throw new Error("Error al eliminar la actividad. Intente de nuevo.");
+    })
+    .then((data) => {
+      alert(data);
+    })
+    .catch((error) => console.error(error));
 }
 
 // Función para crear un nuevo evento
@@ -184,30 +181,30 @@ function crearEvento() {
   var idUsuarioCreador = document.getElementById("idUsuarioCreador").value;
   var ubicacion = document.getElementById("ubicacion").value;
 
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "gestorEvento", true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState == 4) {
-      if (xhr.status == 201) {
-        alert(xhr.responseText);
-        // Llamar a la función obtenerEventos() para actualizar la lista
-        obtenerEventos();
-      } else {
-        alert("Error al crear el evento. Intente de nuevo.");
+  fetch("gestorEvento", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: `action=crearEvento&nombre=${encodeURIComponent(
+      nombre
+    )}&detalles=${encodeURIComponent(
+      detalles
+    )}&idUsuarioCreador=${encodeURIComponent(
+      idUsuarioCreador
+    )}&ubicacion=${encodeURIComponent(ubicacion)}`,
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.text();
       }
-    }
-  };
-  xhr.send(
-    "action=crearEvento&nombre=" +
-      encodeURIComponent(nombre) +
-      "&detalles=" +
-      encodeURIComponent(detalles) +
-      "&idUsuarioCreador=" +
-      encodeURIComponent(idUsuarioCreador) +
-      "&ubicacion=" +
-      encodeURIComponent(ubicacion)
-  );
+      throw new Error("Error al crear el evento. Intente de nuevo.");
+    })
+    .then((data) => {
+      alert(data);
+      obtenerEventos();
+    })
+    .catch((error) => console.error(error));
 }
 
 // Función para editar un evento existente
@@ -215,99 +212,99 @@ function editarEvento(idEvento) {
   var nombre = document.getElementById("nombre").value;
   var detalles = document.getElementById("detalles").value;
 
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "gestorEvento", true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState == 4) {
-      if (xhr.status == 200) {
-        alert(xhr.responseText);
-        // Aquí podrías redirigir a otra página o hacer alguna otra acción
-      } else {
-        alert("Error al editar el evento. Intente de nuevo.");
+  fetch("gestorEvento", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: `action=editarEvento&idEvento=${encodeURIComponent(
+      idEvento
+    )}&nombre=${encodeURIComponent(nombre)}&detalles=${encodeURIComponent(
+      detalles
+    )}`,
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.text();
       }
-    }
-  };
-  xhr.send(
-    "action=editarEvento&idEvento=" +
-      encodeURIComponent(idEvento) +
-      "&nombre=" +
-      encodeURIComponent(nombre) +
-      "&detalles=" +
-      encodeURIComponent(detalles)
-  );
+      throw new Error("Error al editar el evento. Intente de nuevo.");
+    })
+    .then((data) => {
+      alert(data);
+    })
+    .catch((error) => console.error(error));
 }
 
 // Función para eliminar un evento existente
 function eliminarEvento(idEvento) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "gestorEvento", true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState == 4) {
-      if (xhr.status == 200) {
-        alert(xhr.responseText);
-        // Aquí podrías redirigir a otra página o hacer alguna otra acción
-      } else {
-        alert("Error al eliminar el evento. Intente de nuevo.");
+  fetch("gestorEvento", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: `action=eliminarEvento&idEvento=${encodeURIComponent(idEvento)}`,
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.text();
       }
-    }
-  };
-  xhr.send("action=eliminarEvento&idEvento=" + encodeURIComponent(idEvento));
+      throw new Error("Error al eliminar el evento. Intente de nuevo.");
+    })
+    .then((data) => {
+      alert(data);
+    })
+    .catch((error) => console.error(error));
 }
-//**************************************************************************
-// 5. CREAR, EDITAR Y ELIMINAR USUARIOS
-//**************************************************************************
 
 // Función para crear un nuevo usuario
 function crearUsuario() {
-  // Obtener los valores de los campos de entrada
   const nombre = document.getElementById("nombre").value;
   const email = document.getElementById("email").value;
   const contrasena = document.getElementById("contrasena").value;
 
-  // Crear un nuevo objeto FormData para enviar los datos al servlet
   const formData = new FormData();
   formData.append("nombre", nombre);
   formData.append("email", email);
   formData.append("contrasena", contrasena);
 
-  // Realizar una solicitud POST al servlet para crear el nuevo usuario
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "GestorUsuario?action=registrarUsuario", true);
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState == 4) {
-      if (xhr.status == 201) {
-        alert(xhr.responseText);
-        // Aquí podrías redirigir a otra página o hacer alguna otra acción
-        obtenerUsuarios(); // Actualizar la lista de usuarios
-      } else {
-        alert("Error al crear el usuario. Intente de nuevo.");
+  fetch("GestorUsuario?action=registrarUsuario", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.text();
       }
-    }
-  };
-  xhr.send(formData);
+      throw new Error("Error al crear el usuario. Intente de nuevo.");
+    })
+    .then((data) => {
+      alert(data);
+      obtenerUsuarios();
+    })
+    .catch((error) => console.error(error));
 }
+
 // Función para editar un usuario existente
 function editarUsuario(id) {
-  // Obtener los valores de los campos de entrada
   const nombre = prompt("Introduzca el nuevo nombre del usuario:");
   const email = prompt("Introduzca el nuevo email del usuario:");
 
-  // Crear un nuevo objeto FormData para enviar los datos al servlet
   const formData = new FormData();
   formData.append("idUsuario", id);
   formData.append("nombre", nombre);
   formData.append("email", email);
 
-  // Realizar una solicitud POST al servlet para editar el usuario
   fetch("GestorUsuario?action=editarUsuario", {
     method: "POST",
     body: formData,
   })
-    .then((response) => response.text())
+    .then((response) => {
+      if (response.ok) {
+        return response.text();
+      }
+      throw new Error("Error al editar el usuario. Intente de nuevo.");
+    })
     .then((data) => {
-      // Mostrar el mensaje de éxito y actualizar la lista de usuarios
       alert(data);
       obtenerUsuarios();
     })
@@ -316,80 +313,88 @@ function editarUsuario(id) {
 
 // Función para eliminar un usuario existente
 function eliminarUsuario(id) {
-  // Realizar una solicitud GET al servlet para eliminar el usuario
   fetch(`GestorUsuario?action=eliminarUsuario&idUsuario=${id}`)
-    .then((response) => response.text())
+    .then((response) => {
+      if (response.ok) {
+        return response.text();
+      }
+      throw new Error("Error al eliminar el usuario. Intente de nuevo.");
+    })
     .then((data) => {
-      // Mostrar el mensaje de éxito y actualizar la lista de usuarios
       alert(data);
       obtenerUsuarios();
     })
     .catch((error) => console.error(error));
 }
 
-// Llamar a las funciones para obtener y mostrar actividades, eventos y usuarios
-obtenerActividades();
-obtenerEventos();
-obtenerUsuarios();
-
 //**************************************************************************
 // PUBLICAR, RECHAZAR Y APROBAR EVENTOS
 //**************************************************************************
-
 // Función para publicar un evento
 function publicarEvento(idEvento) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "gestorEvento", true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState == 4) {
-      if (xhr.status == 200) {
-        alert(xhr.responseText);
-        // Aquí podrías redirigir a otra página o hacer alguna otra acción
-      } else {
-        alert("Error al publicar el evento. Intente de nuevo.");
+  fetch("gestorEvento", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: `action=publicarEvento&idEvento=${encodeURIComponent(idEvento)}`,
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.text();
       }
-    }
-  };
-  xhr.send("action=publicarEvento&idEvento=" + encodeURIComponent(idEvento));
+      throw new Error("Error al publicar el evento. Intente de nuevo.");
+    })
+    .then((data) => {
+      alert(data);
+    })
+    .catch((error) => console.error(error));
 }
 
 // Función para rechazar un evento
 function rechazarEvento(idEvento) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "gestorEvento", true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState == 4) {
-      if (xhr.status == 200) {
-        alert(xhr.responseText);
-        // Aquí podrías redirigir a otra página o hacer alguna otra acción
-      } else {
-        alert("Error al rechazar el evento. Intente de nuevo.");
+  fetch("gestorEvento", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: `action=rechazarEvento&idEvento=${encodeURIComponent(idEvento)}`,
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.text();
       }
-    }
-  };
-  xhr.send("action=rechazarEvento&idEvento=" + encodeURIComponent(idEvento));
+      throw new Error("Error al rechazar el evento. Intente de nuevo.");
+    })
+    .then((data) => {
+      alert(data);
+    })
+    .catch((error) => console.error(error));
 }
 
 // Función para aprobar la publicación de un evento
 function aprobarPublicacionEvento(idEvento) {
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "gestorEvento", true);
-  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState == 4) {
-      if (xhr.status == 200) {
-        alert(xhr.responseText);
-        // Aquí podrías redirigir a otra página o hacer alguna otra acción
-      } else {
-        alert("Error al aprobar la publicación del evento. Intente de nuevo.");
+  fetch("gestorEvento", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: `action=aprobarPublicacionEvento&idEvento=${encodeURIComponent(
+      idEvento
+    )}`,
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.text();
       }
-    }
-  };
-  xhr.send(
-    "action=aprobarPublicacionEvento&idEvento=" + encodeURIComponent(idEvento)
-  );
+      throw new Error(
+        "Error al aprobar la publicación del evento. Intente de nuevo."
+      );
+    })
+    .then((data) => {
+      alert(data);
+    })
+    .catch((error) => console.error(error));
 }
 
 // Función para crear una tabla con los datos proporcionados
@@ -417,3 +422,8 @@ function crearTabla(data, headers) {
 
   return table;
 }
+
+// Llamar a las funciones para obtener y mostrar actividades, eventos y usuarios
+obtenerActividades();
+obtenerEventos();
+obtenerUsuarios();
