@@ -1,3 +1,7 @@
+//Autor: Maitane Ibañez Irazabal
+//Fecha: 02/05/2024
+// Versión: 1.0
+// Descripción: Archivo JS para la administración de actividades, eventos y usuarios
 // Resumen:
 // 1. Obtener referencias a los elementos del DOM
 // 2. Obtener actividades, eventos y usuarios y mostrarlos en las secciones correspondientes
@@ -9,19 +13,22 @@
 //**************************************************************************
 // OBTENER REFERENCIAS A LOS ELEMENTOS DEL DOM
 //**************************************************************************
-const actividadesSection = document.getElementById("actividades");
-const eventosSection = document.getElementById("eventos");
-const usuariosSection = document.getElementById("usuarios");
+const actividadesSection = document.getElementById("actividades"); // Se obtiene la referencia a la sección de actividades en el DOM
+const eventosSection = document.getElementById("eventos"); // Se obtiene la referencia a la sección de eventos en el DOM
+const usuariosSection = document.getElementById("usuarios"); // Se obtiene la referencia a la sección de usuarios en el DOM
 
 //**************************************************************************
 // OBTENER ACTIVIDADES, EVENTOS Y USUARIOS
 //**************************************************************************
 // Función para obtener las actividades y mostrarlas en la sección correspondiente
 function obtenerActividades() {
+  // Se realiza una petición fetch para obtener las actividades desde el servidor
   fetch("GestorActividad?action=visualizarActividades")
-    .then((response) => response.json())
+    .then((response) => response.json()) // Se convierte la respuesta a JSON
     .then((data) => {
-      const headers = ["ID", "Nombre", "Descripción", "Foto", "Acciones"];
+      // Se maneja la respuesta de la petición
+      const headers = ["ID", "Nombre", "Descripción", "Foto", "Acciones"]; // Encabezados de la tabla de actividades
+      // Se crea una tabla con los datos obtenidos y se agrega a la sección de actividades en el DOM
       const table = crearTabla(
         data.map((actividad) => [
           actividad.id,
@@ -35,14 +42,16 @@ function obtenerActividades() {
       );
       actividadesSection.appendChild(table);
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error(error)); // Se maneja cualquier error
 }
 
 // Función para obtener los eventos y mostrarlos en la sección correspondiente
 function obtenerEventos() {
+  // Se realiza una petición fetch para obtener los eventos desde el servidor
   fetch("GestorEventos?action=visualizarEventos")
-    .then((response) => response.json())
+    .then((response) => response.json()) // Se convierte la respuesta a JSON
     .then((data) => {
+      // Se maneja la respuesta de la petición
       const headers = [
         "ID",
         "Nombre",
@@ -51,7 +60,8 @@ function obtenerEventos() {
         "Hora",
         "Lugar",
         "Acciones",
-      ];
+      ]; // Encabezados de la tabla de eventos
+      // Se crea una tabla con los datos obtenidos y se agrega a la sección de eventos en el DOM
       const table = crearTabla(
         data.map((evento) => [
           evento.id,
@@ -70,15 +80,18 @@ function obtenerEventos() {
       );
       eventosSection.appendChild(table);
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error(error)); // Se maneja cualquier error
 }
 
 // Función para obtener los usuarios y mostrarlos en la sección correspondiente
 function obtenerUsuarios() {
+  // Se realiza una petición fetch para obtener los usuarios desde el servidor
   fetch("GestorUsuario?action=visualizarUsuarios")
-    .then((response) => response.json())
+    .then((response) => response.json()) // Se convierte la respuesta a JSON
     .then((data) => {
-      const headers = ["ID", "Nombre", "Email", "Permiso", "Acciones"];
+      // Se maneja la respuesta de la petición
+      const headers = ["ID", "Nombre", "Email", "Permiso", "Acciones"]; // Encabezados de la tabla de usuarios
+      // Se crea una tabla con los datos obtenidos y se agrega a la sección de usuarios en el DOM
       const table = crearTabla(
         data.map((usuario) => [
           usuario.id,
@@ -92,7 +105,7 @@ function obtenerUsuarios() {
       );
       usuariosSection.appendChild(table);
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error(error)); // Se maneja cualquier error
 }
 
 //**************************************************************************
@@ -111,6 +124,7 @@ function crearActividad() {
     document.getElementById("fotoActividad").files[0]
   );
 
+  // Se realiza una petición fetch para enviar los datos de la nueva actividad al servidor
   fetch("gestorActividad", {
     method: "POST",
     body: formData,
@@ -122,14 +136,15 @@ function crearActividad() {
       throw new Error("Error al crear la actividad. Intente de nuevo.");
     })
     .then((data) => {
-      alert(data);
-      obtenerActividades();
+      alert(data); // Se muestra un mensaje de alerta con la respuesta del servidor
+      obtenerActividades(); // Se vuelven a obtener y mostrar las actividades actualizadas
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error(error)); // Se maneja cualquier error
 }
 
 // Función para editar una actividad
 function editarActividad(idActividad) {
+  // Se realiza una petición fetch para enviar la solicitud de edición de la actividad al servidor
   fetch("gestorActividad", {
     method: "POST",
     headers: {
@@ -146,13 +161,16 @@ function editarActividad(idActividad) {
       throw new Error("Error al editar la actividad. Intente de nuevo.");
     })
     .then((data) => {
-      alert(data);
+      alert(data); // Se muestra
+
+ un mensaje de alerta con la respuesta del servidor
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error(error)); // Se maneja cualquier error
 }
 
 // Función para eliminar una actividad
 function eliminarActividad(idActividad) {
+  // Se realiza una petición fetch para enviar la solicitud de eliminación de la actividad al servidor
   fetch("gestorActividad", {
     method: "POST",
     headers: {
@@ -169,9 +187,9 @@ function eliminarActividad(idActividad) {
       throw new Error("Error al eliminar la actividad. Intente de nuevo.");
     })
     .then((data) => {
-      alert(data);
+      alert(data); // Se muestra un mensaje de alerta con la respuesta del servidor
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error(error)); // Se maneja cualquier error
 }
 
 // Función para crear un nuevo evento
@@ -181,6 +199,7 @@ function crearEvento() {
   var idUsuarioCreador = document.getElementById("idUsuarioCreador").value;
   var ubicacion = document.getElementById("ubicacion").value;
 
+  // Se realiza una petición fetch para enviar los datos del nuevo evento al servidor
   fetch("gestorEvento", {
     method: "POST",
     headers: {
@@ -201,10 +220,10 @@ function crearEvento() {
       throw new Error("Error al crear el evento. Intente de nuevo.");
     })
     .then((data) => {
-      alert(data);
-      obtenerEventos();
+      alert(data); // Se muestra un mensaje de alerta con la respuesta del servidor
+      obtenerEventos(); // Se vuelven a obtener y mostrar los eventos actualizados
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error(error)); // Se maneja cualquier error
 }
 
 // Función para editar un evento existente
@@ -212,6 +231,7 @@ function editarEvento(idEvento) {
   var nombre = document.getElementById("nombre").value;
   var detalles = document.getElementById("detalles").value;
 
+  // Se realiza una petición fetch para enviar la solicitud de edición del evento al servidor
   fetch("gestorEvento", {
     method: "POST",
     headers: {
@@ -230,13 +250,14 @@ function editarEvento(idEvento) {
       throw new Error("Error al editar el evento. Intente de nuevo.");
     })
     .then((data) => {
-      alert(data);
+      alert(data); // Se muestra un mensaje de alerta con la respuesta del servidor
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error(error)); // Se maneja cualquier error
 }
 
 // Función para eliminar un evento existente
 function eliminarEvento(idEvento) {
+  // Se realiza una petición fetch para enviar la solicitud de eliminación del evento al servidor
   fetch("gestorEvento", {
     method: "POST",
     headers: {
@@ -251,9 +272,9 @@ function eliminarEvento(idEvento) {
       throw new Error("Error al eliminar el evento. Intente de nuevo.");
     })
     .then((data) => {
-      alert(data);
+      alert(data); // Se muestra un mensaje de alerta con la respuesta del servidor
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error(error)); // Se maneja cualquier error
 }
 
 // Función para crear un nuevo usuario
@@ -267,6 +288,7 @@ function crearUsuario() {
   formData.append("email", email);
   formData.append("contrasena", contrasena);
 
+  // Se realiza una petición fetch para enviar los datos del nuevo usuario al servidor
   fetch("GestorUsuario?action=registrarUsuario", {
     method: "POST",
     body: formData,
@@ -278,10 +300,10 @@ function crearUsuario() {
       throw new Error("Error al crear el usuario. Intente de nuevo.");
     })
     .then((data) => {
-      alert(data);
-      obtenerUsuarios();
+      alert(data); // Se muestra un mensaje de alerta con la respuesta del servidor
+      obtenerUsuarios(); // Se vuelven a obtener y mostrar los usuarios actualizados
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error(error)); // Se maneja cualquier error
 }
 
 // Función para editar un usuario existente
@@ -294,6 +316,7 @@ function editarUsuario(id) {
   formData.append("nombre", nombre);
   formData.append("email", email);
 
+  // Se realiza una petición fetch para enviar la solicitud de edición del usuario al servidor
   fetch("GestorUsuario?action=editarUsuario", {
     method: "POST",
     body: formData,
@@ -305,14 +328,15 @@ function editarUsuario(id) {
       throw new Error("Error al editar el usuario. Intente de nuevo.");
     })
     .then((data) => {
-      alert(data);
-      obtenerUsuarios();
+      alert(data); // Se muestra un mensaje de alerta con la respuesta del servidor
+      obtenerUsuarios(); // Se vuelven a obtener y mostrar los usuarios actualizados
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error(error)); // Se maneja cualquier error
 }
 
 // Función para eliminar un usuario existente
 function eliminarUsuario(id) {
+  // Se realiza una petición fetch para enviar la solicitud de eliminación del usuario al servidor
   fetch(`GestorUsuario?action=eliminarUsuario&idUsuario=${id}`)
     .then((response) => {
       if (response.ok) {
@@ -321,17 +345,20 @@ function eliminarUsuario(id) {
       throw new Error("Error al eliminar el usuario. Intente de nuevo.");
     })
     .then((data) => {
-      alert(data);
-      obtenerUsuarios();
+      alert(data); // Se muestra un mensaje de alerta con la respuesta del servidor
+      obtenerUsuarios(); // Se vuelven a obtener y mostrar los usuarios actualizados
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error(error)); // Se maneja cualquier error
 }
 
 //**************************************************************************
 // PUBLICAR, RECHAZAR Y APROBAR EVENTOS
 //**************************************************************************
-// Función para publicar un evento
+// Función para publicar
+
+ un evento
 function publicarEvento(idEvento) {
+  // Se realiza una petición fetch para enviar la solicitud de publicación del evento al servidor
   fetch("gestorEvento", {
     method: "POST",
     headers: {
@@ -346,13 +373,14 @@ function publicarEvento(idEvento) {
       throw new Error("Error al publicar el evento. Intente de nuevo.");
     })
     .then((data) => {
-      alert(data);
+      alert(data); // Se muestra un mensaje de alerta con la respuesta del servidor
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error(error)); // Se maneja cualquier error
 }
 
 // Función para rechazar un evento
 function rechazarEvento(idEvento) {
+  // Se realiza una petición fetch para enviar la solicitud de rechazo del evento al servidor
   fetch("gestorEvento", {
     method: "POST",
     headers: {
@@ -367,13 +395,14 @@ function rechazarEvento(idEvento) {
       throw new Error("Error al rechazar el evento. Intente de nuevo.");
     })
     .then((data) => {
-      alert(data);
+      alert(data); // Se muestra un mensaje de alerta con la respuesta del servidor
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error(error)); // Se maneja cualquier error
 }
 
 // Función para aprobar la publicación de un evento
 function aprobarPublicacionEvento(idEvento) {
+  // Se realiza una petición fetch para enviar la solicitud de aprobación de publicación del evento al servidor
   fetch("gestorEvento", {
     method: "POST",
     headers: {
@@ -392,38 +421,40 @@ function aprobarPublicacionEvento(idEvento) {
       );
     })
     .then((data) => {
-      alert(data);
+      alert(data); // Se muestra un mensaje de alerta con la respuesta del servidor
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error(error)); // Se maneja cualquier error
 }
 
 // Función para crear una tabla con los datos proporcionados
 function crearTabla(data, headers) {
-  const table = document.createElement("table");
-  table.classList.add("table", "table-bordered", "table-striped");
+  const table = document.createElement("table"); // Se crea un elemento de tabla en el DOM
+  table.classList.add("table", "table-bordered", "table-striped"); // Se agregan clases a la tabla para darle formato
 
-  const headerRow = document.createElement("tr");
+  const headerRow = document.createElement("tr"); // Se crea una fila para los encabezados
   headers.forEach((header) => {
-    const th = document.createElement("th");
-    th.textContent = header;
-    headerRow.appendChild(th);
+    const th = document.createElement("th"); // Se crea una celda de encabezado
+    th.textContent = header; // Se establece el texto del encabezado
+    headerRow.appendChild(th); // Se agrega el encabezado a la fila
   });
-  table.appendChild(headerRow);
+  table.appendChild(headerRow); // Se agrega la fila de encabezados a la tabla
 
+  // Se recorre cada item de los datos para crear filas de la tabla
   data.forEach((item) => {
-    const row = document.createElement("tr");
+    const row = document.createElement("tr"); // Se crea una fila para un item
     headers.forEach((header, index) => {
-      const td = document.createElement("td");
-      td.textContent = item[index];
-      row.appendChild(td);
+      const td = document.createElement("td"); // Se crea una celda para cada valor del item
+      td.textContent = item[index]; // Se establece el texto de la celda
+      row.appendChild(td); // Se agrega la celda a la fila
     });
-    table.appendChild(row);
+    table.appendChild(row); // Se agrega la fila a la tabla
   });
 
-  return table;
+  return table; // Se retorna la tabla completa
 }
 
 // Llamar a las funciones para obtener y mostrar actividades, eventos y usuarios
 obtenerActividades();
 obtenerEventos();
 obtenerUsuarios();
+
