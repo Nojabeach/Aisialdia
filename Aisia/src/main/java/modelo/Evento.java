@@ -79,10 +79,15 @@ public class Evento {
 	 * Ubicación del evento.
 	 */
 	private String ubicacion;
+	/**
+	 * Fecha del evento en sí.
+	 */
+	private Date fechaEvento;
 
 	/**
 	 * Enumeración que define los posibles motivos de finalización de un evento.
 	 */
+
 	public enum MotivoFinalizacion {
 		/**
 		 * El evento ha finalizado por falta de visibilidad.
@@ -104,15 +109,6 @@ public class Evento {
 		 */
 		Otros
 	}
-
-	/**
-	 * Este atributo representa la instancia de HttpServletRequest que se pasa al
-	 * constructor de la clase Evento. La solicitud HTTP contiene información sobre
-	 * la petición del cliente, como la URL, los encabezados, los parámetros y el
-	 * cuerpo de la petición. El atributo request puede ser utilizado para acceder a
-	 * esta información dentro de la clase Evento.
-	 */
-	private HttpServletRequest request;
 
 	// CONSTRUCTORES
 	// --------------------------------------------------------------------------------------------
@@ -144,10 +140,11 @@ public class Evento {
 	 *                                evento.
 	 * @param motivoFinalizacion      Motivo por el que se finalizó el evento.
 	 * @param ubicacion               Ubicación del evento.
+	 * @param fechaEvento             Fecha del evento (formato Date)
 	 */
 	public Evento(int idEvento, String nombre, String detalles, int idUsuarioCreador, Date fechaAprobacion,
 			int idModeradorAprobacion, Date fechaPublicacion, int idModeradorPublicacion, Date fechaFinalizacion,
-			int idModeradorFinalizacion, MotivoFinalizacion motivoFinalizacion, String ubicacion) {
+			int idModeradorFinalizacion, MotivoFinalizacion motivoFinalizacion, String ubicacion, Date fechaEvento) {
 
 		this.idEvento = idEvento;
 		this.nombre = nombre;
@@ -161,6 +158,7 @@ public class Evento {
 		this.idModeradorFinalizacion = idModeradorFinalizacion;
 		this.motivoFinalizacion = motivoFinalizacion;
 		this.ubicacion = ubicacion;
+		this.fechaEvento = fechaEvento;
 	}
 
 	/**
@@ -170,11 +168,12 @@ public class Evento {
 	 * @param nombre   Nombre del evento.
 	 * @param detalles Detalles o descripción del evento.
 	 */
-	public Evento(int idEvento, String nombre, String detalles) {
+	public Evento(int idEvento, String nombre, String detalles, Date fechaEvento) {
 
 		this.idEvento = idEvento;
 		this.nombre = nombre;
 		this.detalles = detalles;
+		this.fechaEvento = fechaEvento;
 	}
 
 	/**
@@ -195,10 +194,11 @@ public class Evento {
 	 * @param detalles         Detalles o descripción del evento.
 	 * @param idUsuarioCreador Id del usuario creador del evento
 	 */
-	public Evento(String nombre, String detalles, int idUsuarioCreador, String ubicacion) {
+	public Evento(String nombre, String detalles, Date fechaEvento, int idUsuarioCreador, String ubicacion) {
 		super();
 		this.nombre = nombre;
 		this.detalles = detalles;
+		this.fechaEvento = fechaEvento;
 		this.idUsuarioCreador = idUsuarioCreador;
 		this.ubicacion = ubicacion;
 	}
@@ -211,22 +211,13 @@ public class Evento {
 	 * @param detalles  Detalles o descripción del evento.
 	 * @param ubicacion Detalles de la ubicación del evento.
 	 */
-	public Evento(int idEvento, String nombre, String detalles, String ubicacion) {
+	public Evento(int idEvento, String nombre, String detalles, Date fechaEvento, String ubicacion) {
 		super();
 		this.idEvento = idEvento;
 		this.nombre = nombre;
 		this.detalles = detalles;
+		this.fechaEvento = fechaEvento;
 		this.ubicacion = ubicacion;
-	}
-/**
- * Constructor de la clase Evento que se usa en el JUNIT
- * 
- * @param idEvento El identificador único del evento (entero)
- * @param request La instancia de HttpServletRequest que contiene información sobre la petición del cliente.
- */
-	public Evento(int idEvento, HttpServletRequest request) {
-		this.idEvento = idEvento;
-		this.request = request;
 	}
 
 	// GETTERS Y SETTERS
@@ -477,6 +468,24 @@ public class Evento {
 		this.ubicacion = ubicacion;
 	}
 
+	/**
+	 * Obtiene la fecha del evento.
+	 *
+	 * @return La fecha del evento.
+	 */
+	public Date getFechaEvento() {
+		return fechaEvento;
+	}
+
+	/**
+	 * Establece la fecha del evento.
+	 *
+	 * @param fechaEvento La nueva fecha del evento.
+	 */
+	public void setFechaEvento(Date fechaEvento) {
+		this.fechaEvento = fechaEvento;
+	}
+
 	// TOSTRING
 	// --------------------------------------------------------------------------------------------
 	/**
@@ -484,7 +493,6 @@ public class Evento {
 	 *
 	 * @return String con la información del evento.
 	 */
-
 	@Override
 	public String toString() {
 		return "Evento [idEvento=" + idEvento + ", nombre=" + nombre + ", detalles=" + detalles + ", idUsuarioCreador="
@@ -492,7 +500,7 @@ public class Evento {
 				+ fechaUltimaModificacion + ", idModeradorAprobacion=" + idModeradorAprobacion + ", fechaPublicacion="
 				+ fechaPublicacion + ", idModeradorPublicacion=" + idModeradorPublicacion + ", fechaFinalizacion="
 				+ fechaFinalizacion + ", idModeradorFinalizacion=" + idModeradorFinalizacion + ", motivoFinalizacion="
-				+ motivoFinalizacion + ", ubicacion=" + ubicacion + "]";
+				+ motivoFinalizacion + ", ubicacion=" + ubicacion + ", fechaEvento=" + fechaEvento + "]";
 	}
 
 	// MÉTODOS DE NEGOCIO

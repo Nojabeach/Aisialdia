@@ -179,7 +179,8 @@ public class DaoUsuario {
 			ResultSet rs = stmt.executeQuery();
 			List<Evento> eventos = new ArrayList<>();
 			while (rs.next()) {
-				eventos.add(new Evento(rs.getInt("idEvento"), rs.getString("nombre"), rs.getString("detalles")));
+				eventos.add(new Evento(rs.getInt("idEvento"), rs.getString("nombre"), rs.getString("detalles"),
+						rs.getDate("fechaEvento")));
 			}
 			return eventos;
 		}
@@ -195,17 +196,21 @@ public class DaoUsuario {
 	 */
 	public List<Evento> buscarEventos(String criterio) throws Exception {
 		// Preparar la consulta SQL para buscar eventos con el criterio especificado
-		String sql = "SELECT * FROM eventos WHERE nombre LIKE ? OR descripcion LIKE ?";
+		String sql = "SELECT * FROM eventos WHERE nombre LIKE? OR descripcion LIKE?";
+		List<Evento> eventos = new ArrayList<>();
 		try (PreparedStatement stmt = con.prepareStatement(sql)) {
 			stmt.setString(1, "%" + criterio + "%");
 			stmt.setString(2, "%" + criterio + "%");
-			ResultSet rs = stmt.executeQuery();
-			List<Evento> eventos = new ArrayList<>();
-			while (rs.next()) {
-				eventos.add(new Evento(rs.getInt("idEvento"), rs.getString("nombre"), rs.getString("detalles")));
+			try (ResultSet rs = stmt.executeQuery()) {
+				while (rs.next()) {
+					eventos.add(new Evento(rs.getInt("idEvento"), rs.getString("nombre"), rs.getString("detalles"),
+							rs.getDate("fechaEvento")));
+				}
 			}
-			return eventos;
+		} catch (SQLException e) {
+			throw new Exception("Error al buscar eventos", e);
 		}
+		return eventos;
 	}
 
 	/**
@@ -223,7 +228,8 @@ public class DaoUsuario {
 			stmt.setInt(1, idEvento);
 			ResultSet rs = stmt.executeQuery();
 			if (rs.next()) {
-				return new Evento(rs.getInt("idEvento"), rs.getString("nombre"), rs.getString("detalles"));
+				return new Evento(rs.getInt("idEvento"), rs.getString("nombre"), rs.getString("detalles"),
+						rs.getDate("fechaEvento"));
 			}
 		}
 		return null;

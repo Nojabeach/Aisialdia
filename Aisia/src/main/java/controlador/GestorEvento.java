@@ -1,17 +1,19 @@
 package controlador;
 
+import java.io.IOException;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+
+import dao.DaoEvento;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import modelo.Evento;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-
-import dao.DaoEvento;
 
 /**
  * Servlet implementation class GestorEvento
@@ -41,7 +43,30 @@ public class GestorEvento extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		String action = request.getParameter("action");
+		try {
+			switch (action) {
+			case "obtenerEventoPorId":
+				obtenerEventoPorId(request, response);
+				break;
+			case "obtenerEventosPorUsuario":
+				obtenerEventosPorUsuario(request, response);
+				break;
+			case "obtenerEventosPendientesAprobacion":
+				obtenerEventosPendientesAprobacion(request, response);
+				break;
+			case "obtenerTodosLosEventosActivos":
+				obtenerTodosLosEventosActivos(request, response);
+				break;
+			default:
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				ControlErrores.mostrarErrorGenerico("{\"error\": \"Acción no válida\"}", response);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
+		}
 	}
 
 	/**
@@ -76,14 +101,17 @@ public class GestorEvento extends HttpServlet {
 			case "aprobarPublicacionEvento":
 				aprobarPublicacionEvento(request, response);
 				break;
+			case "finalizarPublicacionEvento":
+				finalizarPublicacionEvento(request, response);
+				break;
 			default:
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().write("{\"error\": \"Acción no válida\"}");
+				ControlErrores.mostrarErrorGenerico("{\"error\": \"Acción no válida\"}", response);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().write("{\"error\": \"" + e.getMessage() + "\"}");
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
 		}
 	}
 
@@ -100,10 +128,13 @@ public class GestorEvento extends HttpServlet {
 			throws IOException, ServletException {
 		String nombre = request.getParameter("nombre");
 		String detalles = request.getParameter("detalles");
+		String fechaEventoStr = request.getParameter("fechaEvento");
+		Date fechaEvento = Date.valueOf(fechaEventoStr); // Convertir la cadena a Date
 		int idUsuarioCreador = Integer.parseInt(request.getParameter("idUsuarioCreador"));
+
 		String ubicacion = request.getParameter("ubicacion");
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		Evento evento = new Evento(nombre, detalles, idUsuarioCreador, ubicacion);
+		Evento evento = new Evento(nombre, detalles, fechaEvento, idUsuarioCreador, ubicacion);
 		try {
 			DaoEvento.getInstance().crearEvento(evento, timestamp);
 			response.setStatus(HttpServletResponse.SC_CREATED);
@@ -129,7 +160,9 @@ public class GestorEvento extends HttpServlet {
 		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
 		String nombre = request.getParameter("nombre");
 		String detalles = request.getParameter("detalles");
-		Evento evento = new Evento(idEvento, nombre, detalles);
+		String fechaEventoStr = request.getParameter("fechaEvento");
+		Date fechaEvento = Date.valueOf(fechaEventoStr); // Convertir la cadena a Date
+		Evento evento = new Evento(idEvento, nombre, detalles, fechaEvento);
 		try {
 			DaoEvento.getInstance().editarEvento(evento);
 			response.getWriter().println("Evento editado exitosamente!");
@@ -227,6 +260,160 @@ public class GestorEvento extends HttpServlet {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().println("Error al aprobar la publicación del evento. Intente de nuevo.");
+		}
+	}
+
+	/**
+	 * Finaliza la publicación de un evento.
+	 * 
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
+	 * @throws SQLException Si se produce un error en la base de datos.
+	 * @throws IOException  Si se produce un error de entrada/salida.
+	 */
+	private void finalizarPublicacionEvento(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException {
+		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
+		int idModerador = Integer.parseInt(request.getParameter("idModerador"));
+		try {
+			DaoEvento.getInstance().finalizarPublicacionEvento(idEvento, idModerador);
+			response.getWriter().println("Evento finalizado exitosamente!");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Error al finalizar el evento. Intente de nuevo.");
+		}
+	}
+
+	/**
+	 * Obtiene un evento específico por su ID.
+	 * 
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
+	 * @throws SQLException Si se produce un error en la base de datos.
+	 * @throws IOException  Si se produce un error de entrada/salida.
+	 */
+	private void obtenerEventoPorId(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException {
+		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
+		try {
+			Evento evento = DaoEvento.getInstance().obtenerEventoPorId(idEvento);
+			if (evento != null) {
+				response.getWriter().println("Evento encontrado: " + evento.toString());
+			} else {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				response.getWriter().println("Evento no encontrado.");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Error al obtener el evento. Intente de nuevo.");
+		}
+	}
+
+	/**
+	 * Obtiene la lista de eventos organizados por un usuario específico.
+	 * 
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
+	 * @throws SQLException Si se produce un error en la base de datos.
+	 * @throws IOException  Si se produce un error de entrada/salida.
+	 */
+	private void obtenerEventosPorUsuario(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException {
+		int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+		try {
+			List<Evento> eventos = DaoEvento.getInstance().obtenerEventosPorUsuario(idUsuario);
+			if (eventos != null && !eventos.isEmpty()) {
+				response.getWriter().println("Eventos del usuario: ");
+				for (Evento evento : eventos) {
+					response.getWriter().println(evento.toString());
+				}
+			} else {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				response.getWriter().println("No se encontraron eventos para el usuario.");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Error al obtener los eventos del usuario. Intente de nuevo.");
+		}
+	}
+
+	/**
+	 * Obtiene la lista de eventos pendientes de aprobación.
+	 * 
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
+	 * @throws SQLException Si se produce un error en la base de datos.
+	 * @throws IOException  Si se produce un error de entrada/salida.
+	 */
+	private void obtenerEventosPendientesAprobacion(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException {
+		try {
+			List<Evento> eventos = DaoEvento.getInstance().obtenerEventosPendientesAprobacion();
+			if (eventos != null && !eventos.isEmpty()) {
+				response.getWriter().println("Eventos pendientes de aprobación: ");
+				for (Evento evento : eventos) {
+					response.getWriter().println(evento.toString());
+				}
+			} else {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				response.getWriter().println("No se encontraron eventos pendientes de aprobación.");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Error al obtener los eventos pendientes de aprobación. Intente de nuevo.");
+		}
+	}
+
+	/**
+	 * Obtiene la lista de todos los eventos activos.
+	 *
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
+	 * @throws SQLException Si se produce un error en la base de datos.
+	 * @throws IOException  Si se produce un error de entrada/salida.
+	 */
+	private void obtenerTodosLosEventosActivos(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException {
+
+		String actividad = request.getParameter("actividad");
+		String descripcion = request.getParameter("descripcion");
+		String ubicacion = request.getParameter("ubicacion");
+		String fechaString = request.getParameter("fecha");
+		java.util.Date fechaUtil = null;
+		java.sql.Date fechaSql = null;
+		if (fechaString != null && !fechaString.isEmpty()) {
+			try {
+				fechaUtil = new SimpleDateFormat("yyyy-MM-dd").parse(fechaString);
+				fechaSql = new java.sql.Date(fechaUtil.getTime());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		try {
+			List<Evento> eventos = DaoEvento.getInstance().obtenerTodosLosEventosActivos(actividad, descripcion,
+					ubicacion, fechaSql);
+			if (eventos != null && !eventos.isEmpty()) {
+				response.getWriter().println("Todos los eventos activos: ");
+				for (Evento evento : eventos) {
+					response.getWriter().println(evento.toString());
+				}
+			} else {
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				response.getWriter().println("No se encontraron eventos activos.");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Error al obtener los eventos activos. Intente de nuevo.");
 		}
 	}
 

@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -51,22 +52,22 @@ public class DaoEvento {
 	 *                      datos
 	 */
 	public int crearEvento(Evento evento, Timestamp fechaUltimaModificacion) throws SQLException {
-	    String sql = "INSERT INTO eventos (nombre, detalles, idUsuariocreador, fechaUltimaModificacion, ubicacion) VALUES (?, ?, ?, ?, ?)";
-	    PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-	    ps.setString(1, evento.getNombre());
-	    ps.setString(2, evento.getDetalles());
-	    ps.setInt(3, evento.getIdUsuarioCreador());
-	    ps.setTimestamp(4, fechaUltimaModificacion);
-	    ps.setString(5, evento.getUbicacion());
-	    ps.executeUpdate();
+		String sql = "INSERT INTO eventos (nombre, detalles, idUsuariocreador, fechaUltimaModificacion, ubicacion) VALUES (?, ?, ?, ?, ?)";
+		PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		ps.setString(1, evento.getNombre());
+		ps.setString(2, evento.getDetalles());
+		ps.setInt(3, evento.getIdUsuarioCreador());
+		ps.setTimestamp(4, fechaUltimaModificacion);
+		ps.setString(5, evento.getUbicacion());
+		ps.executeUpdate();
 
-	    ResultSet rs = ps.getGeneratedKeys();
-	    if (rs.next()) {
-	        int idEvento = rs.getInt(1);
-	        return idEvento;
-	    } else {
-	        throw new SQLException("No se pudo obtener el ID del evento creado.");
-	    }
+		ResultSet rs = ps.getGeneratedKeys();
+		if (rs.next()) {
+			int idEvento = rs.getInt(1);
+			return idEvento;
+		} else {
+			throw new SQLException("No se pudo obtener el ID del evento creado.");
+		}
 	}
 
 	/**
@@ -173,20 +174,22 @@ public class DaoEvento {
 		ps.executeUpdate();
 		ps.close();
 	}
+
 	/**
 	 * Finaliza la publicación de un evento en la base de datos.
 	 *
-	 * @param idEvento           El ID del evento que se desea finalizar.
-	 * @param idModerador        El ID del moderador que finaliza el evento.
-	 * @throws SQLException      si ocurre algún error al interactuar con la base de datos.
+	 * @param idEvento    El ID del evento que se desea finalizar.
+	 * @param idModerador El ID del moderador que finaliza el evento.
+	 * @throws SQLException si ocurre algún error al interactuar con la base de
+	 *                      datos.
 	 */
 	public void finalizarPublicacionEvento(int idEvento, int idModerador) throws SQLException {
-	    String sql = "UPDATE eventos SET motivoFinalizacion = 'FinVisibilidad', fechaFinalizacion = current_date, "
-	                + "fechaUltimaModificacion = current_date, idModeradorFinalizacion = ? WHERE idEvento = ?";
-	    PreparedStatement ps = con.prepareStatement(sql);
-	    ps.setInt(1, idModerador);
-	    ps.setInt(2, idEvento);
-	    ps.executeUpdate();
+		String sql = "UPDATE eventos SET motivoFinalizacion = 'FinVisibilidad', fechaFinalizacion = current_date, "
+				+ "fechaUltimaModificacion = current_date, idModeradorFinalizacion = ? WHERE idEvento = ?";
+		PreparedStatement ps = con.prepareStatement(sql);
+		ps.setInt(1, idModerador);
+		ps.setInt(2, idEvento);
+		ps.executeUpdate();
 		ps.close();
 	}
 
@@ -285,17 +288,56 @@ public class DaoEvento {
 	}
 
 	/**
-	 * Obtiene todos los eventos publicados activos de la base de datos (sin finalizar)
+	 * Obtiene todos los eventos publicados activos de la base de datos (sin
+	 * finalizar) que coinciden con los filtros especificados.
 	 *
+	 * @param actividad   Filtro por actividad (opcional)
+	 * @param descripcion Filtro por descripción (opcional)
+	 * @param ubicacion   Filtro por ubicación (opcional)
+	 * @param fecha       Filtro por fecha (opcional)
 	 * @return Una lista de objetos Evento que representan todos los eventos en la
-	 *         base de datos.
+	 *         base de datos que coinciden con los filtros especificados.
 	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
 	 */
-	public List<Evento> obtenerTodosLosEventosActivos() throws SQLException {
+	public List<Evento> obtenerTodosLosEventosActivos(String actividad, String descripcion, String ubicacion,
+			Date fecha) throws SQLException {
 		List<Evento> eventos = new ArrayList<>();
-		String sql = "SELECT * FROM eventos where fechafinalizacion is  null and fechapublicacion is not null  order by id";
-		PreparedStatement stmt = con.prepareStatement(sql);
-		ResultSet rs = stmt.executeQuery();
+		String sql = "SELECT * FROM eventos where fechafinalizacion is null and fechapublicacion is not null";
+
+		// Agregar cláusulas WHERE según sea necesario
+		if (actividad != null && !actividad.isEmpty()) {
+			sql += " AND idActividad =?";
+		}
+		if (descripcion != null && !descripcion.isEmpty()) {
+			sql += " AND descripcion LIKE?";
+		}
+		if (ubicacion != null && !ubicacion.isEmpty()) {
+			sql += " AND ubicacion LIKE?";
+		}
+		if (fecha != null) {
+			sql += " AND fechaEvento =?";
+		}
+
+		sql += " ORDER BY id";
+
+		PreparedStatement ps = con.prepareStatement(sql);
+
+		// Agregar parámetros a la consulta según sea necesario
+		int paramIndex = 1;
+		if (actividad != null && !actividad.isEmpty()) {
+			ps.setInt(paramIndex++, Integer.parseInt(actividad));
+		}
+		if (descripcion != null && !descripcion.isEmpty()) {
+			ps.setString(paramIndex++, "%" + descripcion + "%");
+		}
+		if (ubicacion != null && !ubicacion.isEmpty()) {
+			ps.setString(paramIndex++, "%" + ubicacion + "%");
+		}
+		if (fecha != null) {
+			ps.setDate(paramIndex++, fecha);
+		}
+
+		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			Evento evento = new Evento();
 			evento.setIdEvento(rs.getInt("id"));
