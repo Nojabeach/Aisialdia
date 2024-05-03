@@ -72,26 +72,42 @@ public class DaoUsuario {
 
 	/**
 	 * Valida el usuario y contraseña, y devuelve un objeto Usuario si la
-	 * autenticación es correcta.
+	 * autenticación es correcta. Además, registra el acceso en la tabla de accesos.
 	 * 
 	 * @param email      Correo electrónico del usuario.
-	 * @param contrasena Contraseña del usuario.
+	 * @param contrasena Contraseña del usuario (no se almacena, solo se utiliza
+	 *                   para autenticar).
 	 * @return Objeto Usuario si la autenticación es correcta, null si no lo es.
 	 * @throws Exception Si ocurre un error al iniciar sesión.
 	 */
 	public Usuario iniciarSesion(String email, String contrasena) throws Exception {
 		// Preparar la consulta SQL para validar el usuario y contraseña
-		String sql = "SELECT * FROM usuarios WHERE email = ? AND contrasena = ?";
-		try (PreparedStatement stmt = con.prepareStatement(sql)) {
-			stmt.setString(1, email);
-			stmt.setString(2, contrasena);
-			ResultSet rs = stmt.executeQuery();
+		String sql = "SELECT * FROM usuarios WHERE email =? AND contrasena =?";
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, email);
+			ps.setString(2, contrasena); // Ya se está pasando la contraseña cifrada
+			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				return new Usuario(rs.getInt("idUsuario"), rs.getString("nombre"), rs.getString("email"),
-						rs.getString("Contrasena"));
+				// Registramos el acceso en la tabla de accesos
+				registrarAcceso(rs.getInt("idUsuario"));
+				return new Usuario(rs.getInt("idUsuario"), rs.getString("nombre"), rs.getString("email"), null);
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Registra un acceso en la tabla de accesos.
+	 * 
+	 * @param idUsuario ID del usuario que accede.
+	 * @throws SQLException Si se produce un error al acceder a la base de datos.
+	 */
+	private void registrarAcceso(int idUsuario) throws SQLException {
+		String sql = "INSERT INTO accesos (idUsuario, fechaAcceso) VALUES (?, NOW())";
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, idUsuario);
+			ps.executeUpdate();
+		}
 	}
 
 	/**
