@@ -198,6 +198,13 @@ function crearEvento() {
   var detalles = document.getElementById("detalles").value;
   var idUsuarioCreador = document.getElementById("idUsuarioCreador").value;
   var ubicacion = document.getElementById("ubicacion").value;
+  var actividades = [];
+  var actividadChecks = document.getElementsByName("actividad");
+  for (var i = 0; i < actividadChecks.length; i++) {
+    if (actividadChecks[i].checked) {
+      actividades.push(actividadChecks[i].value);
+    }
+  }
 
   // Se realiza una petición fetch para enviar los datos del nuevo evento al servidor
   fetch("gestorEvento", {
@@ -211,7 +218,7 @@ function crearEvento() {
       detalles
     )}&idUsuarioCreador=${encodeURIComponent(
       idUsuarioCreador
-    )}&ubicacion=${encodeURIComponent(ubicacion)}`,
+    )}&ubicacion=${encodeURIComponent(ubicacion)}&actividades=${encodeURIComponent(actividades)}`,
   })
     .then((response) => {
       if (response.ok) {

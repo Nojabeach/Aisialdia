@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.servlet.http.HttpServletRequest;
+import modelo.Actividad;
 import modelo.Evento;
 import modelo.Evento.MotivoFinalizacion;
 
@@ -45,25 +46,38 @@ public class DaoEvento {
 	}
 
 	/**
-	 * Crea un nuevo evento en la base de datos.
+	 * Crea un nuevo evento en la base de datos y vincula las actividades
+	 * relacionadas.
 	 *
-	 * @param evento El evento a crear.
-	 * @throws SQLException Si ocurre un error al crear el evento en la base de
-	 *                      datos
+	 * @param evento      El evento a crear.
+	 * @param actividades Las actividades a vincular al evento.
+	 * @throws SQLException Si ocurre un error al crear el evento o las
+	 *                      vinculaciones en la base de datos
 	 */
-	public int crearEvento(Evento evento, Timestamp fechaUltimaModificacion) throws SQLException {
-		String sql = "INSERT INTO eventos (nombre, detalles, idUsuariocreador, fechaUltimaModificacion, ubicacion) VALUES (?, ?, ?, ?, ?)";
-		PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-		ps.setString(1, evento.getNombre());
-		ps.setString(2, evento.getDetalles());
-		ps.setInt(3, evento.getIdUsuarioCreador());
-		ps.setTimestamp(4, fechaUltimaModificacion);
-		ps.setString(5, evento.getUbicacion());
-		ps.executeUpdate();
+	public int crearEvento(Evento evento, List<Actividad> actividades, Timestamp fechaUltimaModificacion)
+			throws SQLException {
+		String sqlEvento = "INSERT INTO eventos (nombre, detalles, idUsuariocreador, fechaUltimaModificacion, ubicacion) VALUES (?,?,?,?,?)";
+		PreparedStatement psEvento = con.prepareStatement(sqlEvento, Statement.RETURN_GENERATED_KEYS);
+		psEvento.setString(1, evento.getNombre());
+		psEvento.setString(2, evento.getDetalles());
+		psEvento.setInt(3, evento.getIdUsuarioCreador());
+		psEvento.setTimestamp(4, fechaUltimaModificacion);
+		psEvento.setString(5, evento.getUbicacion());
+		psEvento.executeUpdate();
 
-		ResultSet rs = ps.getGeneratedKeys();
+		ResultSet rs = psEvento.getGeneratedKeys();
 		if (rs.next()) {
 			int idEvento = rs.getInt(1);
+
+			// Crear vinculaciones con actividades
+			String sqlClasificacion = "INSERT INTO clasificacionEventos (idActividad, idEvento) VALUES (?,?)";
+			PreparedStatement psClasificacion = con.prepareStatement(sqlClasificacion);
+			for (Actividad actividad : actividades) {
+				psClasificacion.setInt(1, actividad.getIdActividad());
+				psClasificacion.setInt(2, idEvento);
+				psClasificacion.executeUpdate();
+			}
+
 			return idEvento;
 		} else {
 			throw new SQLException("No se pudo obtener el ID del evento creado.");

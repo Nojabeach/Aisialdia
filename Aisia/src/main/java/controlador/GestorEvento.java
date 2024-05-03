@@ -6,13 +6,16 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
+import dao.DaoActividad;
 import dao.DaoEvento;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import modelo.Actividad;
 import modelo.Evento;
 
 /**
@@ -123,20 +126,34 @@ public class GestorEvento extends HttpServlet {
 	 *                 respuesta HTTP.
 	 * @throws IOException      Si se produce un error de entrada/salida.
 	 * @throws ServletException Si se produce un error en el servlet.
+	 * @throws SQLException     Si se produce un error en la base de datos.
 	 */
 	private void crearEvento(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
+			throws IOException, ServletException, SQLException {
 		String nombre = request.getParameter("nombre");
 		String detalles = request.getParameter("detalles");
 		String fechaEventoStr = request.getParameter("fechaEvento");
 		Date fechaEvento = Date.valueOf(fechaEventoStr); // Convertir la cadena a Date
 		int idUsuarioCreador = Integer.parseInt(request.getParameter("idUsuarioCreador"));
-
 		String ubicacion = request.getParameter("ubicacion");
+
+		// Obtener la lista de actividades seleccionadas
+		String[] actividadIds = request.getParameterValues("actividad");
+		List<Actividad> actividades = new ArrayList<>();
+		if (actividadIds != null) {
+			for (String actividadId : actividadIds) {
+				int idActividad = Integer.parseInt(actividadId);
+				Actividad actividad = DaoActividad.getInstance().obtenerActividadPorId(idActividad);
+				if (actividad != null) {
+					actividades.add(actividad);
+				}
+			}
+		}
+
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		Evento evento = new Evento(nombre, detalles, fechaEvento, idUsuarioCreador, ubicacion);
 		try {
-			DaoEvento.getInstance().crearEvento(evento, timestamp);
+			DaoEvento.getInstance().crearEvento(evento, actividades, timestamp);
 			response.setStatus(HttpServletResponse.SC_CREATED);
 			response.getWriter().println("Evento creado exitosamente!");
 		} catch (SQLException e) {

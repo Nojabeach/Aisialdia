@@ -511,8 +511,8 @@ public class Evento {
 	 * @param evento El evento a crear.
 	 * @throws SQLException Si ocurre un error al crear el evento.
 	 */
-	public void crearEvento(Evento evento, Timestamp timestamp) throws SQLException {
-		DaoEvento.getInstance().crearEvento(evento, timestamp);
+	public void crearEvento(Evento evento, List<Actividad> actividades, Timestamp timestamp) throws SQLException {
+		DaoEvento.getInstance().crearEvento(evento, actividades, timestamp);
 	}
 
 	/**
