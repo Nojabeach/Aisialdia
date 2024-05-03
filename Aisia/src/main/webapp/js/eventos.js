@@ -10,8 +10,9 @@ Resumen:
 8. Busca eventos por ubicación.
 9. Busca eventos por fecha.
 */
+
+// Cargar las actividades posibles desde el servlet GestorActividad y el método visualizarActividades
 document.addEventListener("DOMContentLoaded", function () {
-  // Cargar las actividades posibles desde el servlet GestorActividad y el método visualizarActividades
   fetch("GestorActividad?accion=visualizarActividades")
     .then((response) => response.json())
     .then((data) => {
@@ -75,6 +76,25 @@ document.addEventListener("DOMContentLoaded", () => {
       default:
         console.error("Opción de búsqueda no válida");
     }
+  });
+
+  // Agregar evento al botón de crear evento
+  const createEventButton = document.getElementById("create-event-button");
+  createEventButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    const formData = new FormData(document.getElementById("new-event-form"));
+    fetch("GestorEvento?action=crearEvento", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        console.log("Evento creado con éxito");
+        // Redirigir a events.html o mostrar un mensaje de éxito
+      })
+      .catch((error) => {
+        console.error("Error al crear evento: ", error);
+      });
   });
 });
 
