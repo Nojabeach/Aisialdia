@@ -1,0 +1,131 @@
+<!-- events.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Eventos | AisiAldia</title>
+    <!-- Icono de la pestaña -->
+    <link rel="shortcut icon" href="./img/Logos/logo_transparent - noText.png" type="image/x-icon" />
+    <!-- Enlace de estilos -->
+    <link rel="stylesheet" href="./styles/estilocomun.css">
+    <link rel="stylesheet" href="./styles/eventos.css">
+    <!-- Enlace de fonts, iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Enlace de scripts -->
+    <script src="./js/eventos.js" defer></script>
+</head>
+
+<body>
+
+    <div id="contenedor">
+        <header id="cabecera">
+            <div id="divTitulo">
+                <h1>AisiAldia</h1>
+                <p>Ocio para todos</p>
+            </div>
+            <div id="loginFormContainer">
+                <form id="LoginForm" action="Login" method="post">
+                    <div class="input-group">
+                        <input type="text" id="usuario" name="usuario" placeholder="Usuario o Email">
+
+                        <input type="password" id="contraseña" name="contraseña" placeholder="Contraseña">
+
+                        <input type="submit" value="Iniciar sesión">
+                    </div>
+                    <div class="input-group registroLink">
+                        <p>¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a></p>
+                    </div>
+                </form>
+                <!-- Contenedor para el nombre del usuario y botón de cerrar sesión -->
+                <div id="userInfoContainer" style="display: none;">
+                    <p id="userName"></p>
+                    <p id="userPermiso"></p>
+                    <button id="logoutButton">Cerrar sesión</button>
+                </div>
+            </div>
+        </header>
+
+        <nav id="navbar">
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="acercade.html">Acerca de</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+                <li><a href="events.html">Mis Eventos</a></li>
+            </ul>
+        </nav>
+
+        <main id="seccionCuerpo">
+            <section class="events-container">
+                <h2>Buscar Eventos</h2>
+                <form id="search-form">
+                    <label for="search-option">Buscar por:</label>
+                    <select id="search-option">
+                        <option value="actividad">Actividad</option>
+                        <option value="descripcion">Descripción</option>
+                        <option value="ubicacion">Ubicación</option>
+                        <option value="fecha">Fecha</option>
+                    </select>
+                    <div id="actividad-container" style="display: none;">
+                        <label for="actividad">Actividad:</label>
+                        <select id="actividad"></select>
+                    </div>
+                    <label for="search">Buscar:</label>
+                    <input type="text" id="search" name="search">
+                    <button type="submit">Buscar</button>
+                </form>
+                <h2>Eventos Publicados y Activos</h2>
+                <div id="events-container"></div>
+            </section>
+            <section class="favorites-container">
+                <h2>Mis Eventos Favoritos</h2>
+                <ul class="favorites-list">
+                    <!-- Eventos favoritos del usuario -->
+                </ul>
+            </section>
+            <!-- Zona para evoluciones futuras -->
+            <section class="comments-container">
+                <h2>Comentarios</h2>
+                <ul class="comments-list">
+                    <!-- Comentarios de los eventos -->
+                </ul>
+                <form class="comment-form">
+                    <label for="comment">Añadir comentario:</label>
+                    <textarea id="comment" name="comment"></textarea>
+                    <button type="submit">Enviar</button>
+                </form>
+            </section>
+            <aside id="aside">
+                <h2>Crear Nuevo Evento</h2>
+                <form id="new-event-form">
+                    <label for="name">Nombre:</label>
+                    <input type="text" id="name" name="name" required>
+
+                    <label for="details">Detalles:</label>
+                    <textarea id="details" name="details" required></textarea>
+                    <label for="date">Fecha:</label>
+                    <input type="date" id="date" name="date" required>
+
+                    <label for="location">Ubicación:</label>
+                    <input type="text" id="location" name="location" required>
+
+                    <buttontype="submit">Crear Evento</button>
+                </form>
+            </aside>
+        </main>
+
+        <footer>
+            <ul>
+                <li><a href="ayuda.html">Ayuda</a></li>
+                <li><a href="politicadeprivacidad.html">Política de privacidad</a></li>
+                <li><a href="condicionesdeuso.html">Condiciones de uso</a></li><li><a href="accesibilidad.html">Accesibilidad</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+            </ul>
+        </footer>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+/* events.css */
+
+/* Estilos para el cuerpo principal */
+#seccionCuerpo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+    padding: 20px;
+  }
+  
+  /* Estilos para el contenedor de eventos */
+  .events-container {
+    width: 48%;
+  }
+  
+  /* Estilos para el contenedor de eventos favoritos */
+  .favorites-container {
+    width: 48%;
+  }
+  
+  /* Estilos para el contenedor de comentarios */
+  .comments-container {
+    width: 48%;
+  }
+  
+  /* Estilos para la sección "Crear Nuevo Evento" */
+  #aside {
+    width: 48%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  #new-event-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  #new-event-form label {
+    margin-top: 10px;
+  }
+  
+  #new-event-form input,
+  #new-event-form textarea {
+    margin-top: 5px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  #new-event-form button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #new-event-form button:hover {
+    background-color: #444;
+  }

@@ -285,15 +285,15 @@ public class DaoEvento {
 	}
 
 	/**
-	 * Obtiene todos los eventos de la base de datos.
+	 * Obtiene todos los eventos publicados activos de la base de datos (sin finalizar)
 	 *
 	 * @return Una lista de objetos Evento que representan todos los eventos en la
 	 *         base de datos.
 	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
 	 */
-	public List<Evento> obtenerTodosLosEventos() throws SQLException {
+	public List<Evento> obtenerTodosLosEventosActivos() throws SQLException {
 		List<Evento> eventos = new ArrayList<>();
-		String sql = "SELECT * FROM eventos order by id";
+		String sql = "SELECT * FROM eventos where fechafinalizacion is  null and fechapublicacion is not null  order by id";
 		PreparedStatement stmt = con.prepareStatement(sql);
 		ResultSet rs = stmt.executeQuery();
 		while (rs.next()) {
