@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((data) => {
         const eventosList = document.getElementById("ultimosEventosList");
+        eventosList.innerHTML = ''; // Limpiar la lista antes de agregar los nuevos eventos
         // Recorrer cada evento obtenido y crear elementos para mostrarlos en el aside
         data.forEach((evento) => {
           const li = document.createElement("li");
