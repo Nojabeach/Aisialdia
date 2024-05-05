@@ -1,5 +1,6 @@
 package modelo;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class Usuario {
 	/**
 	 * Fecha de nacimiento del usuario (formato dd/mm/aaaa).
 	 */
-	private String fechaNacimiento;
+	private Date fechaNacimiento;
 
 	/**
 	 * Intereses del usuario (por ejemplo, "Música", "Deporte", "Lectura").
@@ -92,7 +93,7 @@ public class Usuario {
 	 * @param intereses       Lista de intereses del usuario.
 	 * @param rol             Rol del usuario en el sistema.
 	 */
-	public Usuario(int idUsuario, String nombre, String email, String hashContrasena, String fechaNacimiento,
+	public Usuario(int idUsuario, String nombre, String email, String hashContrasena, Date fechaNacimiento,
 			String intereses, int permiso, Rol rol) {
 		this.idUsuario = idUsuario;
 		this.nombre = nombre;
@@ -229,7 +230,7 @@ public class Usuario {
 	 *
 	 * @return Fecha de nacimiento del usuario.
 	 */
-	public String getFechaNacimiento() {
+	public Date getFechaNacimiento() {
 		return fechaNacimiento;
 	}
 
@@ -238,7 +239,7 @@ public class Usuario {
 	 *
 	 * @param fechaNacimiento Nueva fecha de nacimiento del usuario.
 	 */
-	public void setFechaNacimiento(String fechaNacimiento) {
+	public void setFechaNacimiento(Date fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
 	}
 

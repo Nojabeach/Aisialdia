@@ -56,17 +56,19 @@ public class DaoUsuario {
 	 *                                  valores nulos.
 	 */
 	public void registrarUsuario(Usuario usuario) throws SQLException, IllegalArgumentException {
-		if (usuario == null || usuario.getNombre() == null || usuario.getEmail() == null
-				|| usuario.getcontrasena() == null) {
-			throw new IllegalArgumentException("El objeto usuario o sus campos no pueden ser nulos");
-		}
 
-		String sql = "INSERT INTO usuarios (nombre, email, contrasena) VALUES (?, ?, ?)";
-
+		String sql = "INSERT INTO usuarios (nombre, email, contrasena,fechaNacimiento,recibeNotificaciones,intereses,roles,permiso,consentimiento_datos) VALUES (?, ?, ?)";
+		System.out.println(sql);
 		PreparedStatement ps = con.prepareStatement(sql);
 		ps.setString(1, usuario.getNombre());
-		ps.setString(2, usuario.getEmail());
-		ps.setString(3, usuario.getcontrasena());
+	    ps.setString(2, usuario.getEmail());
+	    ps.setString(3, usuario.getcontrasena());
+	    ps.setDate(4, usuario.getFechaNacimiento());
+	    ps.setBoolean(5, usuario.isRecibeNotificaciones());
+	    ps.setString(6, usuario.getIntereses());
+	    ps.setString(7, usuario.getRol());
+	    ps.setInt(8, usuario.getPermiso());
+	    ps.setDate(9, usuario.getConsentimientoDatos());
 		ps.executeUpdate();
 	}
 
@@ -313,7 +315,7 @@ public class DaoUsuario {
 				int idUsuario = rs.getInt("idUsuario");
 				String nombre = rs.getString("nombre");
 				String email = rs.getString("email");
-				String hashContrasena = rs.getString("hashContrasena");
+				String hashContrasena = rs.getString("contrasena");
 				String fechaNacimiento = rs.getString("fechaNacimiento");
 				String intereses = rs.getString("intereses");
 				int permiso = rs.getInt("permiso");
