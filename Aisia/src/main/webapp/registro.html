@@ -1,41 +1,78 @@
+<!-- registro.html -->
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <title>Registro | AisiAldia</title>
     <!-- Icono de la pestaña -->
-    <link rel="shortcut icon" href="./img/Logos/logo_transparent - noText.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="img/Logos/logo_transparent - noText.png" type="image/x-icon" />
     <!-- Enlace de estilos -->
-    <link rel="stylesheet" href="./styles/registro.css">
-    <link rel="stylesheet" href="./styles/paletacolores.css">
-    <!-- Enlace de fonts,  iconos -->
+    <link rel="stylesheet" href="styles/estilocomun.css">
+    <link rel="stylesheet" href="styles/registro.css">
+    <!-- Enlace de fonts,iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Enlace de scripts -->
-    <script src="./js/registro.js" defer></script>
+    <script src="js/registro.js" defer></script>
 </head>
 
 <body>
-    <div class="container">
-        <h1>Registro</h1>
-        <form action="GestorUsuario?action=registrarUsuario" method="post">
-            <input type="text" name="nombre" placeholder="Nombre" required>
-            <input type="email" name="email" placeholder="Correo electrónico" required>
-            <input type="password" name="password" placeholder="Contraseña" required>
-            <label for="consentimiento-datos">
-                <input type="checkbox" id="consentimiento-datos" name="consentimiento-datos" required>
-                Acepto el consentimiento de uso de datos
-            </label>
-            <label for="terminos-condiciones">
-                <input type="checkbox" id="terminos-condiciones" name="terminos-condiciones" required>
-                He leído y acepto los <a href="condicionesdeuso.html">términos y condiciones</a> de la web
-            </label>
-            <input type="submit" value="Registrarse">
-        </form>
-        <div class="login-link">
-            ¿Ya tienes una cuenta? <a href="index.html">Inicia sesión aquí</a>
-        </div>
-    </div>
+    <div class="contenedor">
+        <header id="cabecera" role="banner">
+            <div id="divTitulo">
+                <h1>AisiAldia</h1>
+                <p lang="es">¡Bienvenido! - Ongi Etorri! - Benvido! - Benvingut! - Bienvenío! - Bienveníu!</p>
+            </div>
+            <nav id="navbar" role="navigation">
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <section class="registro">
+                <h1>Registro</h1>
+                <form id="registro" action="GestorUsuario?action=registrarUsuario" method="post">
+                    <section class="formulario-comun">
+                        <label for="nombre" aria-label="Nombre">
+                            <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
+                        </label>
+                        <label for="email" aria-label="Correo electrónico">
+                            <input type="email" id="email" name="email" placeholder="Correo electrónico" required>
+                        </label>
+                        <label for="password" aria-label="Contraseña">
+                            <input type="password" id="password" name="password" placeholder="Contraseña" required>
+                        </label>
+                        <label for="consentimiento-datos" aria-label="Consentimiento de uso de datos">
+                            <input type="checkbox" id="consentimiento-datos" name="consentimiento-datos" required>
+                            Acepto el consentimiento de uso de datos
+                        </label>
+                        <label for="terminos-condiciones" aria-label="Términos y condiciones">
+                            <input type="checkbox"  name="terminos-condiciones" required>
+                            He leído y acepto los <a id="terminos-condiciones" href="condicionesdeuso.html">términos y condiciones</a> de la web
+                        </label>
+                        <input type="submit" value="Registrarse" id="boton-registro">
+                    </section>
+                </form>
+                <div class="login-link">
+                    ¿Ya tienes una cuenta? <a href="index.html">Inicia sesión aquí</a>
+                </div>
+            </section>
+        </main>
+        <footer role="contentinfo">
+            <ul>
+                <li><a href="ayuda.html">Ayuda</a></li>
+                <li><a href="politicadeprivacidad.html">Política de privacidad</a></li>
+                <li><a href="condicionesdeuso.html">Condiciones de uso</a></li>
+                <li><a href="accesibilidad.html">Accesibilidad</a></li>
+                <li><a href="contacto.html">Contacto</a></li>
+            </ul>
+            <div class="social-links">
+                <a href="https://discord.com/users/maitane_82" target="_blank"><i class="fab fa-discord"></i></a>
+                <a href="https://www.linkedin.com/in/maitane-ibanez-irazabal" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://github.com/Nojabeach" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+            <p>&copy; 2024 AisiAldia. Todos los derechos reservados.</p>
+        </footer>
+    </div> 
 </body>
 
 </html>

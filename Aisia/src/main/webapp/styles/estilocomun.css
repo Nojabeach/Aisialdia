@@ -1,5 +1,5 @@
 /* Importación de la paleta de colores */
-@import url("./paletacolores.css");
+@import url("paletacolores.css");
 /* Importación de fuentes */
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap");
 
@@ -194,6 +194,7 @@ form label {
 }
 
 form input[type="text"],
+form input[type="password"],
 form input[type="file"],
 form button {
   width: calc(100% - 40px);
@@ -207,6 +208,7 @@ form button {
 }
 
 form input[type="text"]:focus,
+form input[type="password"]:focus,
 form input[type="file"]:focus,
 form button:focus {
   outline: none;
@@ -242,7 +244,7 @@ form button:hover {
 }
 
 /* Estilos para el campo de mensaje */
-.contacto-formulario textarea {
+.formulario-comun textarea {
   width: 100%;
   height: 150px;
   padding: 10px;
@@ -253,13 +255,13 @@ form button:hover {
   resize: vertical;
 }
 
-.contacto-formulario textarea:focus {
+.formulario-comun textarea:focus {
   outline: none;
   border-color: var(--boton-primario-hover);
 }
 
 /* Estilos para el campo de contacto */
-.contacto-formulario input[type="email"] {
+.formulario-comun input[type="email"] {
   width: 100%;
   padding: 10px;
   border: 1px solid var(--form-borde);
@@ -268,13 +270,13 @@ form button:hover {
   color: var(--form-texto);
 }
 
-.contacto-formulario input[type="email"]:focus {
+.formulario-comun input[type="email"]:focus {
   outline: none;
   border-color: var(--boton-primario-hover);
 }
 
 /* Estilos para el campo de asunto */
-.contacto-formulario input[type="text"] {
+.formulario-comun input[type="text"] {
   width: 100%;
   padding: 10px;
   border: 1px solid var(--form-borde);
@@ -283,12 +285,28 @@ form button:hover {
   color: var(--form-texto);
 }
 
-.contacto-formulario input[type="text"]:focus {
+.formulario-comun input[type="text"]:focus {
   outline: none;
   border-color: var(--boton-primario-hover);
 }
+
+/* Estilos para el campo de asunto */
+.formulario-comun input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--form-borde);
+  border-radius: 5px;
+  background-color: var(--form-texto2);
+  color: var(--form-texto);
+}
+
+.formulario-comun input[type="text"]:focus {
+  outline: none;
+  border-color: var(--boton-primario-hover);
+}
+
 /* Estilos para el botón de envío */
-.contacto-formulario input[type="submit"] {
+.formulario-comun input[type="submit"] {
   padding: 10px 20px;
   background-color: var(--boton-primario-fondo);
   color: var(--boton-primario-texto);
@@ -298,7 +316,7 @@ form button:hover {
   transition: background-color 0.3s ease;
 }
 
-.contacto-formulario input[type="submit"]:hover {
+.formulario-comun input[type="submit"]:hover {
   background-color: var(--boton-primario-hover);
 }
 /* Estilos para iconos */
@@ -443,9 +461,9 @@ footer ul li a:hover {
   }
 
   /* Hacer que los inputs del formulario ocupen todo el ancho del contenedor */
-  .contacto-formulario input[type="text"],
-  .contacto-formulario input[type="email"],
-  .contacto-formulario textarea {
+  .formulario-comun input[type="text"],
+  .formulario-comun input[type="email"],
+  .formulario-comun textarea {
     width: 100%;
   }
 
@@ -502,9 +520,9 @@ footer ul li a:hover {
   }
 
   /* Hacer que los inputs del formulario ocupen todo el ancho del contenedor */
-  .contacto-formulario input[type="text"],
-  .contacto-formulario input[type="email"],
-  .contacto-formulario textarea {
+  .formulario-comun input[type="text"],
+  .formulario-comun input[type="email"],
+  .formulario-comun textarea {
     width: 100%;
   }
 

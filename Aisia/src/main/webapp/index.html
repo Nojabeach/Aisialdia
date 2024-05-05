@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AisiAldia | Ocio para todos</title>
     <!-- Icono de la pestaña -->
-    <link rel="shortcut icon" href="./img/Logos/logo_transparent - noText.png" type="image/x-icon" />
+    <link rel="shortcut icon" href="img/Logos/logo_transparent - noText.png" type="image/x-icon" />
     <!-- Enlace de estilos -->
-    <link rel="stylesheet" href="./styles/index.css">
+    <link rel="stylesheet" href="styles/index.css">
     <!-- Enlace de fonts, iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Enlace de scripts -->
-    <script src="./js/index.js" ></script>
-    <script src="./js/index_ultimosEventos.js" ></script>
+    <script src="js/index.js"></script>
+    <script src="js/index_ultimosEventos.js"></script>
 </head>
 
 <body>
@@ -25,27 +25,29 @@
                 <p>Ocio para todos</p>
             </div>
             <div id="loginFormContainer">
-                <form id="LoginForm" action="Login" method="post">
-                    <div class="input-group">
-                        <input type="text" id="usuario" name="usuario" placeholder="Usuario o Email">
-
-                        <input type="password" id="contraseña" name="contraseña" placeholder="Contraseña">
-
-                        <input type="submit" value="Iniciar sesión">
-                    </div>
-                    <div class="input-group registroLink">
-                        <p>¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a></p>
-                    </div>
-                </form>
+                <!-- Contenedor para el formulario de inicio de sesión -->
+                <div id="formularioInicioSesionContainer">
+                    <form id="formularioInicioSesion">
+                        <div class="input-group">
+                            <input type="text" id="inputUsuario" placeholder="Usuario o Email">
+                            <input type="password" id="inputContrasena" placeholder="Contraseña">
+                            <button id="botonIniciarSesion">Iniciar sesión</button>
+                        </div>
+                        <div class="registroLink">
+                            <p>
+                                ¿No tienes cuenta? <a id="enlaceRegistro" href="registro.html">Regístrate aquí</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
                 <!-- Contenedor para el nombre del usuario y botón de cerrar sesión -->
                 <div id="userInfoContainer" style="display: none;">
                     <p id="userName"></p>
                     <p id="userPermiso"></p>
-                    <button id="logoutButton">Cerrar sesión</button>
+                    <button id="botonCerrarSesion">Cerrar sesión</button>
                 </div>
             </div>
         </header>
-
         <nav id="navbar">
             <ul>
                 <li><a href="index.html">Inicio</a></li>
@@ -85,7 +87,8 @@
             </aside>
         </main>
 
-        <footer>
+        <footer role="contentinfo">
+
             <ul>
                 <li><a href="ayuda.html">Ayuda</a></li>
                 <li><a href="politicadeprivacidad.html">Política de privacidad</a></li>
@@ -93,8 +96,16 @@
                 <li><a href="accesibilidad.html">Accesibilidad</a></li>
                 <li><a href="contacto.html">Contacto</a></li>
             </ul>
+            <div class="social-links">
+                <a href="https://discord.com/users/maitane_82" target="_blank"><i class="fab fa-discord"></i></a>
+                <a href="https://www.linkedin.com/in/maitane-ibanez-irazabal" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://github.com/Nojabeach" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+            <p>&copy; 2024 AisiAldia. Todos los derechos reservados.</p>
         </footer>
     </div>
+
+
 
 </body>
 

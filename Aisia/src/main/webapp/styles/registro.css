@@ -1,91 +1,96 @@
-/* Importación de fuentes */
-@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap");
 
-/* Tipografía principal */
-body,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Lato", sans-serif;
-}
-/* Contenedor principal */
-.container {
-  max-width: 600px;
-  margin: 40px auto;
+
+/* Header */
+header {
+  background-color: #f0f0f0; /* Agregamos un fondo gris claro */
   padding: 20px;
-  background-color: var(--fondo-terciario);
-  border: 1px solid var(--borde-principal);
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
-/* Título de la página */
-h1 {
+header h1 {
   font-size: 24px;
   margin-bottom: 10px;
   color: var(--titulo-principal);
 }
 
-/* Formulario de registro */
+/* Main */
+main {
+  flex-grow: 1; /* Hacemos que main ocupe el espacio restante */
+  padding: 20px;
+}
+
+main section {
+  background-color: #fff; /* Agregamos un fondo blanco */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Formulario */
 form {
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-form label {
-  display: block;
+label {
   margin-bottom: 10px;
-  font-weight: bold;
-  color: var(--form-texto);
 }
 
-form input[type="text"],
-form input[type="email"],
-form input[type="password"] {
-  width: 95%;
+input[type="text"], input[type="email"], input[type="password"] {
+  width: 100%;
   padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid var(--form-borde);
+  margin-bottom: 20px;
+  border: 1px solid   var(--borde-principal);
   border-radius: 5px;
-  background-color: var(--form-fondo);
-  color: var(--form-texto);
-  transition: border-color 0.3s ease;
 }
 
-form input[type="text"]:focus,
-form input[type="email"]:focus,
-form input[type="password"]:focus {
-  outline: none;
-  border-color: var(--boton-primario-hover);
+input[type="checkbox"] {
+  margin-right: 10px;
 }
-
-form input[type="submit"] {
-  padding: 10px 20px;
-  background-color: var(--boton-primario-fondo);
-  color: var(--boton-primario-texto);
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+#terminos-condiciones {
+  color: var(  --texto-naranja);
 }
-
-form input[type="submit"]:hover {
-  background-color: var(--boton-primario-hover);
-}
-
 /* Enlace para iniciar sesión */
 .login-link {
+  font-size: 14px;
+  color: var(--texto-principal);
   text-align: center;
   margin-top: 20px;
 }
 
 .login-link a {
-  color: var(--enlace-primario);
+  color: var(--boton-registrarse);
   text-decoration: none;
 }
 
 .login-link a:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+footer {
+  padding: 20px;
+  text-align: center;
+
+}
+
+footer ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+footer li {
+  margin-right: 20px;
+}
+
+footer a {
+  text-decoration: none;
+}
+
+footer a:hover {
   text-decoration: underline;
 }

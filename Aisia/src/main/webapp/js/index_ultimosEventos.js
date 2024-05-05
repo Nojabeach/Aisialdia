@@ -22,7 +22,7 @@ window.onload = function () {
           console.log("Evento:", evento);
           const li = document.createElement("li");
           const img = document.createElement("img");
-          img.src = `./img/Iconos/${evento.tipoActividad.toLowerCase()}.png`;
+          img.src = `img/Iconos/${evento.tipoActividad.toLowerCase()}.png`;
           console.log("img.src:", img.src);
           img.alt = `Icono ${evento.tipoActividad}`;
           const a = document.createElement("a");

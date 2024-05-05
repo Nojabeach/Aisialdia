@@ -42,15 +42,15 @@ public class UltimosEventos extends HttpServlet {
 			// Obtener la cantidad de eventos a mostrar
 			int cantidadEventos = 10; // Cantidad puesta por mi para así visualizar la barra de scroll y poder
 										// editarla correctamente
-			System.out.println("Cantidad de eventos: " + cantidadEventos);
+			//System.out.println("Cantidad de eventos: " + cantidadEventos);
 
 			// Obtener los últimos eventos con su información asociada
 			List<EventoConActividad> eventos = EventoConActividad.obtenerUltimosEventos(cantidadEventos);
-			System.out.println("Eventos obtenidos: " + eventos.size());
+			//System.out.println("Eventos obtenidos: " + eventos.size());
 
 			// Convertir la lista de eventos a JSON
 			String eventosJSON = new Gson().toJson(eventos);
-			System.out.println("Eventos en formato JSON: " + eventosJSON);
+			//System.out.println("Eventos en formato JSON: " + eventosJSON);
 
 			// Establecer el tipo de contenido y encabezados de la respuesta
 			response.setContentType("application/json");

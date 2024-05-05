@@ -9,6 +9,7 @@
   --color-terciario: #99bca9; /* Gris verdoso */
   --color-acento: #f2f7f4; /* Blanco verdoso */
   --amarillo-naranja: #f2b134; /* Amarillo naranja */
+  --color-error: #e790a2; /* Rosa pastel */
 
   /* Colores de fondo */
   --fondo-principal: var(--color-secundario); /* Verde pastel */
@@ -22,6 +23,7 @@
   --texto-secundario: var(--color-secundario); /* Verde pastel */
   --texto-terciario: var(--color-terciario); /* Gris verdoso */
   --texto-blanco: var(--color-acento); /* Blanco verdoso */
+  --texto-naranja: var(--amarillo-naranja); /* Amarillo naranja */
 
   /* Colores de títulos */
   --titulo-principal: var(--color-primario); /* Verde pastel oscuro */
