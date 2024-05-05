@@ -1,5 +1,6 @@
 package modelo;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -45,6 +46,10 @@ public class EventoConActividad {
 	 * Ruta de la imagen que representa la actividad asociada.
 	 */
 	private String fotoActividad;
+	/**
+	 * Fecha en la que tiene lugar el evento.
+	 */
+	private Date fechaEvento;
 
 	// CONSTRUCTORES
 	// --------------------------------------------------------------------------------------------
@@ -64,15 +69,18 @@ public class EventoConActividad {
 	 * @param ubicacion     Ubicación del evento.
 	 * @param tipoActividad Tipo de actividad asociada.
 	 * @param fotoActividad Ruta de la imagen de la actividad.
+	 * @param fechaEvento   Fecha en la que tiene lugar el evento.
 	 */
 	public EventoConActividad(int idEvento, String nombre, String detalles, String ubicacion, String tipoActividad,
-			String fotoActividad) {
+			String fotoActividad, Date fechaEvento) {
+		super();
 		this.idEvento = idEvento;
 		this.nombre = nombre;
 		this.detalles = detalles;
 		this.ubicacion = ubicacion;
 		this.tipoActividad = tipoActividad;
 		this.fotoActividad = fotoActividad;
+		this.fechaEvento = fechaEvento;
 	}
 
 	/**
@@ -202,6 +210,26 @@ public class EventoConActividad {
 		this.fotoActividad = fotoActividad;
 	}
 
+	/**
+	 * Obtiene la fecha del evento.
+	 * 
+	 * @return la fecha del evento.
+	 * 
+	 */
+	public Date getFechaEvento() {
+		return fechaEvento;
+	}
+
+	/**
+	 * Establece la fecha del evento.
+	 * 
+	 * @param fechaEvento la fecha del evento.
+	 * 
+	 */
+	public void setFechaEvento(Date fechaEvento) {
+		this.fechaEvento = fechaEvento;
+	}
+
 // TOSTRING
 // --------------------------------------------------------------------------------------------
 
@@ -211,11 +239,12 @@ public class EventoConActividad {
 	 * 
 	 * @return Una cadena que contiene los detalles del evento y su actividad.
 	 */
+
 	@Override
 	public String toString() {
 		return "EventoConActividad [idEvento=" + idEvento + ", nombre=" + nombre + ", detalles=" + detalles
 				+ ", ubicacion=" + ubicacion + ", tipoActividad=" + tipoActividad + ", fotoActividad=" + fotoActividad
-				+ "]";
+				+ ", fechaEvento=" + fechaEvento + "]";
 	}
 
 	// MÉTODOS DE NEGOCIO
@@ -223,4 +252,5 @@ public class EventoConActividad {
 	public static List<EventoConActividad> obtenerUltimosEventos(int numEventos) throws SQLException {
 		return DaoEventoConActividad.getInstance().obtenerUltimosEventos(numEventos);
 	}
+
 }

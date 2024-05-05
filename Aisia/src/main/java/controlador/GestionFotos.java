@@ -21,7 +21,7 @@ import modelo.Proyecto;
 public class GestionFotos {
 
 	/** Ruta de los archivos en el servidor. */
-	private static final String PATH_FILES = Proyecto.rutaProyecto + "\\fotos";
+	private static final String PATH_FILES = Proyecto.rutaProyecto + "\\img\\Iconos";
 
 	/**
 	 * Sube una foto al servidor.

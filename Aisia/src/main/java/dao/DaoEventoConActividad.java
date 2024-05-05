@@ -13,7 +13,6 @@ import modelo.EventoConActividad;
 
 public class DaoEventoConActividad {
 
-	
 	private Connection con = null;
 	private static DaoEventoConActividad instance = null;
 
@@ -42,89 +41,90 @@ public class DaoEventoConActividad {
 		return instance;
 
 	}
-	
+
 	/**
-     * Obtiene un evento con la información de su actividad relacionada, basado en el
-     * identificador del evento.
-     * 
-     * @param idEvento Identificador del evento del que se desea obtener la información.
-     * @return Un objeto {@link EventoConActividad} que contiene los detalles del evento
-     *         y su actividad asociada, o null si no se encuentra ningún evento
-     *         relacionado.
-     * @throws SQLException Si ocurre un error al acceder a la base de datos.
-     */
+	 * Obtiene un evento con la información de su actividad relacionada, basado en
+	 * el identificador del evento.
+	 * 
+	 * @param idEvento Identificador del evento del que se desea obtener la
+	 *                 información.
+	 * @return Un objeto {@link EventoConActividad} que contiene los detalles del
+	 *         evento y su actividad asociada, o null si no se encuentra ningún
+	 *         evento relacionado.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
 
-    public EventoConActividad obtenerEventoConActividad(int idEvento) throws SQLException {
-        EventoConActividad eventoConActividad = null;
-        String sql="SELECT e.idEvento, e.nombre, e.detalles, e.ubicacion, a.tipoActividad, a.fotoActividad " +
-                "FROM eventos e " +
-                "INNER JOIN clasificacionEventos ce ON e.idEvento = ce.idEvento " +
-                "INNER JOIN actividades a ON ce.idActividad = a.idActividad " +
-                "WHERE e.idEvento = ?";
-        try (PreparedStatement statement = con.prepareStatement(sql)) {
-            statement.setInt(1, idEvento);
+	public EventoConActividad obtenerEventoConActividad(int idEvento) throws SQLException {
+		EventoConActividad eventoConActividad = null;
+		String sql = "SELECT e.idEvento, e.nombre, e.detalles, e.ubicacion, a.tipoActividad, a.fotoActividad "
+				+ "FROM eventos e " + "INNER JOIN clasificacionEventos ce ON e.idEvento = ce.idEvento "
+				+ "INNER JOIN actividades a ON ce.idActividad = a.idActividad " + "WHERE e.idEvento = ?";
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, idEvento);
 
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    int id = resultSet.getInt("idEvento");
-                    String nombre = resultSet.getString("nombre");
-                    String detalles = resultSet.getString("detalles");
-                    String ubicacion = resultSet.getString("ubicacion");
-                    String tipoActividad = resultSet.getString("tipoActividad");
-                    String fotoActividad = resultSet.getString("fotoActividad");
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					int id = rs.getInt("idEvento");
+					String nombre = rs.getString("nombre");
+					String detalles = rs.getString("detalles");
+					String ubicacion = rs.getString("ubicacion");
+					String tipoActividad = rs.getString("tipoActividad");
+					String fotoActividad = rs.getString("fotoActividad");
+					Date fechaEvento = rs.getDate("fechaEvento");
+					eventoConActividad = new EventoConActividad(id, nombre, detalles, ubicacion, tipoActividad,
+							fotoActividad, fechaEvento);
+				}
+			}
+		}
 
-                    eventoConActividad = new EventoConActividad(id, nombre, detalles, ubicacion, tipoActividad, fotoActividad);
-                }
-            }
-        }
+		return eventoConActividad;
+	}
 
-        return eventoConActividad;
-    }
+	/**
+	 * Obtiene una lista de los últimos eventos publicados no finalizados, ordenados
+	 * por fecha de publicación descendente.
+	 * 
+	 * @param numEventos Número máximo de eventos a recuperar.
+	 * @return Una lista de {@link EventoConActividad} que contiene los eventos
+	 *         recientes y sus actividades asociadas, o una lista vacía si no se
+	 *         encuentran eventos.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public List<EventoConActividad> obtenerUltimosEventos(int numEventos) throws SQLException {
+		List<EventoConActividad> eventosConActividad = new ArrayList<>();
 
-    
-    /**
-     * Obtiene una lista de los últimos eventos publicados no finalizados, ordenados por fecha de
-     * publicación descendente.
-     * 
-     * @param numEventos Número máximo de eventos a recuperar.
-     * @return Una lista de {@link EventoConActividad} que contiene los eventos
-     *         recientes y sus actividades asociadas, o una lista vacía si no se
-     *         encuentran eventos.
-     * @throws SQLException Si ocurre un error al acceder a la base de datos.
-     */
-    public List<EventoConActividad> obtenerUltimosEventos(int numEventos) throws SQLException {
-        List<EventoConActividad> eventosConActividad = new ArrayList<>();
+		// Preparar la consulta SQL para obtener los últimos eventos que no estén ya
+		// finalizados
+		String sql = "SELECT e.idEvento, e.nombre, e.detalles, e.fechaPublicacion, e.idModeradorPublicacion, e.fechaFinalizacion, e.idModeradorFinalizacion, e.motivoFinalizacion, e.ubicacion, e.fechaEvento,a.tipoActividad, a.fotoActividad "
+				+ "FROM eventos e " + "INNER JOIN clasificacionEventos ce ON e.idEvento = ce.idEvento "
+				+ "INNER JOIN actividades a ON ce.idActividad = a.idActividad "
+				+ "WHERE e.fechaFinalizacion is null and e.fechapublicacion is not null "
+				+ "ORDER BY e.fechaPublicacion DESC LIMIT ?";
+		PreparedStatement ps = con.prepareStatement(sql);
+		System.out.println(sql);
+		ps.setInt(1, numEventos);
 
-        // Preparar la consulta SQL para obtener los últimos eventos que no estén ya finalizados
-        String sql = "SELECT e.idEvento, e.nombre, e.detalles, e.fechaPublicacion, e.idModeradorPublicacion, e.fechaFinalizacion, e.idModeradorFinalizacion, e.motivoFinalizacion, e.ubicacion, a.tipoActividad, a.fotoActividad " +
-                     "FROM eventos e " +
-                     "INNER JOIN clasificacionEventos ce ON e.idEvento = ce.idEvento " +
-                     "INNER JOIN actividades a ON ce.idActividad = a.idActividad " +
-                     "WHERE e.fechaFinalizacion is null"+
-                     "ORDER BY e.fechaPublicacion DESC LIMIT ?";
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setInt(1, numEventos);
+		// Ejecutar la consulta y procesar los resultados
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			int idEvento = rs.getInt("idEvento");
+			String nombre = rs.getString("nombre");
+			String detalles = rs.getString("detalles");
+			String ubicacion = rs.getString("ubicacion");
+			String tipoActividad = rs.getString("tipoActividad");
+			String fotoActividad = rs.getString("fotoActividad");
+			Date fechaEvento = rs.getDate("fechaEvento");
 
-        // Ejecutar la consulta y procesar los resultados
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            int idEvento = rs.getInt("idEvento");
-            String nombre = rs.getString("nombre");
-            String detalles = rs.getString("detalles");
-            String ubicacion = rs.getString("ubicacion");
-            String tipoActividad = rs.getString("tipoActividad");
-            String fotoActividad = rs.getString("fotoActividad");
+			EventoConActividad eventoConActividad = new EventoConActividad(idEvento, nombre, detalles, ubicacion,
+					tipoActividad, fotoActividad, fechaEvento);
 
+			eventosConActividad.add(eventoConActividad);
+		}
 
-            EventoConActividad eventoConActividad = new EventoConActividad(idEvento, nombre, detalles, ubicacion, tipoActividad, fotoActividad);
+		// Cerrar recursos
+		rs.close();
+		ps.close();
 
-            eventosConActividad.add(eventoConActividad);
-        }
-
-        // Cerrar recursos
-        rs.close();
-        ps.close();
-
-        return eventosConActividad;
-    }
+		return eventosConActividad;
+	}
 }
