@@ -8,11 +8,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import modelo.Evento;
 import modelo.Usuario;
+import modelo.Usuario.Rol;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -162,24 +164,46 @@ public class GestorUsuario extends HttpServlet {
 	 * @throws SQLException Si se produce un error al acceder a la base de datos.
 	 */
 	private void registrarUsuario(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, SQLException {
-		// Obtener parámetros del formulario
-		String nombre = request.getParameter("nombre");
-		String email = request.getParameter("email");
-		String contrasena = request.getParameter("contrasena");
+	        throws IOException {
+	    // Obtener parámetros del formulario
+	    String nombre = request.getParameter("nombre");
+	    String email = request.getParameter("email");
+	    String contrasena = request.getParameter("contrasena");
+	    Date fechaNacimiento = Date.valueOf(request.getParameter("fechaNacimiento"));
+	    boolean recibeNotificaciones = Boolean.parseBoolean(request.getParameter("recibeNotificaciones"));
+	    String intereses = request.getParameter("intereses");
+	    String rolesStr = request.getParameter("roles");
+	    Rol roles = (rolesStr != null && !rolesStr.isEmpty()) ? Rol.valueOf(rolesStr) : Rol.USUARIO;
+	    int permiso = Integer.parseInt(request.getParameter("permiso"));
+	    Date consentimiento_datos = Date.valueOf(request.getParameter("consentimiento_datos"));
+	    Date aceptacionTerminosWeb = Date.valueOf(request.getParameter("aceptacionTerminosWeb"));
 
-		// Crear un nuevo usuario
-		Usuario usuario = new Usuario(nombre, email, contrasena);
+	    // Verificar si se proporcionaron todos los datos necesarios
+	    if (nombre == null || email == null || contrasena == null || nombre.isEmpty() || email.isEmpty() || contrasena.isEmpty()) {
+	        ControlErrores.mostrarErrorGenerico("Todos los campos son obligatorios. Por favor, complete el formulario.", response);
+	        return;
+	    }
 
-		// Registrar el usuario en la base de datos
-		try {
-			DaoUsuario.getInstance().registrarUsuario(usuario);
-			response.setStatus(HttpServletResponse.SC_CREATED);
-			response.getWriter().println("Usuario registrado exitosamente!");
-		} catch (SQLException e) {
-			ControlErrores.mostrarErrorGenerico("Error al registrar el usuario. Intente de nuevo.", response);
-		}
+	    // Crear un nuevo usuario
+	    Usuario usuario = new Usuario(nombre, email, contrasena);
+	    usuario.setFechaNacimiento(fechaNacimiento);
+	    usuario.setRecibeNotificaciones(recibeNotificaciones);
+	    usuario.setIntereses(intereses);
+	    usuario.setRoles(roles);
+	    usuario.setPermiso(permiso);
+	    usuario.setConsentimiento_datos(consentimiento_datos);
+	    usuario.setAceptacionTerminosWeb(aceptacionTerminosWeb);
+
+	    // Registrar el usuario en la base de datos
+	    try {
+	        DaoUsuario.getInstance().registrarUsuario(usuario);
+	        response.setStatus(HttpServletResponse.SC_CREATED);
+	        response.getWriter().println("Usuario registrado exitosamente!");
+	    } catch (SQLException e) {
+	        ControlErrores.mostrarErrorGenerico("Error al registrar el usuario. Intente de nuevo.", response);
+	    }
 	}
+
 
 	/**
 	 * Inicia sesión de un usuario en el sistema.

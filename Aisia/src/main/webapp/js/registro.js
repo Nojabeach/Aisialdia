@@ -1,47 +1,72 @@
-/*
- * Este script maneja el envío del formulario de registro.
- * Verifica que se completen todos los campos requeridos,
- * que se acepten los términos y condiciones, y envía los datos al servidor
- * para registrar al usuario. Luego, redirige al usuario a la página de eventos
- * si el registro es exitoso, o muestra un mensaje de error en caso contrario.
- */
-// Función para manejar el envío del formulario de registro
 function procesarEnvioFormularioRegistro(evento) {
-  evento.preventDefault(); // Evitar que el formulario se envíe automáticamente
+  console.log("Iniciando procesamiento de envío de formulario de registro...");
 
-  // Obtener los valores de los campos del formulario
-  const nombre = document.getElementById("nombre").value;
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  const aceptaConsentimientoDatos = document.getElementById("consentimiento-datos").checked;
-  const aceptaTerminosCondiciones = document.getElementById("terminos-condiciones").checked;
-  const interesesSeleccionados = document.getElementById("interesesSeleccionados-text").value;
+  evento.preventDefault(); // Evita que el formulario se envíe automáticamente
 
-  // Verificar si los campos están vacíos
-  if (nombre.trim() === "" || email.trim() === "" || password.trim() === "") {
-    alert("Debes rellenar todos los campos");
+  const nombre = obtenerValorCampo("nombre");
+  const email = obtenerValorCampo("email");
+  const contrasena = obtenerValorCampo("password");
+  const fechaNacimiento = obtenerValorCampo("fechaNacimiento");
+  const recibeNotificaciones = obtenerValorCheckbox("recibeNotificaciones");
+  const intereses = obtenerValorCampo("intereses");
+  let consentimientoDatos;
+  if (obtenerValorCheckbox("consentimiento-datos")) {
+    consentimientoDatos = new Date();
+  } else {
+    consentimientoDatos = obtenerValorCampo("consentimiento_datos");
+  }
+  const aceptacionTerminosWeb = obtenerValorCheckbox("terminos-condiciones");
+
+  console.log("Valores obtenidos:", {
+    nombre,
+    email,
+    contrasena,
+    fechaNacimiento,
+    recibeNotificaciones,
+    intereses,
+    consentimientoDatos,
+    aceptacionTerminosWeb
+  });
+
+  const validacion = validarCamposRequeridos([nombre, email, contrasena]);
+  if (!validacion.valido) {
+    console.log("Validación fallida:", validacion);
+    alert(validacion.mensaje);
     return;
   }
 
-  // Verificar si se han aceptado los términos y condiciones
-  if (!aceptaConsentimientoDatos || !aceptaTerminosCondiciones) {
-    alert("Debes aceptar el consentimiento de uso de datos y los términos y condiciones");
+  const validacionTerminos = validarTerminosYCondiciones(consentimientoDatos, aceptacionTerminosWeb);
+  if (!validacionTerminos) {
+    console.log("Validación fallida de términos y condiciones:", validacionTerminos);
+    alert("Debes aceptar los términos y condiciones y el consentimiento de datos.");
     return;
   }
 
-  // Enviar solicitud de registro al servidor
-  fetch(`GestorUsuario?action=registrarUsuario&nombre=${nombre}&email=${email}&password=${password}&interesesSeleccionados=${interesesSeleccionados}`)
-    .then(response => response.json())
+  console.log("Validación exitosa, enviando solicitud de registro al servidor...");
+
+  // Elimina roles y permiso de la llamada a la función
+  enviarSolicitudRegistroAlServidor(nombre, email, contrasena, fechaNacimiento, recibeNotificaciones, intereses, consentimientoDatos)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Hubo un problema con la solicitud");
+      }
+      // Verificar si la respuesta está vacía
+      if (response.status === 204) {
+        // Si la respuesta está vacía, devolver un objeto vacío
+        return {};
+      }
+      // Si la respuesta no está vacía, analizarla como JSON
+      return response.json();
+    })
     .then(data => {
+      console.log("Respuesta del servidor:", data);
       if (data.logged) {
-        // Redirigir al usuario a eventos.html con el usuario logueado
+        console.log("Registro exitoso, redirigiendo al usuario a eventos.html...");
         window.location.href = "eventos.html";
       } else {
+        console.log("Error al registrar usuario:", data);
         alert("Error al registrar usuario");
       }
     })
     .catch(error => console.error(error));
 }
-
-// Agregar evento de envío al formulario de registro
-document.getElementById("registro").addEventListener("submit", procesarEnvioFormularioRegistro);
