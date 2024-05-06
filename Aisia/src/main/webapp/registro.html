@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="styles/registro.css">
     <!-- Enlace de fonts,iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Agrega estas etiquetas <script> (son defer xq ambos archivos se cargarán de forma asíncrona y se ejecutarán después de que el documento HTML se haya cargado completamente. )-->
+    <script src="js/cargarIntereses.js" ></script>
     <script src="js/registro.js" defer></script>
 </head>
 
@@ -32,23 +34,40 @@
                 <h1>Registro</h1>
                 <form id="registro" action="GestorUsuario?action=registrarUsuario" method="post">
                     <section class="formulario-comun">
-                        <label for="nombre" aria-label="Nombre">
-                            <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
+                        <label for="nombre" aria-label="Nombre">Nombre:</label>
+                        <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre" required>
+                        
+                        <label for="email" aria-label="Correo electrónico">Correo electrónico:</label>
+                        <input type="email" id="email" name="email" placeholder="Escribe tu correo electrónico" required>
+                        
+                        <label for="password" aria-label="Contraseña">Contraseña:</label>
+                        <input type="password" id="password" name="password" placeholder="Escribe tu contraseña" required>
+                        
+                        <label for="fechaNacimiento" aria-label="Fecha de nacimiento">Fecha de nacimiento:</label>
+                        <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+                        
+                        <label for="recibeNotificaciones" aria-label="Recibe notificaciones">
+                            <input type="checkbox" id="recibeNotificaciones" name="recibeNotificaciones">
+                            Recibir notificaciones
                         </label>
-                        <label for="email" aria-label="Correo electrónico">
-                            <input type="email" id="email" name="email" placeholder="Correo electrónico" required>
-                        </label>
-                        <label for="password" aria-label="Contraseña">
-                            <input type="password" id="password" name="password" placeholder="Contraseña" required>
-                        </label>
+                        
+                        <label for="intereses" aria-label="Intereses">Intereses:</label>
+                        <select id="intereses" name="intereses" required>
+                            <option value="">Seleccione un interés</option>
+                        </select>
+                        
+                        <input type="text" id="interesesSeleccionados-text" name="interesesSeleccionadosText" hidden>
+                        
                         <label for="consentimiento-datos" aria-label="Consentimiento de uso de datos">
                             <input type="checkbox" id="consentimiento-datos" name="consentimiento-datos" required>
                             Acepto el consentimiento de uso de datos
                         </label>
+                        
                         <label for="terminos-condiciones" aria-label="Términos y condiciones">
                             <input type="checkbox"  name="terminos-condiciones" required>
                             He leído y acepto los <a id="terminos-condiciones" href="condicionesdeuso.html">términos y condiciones</a> de la web
                         </label>
+                        
                         <input type="submit" value="Registrarse" id="boton-registro">
                     </section>
                 </form>

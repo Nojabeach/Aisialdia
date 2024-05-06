@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -57,18 +58,19 @@ public class DaoUsuario {
 	 */
 	public void registrarUsuario(Usuario usuario) throws SQLException, IllegalArgumentException {
 
-		String sql = "INSERT INTO usuarios (nombre, email, contrasena,fechaNacimiento,recibeNotificaciones,intereses,roles,permiso,consentimiento_datos) VALUES (?, ?, ?)";
+		String sql = "INSERT INTO usuarios (nombre, email, contrasena,fechaNacimiento,recibeNotificaciones,intereses,roles,permiso,consentimiento_datos,aceptacionTerminosWeb) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		System.out.println(sql);
 		PreparedStatement ps = con.prepareStatement(sql);
 		ps.setString(1, usuario.getNombre());
-	    ps.setString(2, usuario.getEmail());
-	    ps.setString(3, usuario.getcontrasena());
-	    ps.setDate(4, usuario.getFechaNacimiento());
-	    ps.setBoolean(5, usuario.isRecibeNotificaciones());
-	    ps.setString(6, usuario.getIntereses());
-	    ps.setString(7, usuario.getRol());
-	    ps.setInt(8, usuario.getPermiso());
-	    ps.setDate(9, usuario.getConsentimientoDatos());
+		ps.setString(2, usuario.getEmail());
+		ps.setString(3, usuario.getcontrasena());
+		ps.setDate(4, usuario.getFechaNacimiento());
+		ps.setBoolean(5, usuario.isRecibeNotificaciones());
+		ps.setString(6, usuario.getIntereses());
+		ps.setString(7, (usuario.getRoles() != null) ? usuario.getRoles().toString() : Rol.USUARIO.toString());
+		ps.setInt(8, (usuario.getPermiso() != 0) ? usuario.getPermiso() : 1);
+		ps.setDate(9, usuario.getConsentimiento_datos());
+		ps.setDate(10, usuario.getAceptacionTerminosWeb());
 		ps.executeUpdate();
 	}
 
@@ -315,14 +317,17 @@ public class DaoUsuario {
 				int idUsuario = rs.getInt("idUsuario");
 				String nombre = rs.getString("nombre");
 				String email = rs.getString("email");
-				String hashContrasena = rs.getString("contrasena");
-				String fechaNacimiento = rs.getString("fechaNacimiento");
+				String contrasena = rs.getString("contrasena");
+				Date fechaNacimiento = rs.getDate("fechaNacimiento");
+				boolean recibeNotificaciones = rs.getBoolean("recibeNotificaciones");
 				String intereses = rs.getString("intereses");
 				int permiso = rs.getInt("permiso");
-				Rol rol = Rol.valueOf(rs.getString("rol")); // Convertir String a Rol
+				Rol rol = Rol.valueOf(rs.getString("roles"));
+				Date consentimiento_datos = rs.getDate("consentimiento_datos");
+				Date aceptacionTerminosWeb = rs.getDate("aceptacionTerminosWeb");
 
-				Usuario usuario = new Usuario(idUsuario, nombre, email, hashContrasena, fechaNacimiento, intereses,
-						permiso, rol);
+				Usuario usuario = new Usuario(idUsuario, nombre, email, contrasena, fechaNacimiento,
+						recibeNotificaciones, intereses, permiso, rol, consentimiento_datos, aceptacionTerminosWeb);
 				usuarios.add(usuario);
 			}
 		}

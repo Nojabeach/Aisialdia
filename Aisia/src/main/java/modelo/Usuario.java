@@ -41,6 +41,11 @@ public class Usuario {
 	private Date fechaNacimiento;
 
 	/**
+	 * Indica si el usuario recibe notificaciones.
+	 */
+	private boolean recibeNotificaciones;
+
+	/**
 	 * Intereses del usuario (por ejemplo, "Música", "Deporte", "Lectura").
 	 */
 	private String intereses;
@@ -49,10 +54,11 @@ public class Usuario {
 	 * Control de permisos de los usuarios en la web.
 	 */
 	private int permiso;
+
 	/**
 	 * Rol del usuario en el sistema (USUARIO, MODERADOR, ADMINISTRADOR).
 	 */
-	private Rol rol;
+	private Rol roles;
 
 	/**
 	 * Enum que define los roles posibles para un usuario.
@@ -74,6 +80,16 @@ public class Usuario {
 		ADMINISTRADOR
 	}
 
+	/**
+	 * Fecha en la que el usuario dio su consentimiento para el uso de sus datos.
+	 */
+	private Date consentimiento_datos;
+	/**
+	 * Fecha en la que el usuario acepto terminos y condiciones tras su lectura en
+	 * la web
+	 */
+	private Date aceptacionTerminosWeb;
+
 	// CONSTRUCTORES
 	// --------------------------------------------------------------------------------------------
 	/**
@@ -85,33 +101,48 @@ public class Usuario {
 	/**
 	 * Constructor completo para inicializar la clase con todos sus atributos.
 	 *
-	 * @param idUsuario       Identificador único del usuario.
-	 * @param nombre          Nombre del usuario.
-	 * @param email           Dirección de correo electrónico del usuario.
-	 * @param hashContrasena  Hash de la contraseña del usuario.
-	 * @param fechaNacimiento Fecha de nacimiento del usuario (formato dd/mm/aaaa).
-	 * @param intereses       Lista de intereses del usuario.
-	 * @param rol             Rol del usuario en el sistema.
+	 * @param idUsuario             Identificador único del usuario.
+	 * @param nombre                Nombre del usuario.
+	 * @param email                 Dirección de correo electrónico del usuario.
+	 * @param contrasena            Hash de la contraseña del usuario.
+	 * @param fechaNacimiento       Fecha de nacimiento del usuario (formato
+	 *                              dd/mm/aaaa).
+	 * @param recibeNotificaciones  Indica si el usuario recibe notificaciones.
+	 * @param intereses             Intereses del usuario (por ejemplo, "Música",
+	 *                              "Deporte", "Lectura").
+	 * @param permiso               Control de permisos de los usuarios en la web.
+	 * @param roles                 Rol del usuario en el sistema (USUARIO,
+	 *                              MODERADOR, ADMINISTRADOR).
+	 * @param consentimiento_datos  Fecha en la que el usuario dio su consentimiento
+	 *                              para el uso de sus datos.
+	 * @param aceptacionTerminosWeb Fecha en la que el usuario acepto terminos y
+	 *                              condiciones tras su lectura en la web
 	 */
-	public Usuario(int idUsuario, String nombre, String email, String hashContrasena, Date fechaNacimiento,
-			String intereses, int permiso, Rol rol) {
+
+	public Usuario(int idUsuario, String nombre, String email, String contrasena, Date fechaNacimiento,
+			boolean recibeNotificaciones, String intereses, int permiso, Rol roles, Date consentimiento_datos,
+			Date aceptacionTerminosWeb) {
+
 		this.idUsuario = idUsuario;
 		this.nombre = nombre;
 		this.email = email;
-		this.contrasena = hashContrasena;
+		this.contrasena = contrasena;
 		this.fechaNacimiento = fechaNacimiento;
+		this.recibeNotificaciones = recibeNotificaciones;
 		this.intereses = intereses;
 		this.permiso = permiso;
-		this.rol = rol;
+		this.roles = roles;
+		this.consentimiento_datos = consentimiento_datos;
+		this.aceptacionTerminosWeb = aceptacionTerminosWeb;
 	}
 
 	/**
 	 * Constructor con idUsuario, nombre, email y hashContrasena.
 	 *
-	 * @param idUsuario      Identificador único del usuario.
-	 * @param nombre         Nombre del usuario.
-	 * @param email          Dirección de correo electrónico del usuario.
-	 * @param hashContrasena Hash de la contraseña del usuario.
+	 * @param idUsuario  Identificador único del usuario.
+	 * @param nombre     Nombre del usuario.
+	 * @param email      Dirección de correo electrónico del usuario.
+	 * @param contrasena Contraseña del usuario.
 	 */
 	public Usuario(String nombre, String email, String Contrasena) {
 		this.nombre = nombre;
@@ -262,30 +293,116 @@ public class Usuario {
 	}
 
 	/**
-	 * Obtiene el rol del usuario en el sistema.
+	 * Obtiene la contraseña del usuario.
 	 *
-	 * @return Rol del usuario en el sistema.
+	 * @return La contraseña del usuario.
 	 */
-	public Rol getRol() {
-		return rol;
+	public String getContrasena() {
+		return contrasena;
 	}
 
 	/**
-	 * Establece el rol del usuario en el sistema.
+	 * Establece la contraseña del usuario.
 	 *
-	 * @param rol Nuevo rol del usuario en el sistema.
+	 * @param contrasena La nueva contraseña del usuario.
 	 */
-	public void setRol(Rol rol) {
-		this.rol = rol;
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
 	}
 
+	/**
+	 * Verifica si el usuario recibe notificaciones.
+	 *
+	 * @return true si el usuario recibe notificaciones, false de lo contrario.
+	 */
+	public boolean isRecibeNotificaciones() {
+		return recibeNotificaciones;
+	}
+
+	/**
+	 * Establece si el usuario recibe notificaciones.
+	 *
+	 * @param recibeNotificaciones true si el usuario recibe notificaciones, false
+	 *                             de lo contrario.
+	 */
+	public void setRecibeNotificaciones(boolean recibeNotificaciones) {
+		this.recibeNotificaciones = recibeNotificaciones;
+	}
+
+	/**
+	 * Obtiene el rol del usuario.
+	 *
+	 * @return El rol del usuario.
+	 */
+	public Rol getRoles() {
+		return roles;
+	}
+
+	/**
+	 * Establece el rol del usuario.
+	 *
+	 * @param roles El nuevo rol del usuario.
+	 */
+	public void setRoles(Rol roles) {
+		this.roles = roles;
+	}
+
+	/**
+	 * Obtiene la fecha de consentimiento de datos del usuario.
+	 *
+	 * @return La fecha de consentimiento de datos del usuario.
+	 */
+	public Date getConsentimiento_datos() {
+		return consentimiento_datos;
+	}
+
+	/**
+	 * Establece la fecha de consentimiento de datos del usuario.
+	 *
+	 * @param consentimiento_datos La nueva fecha de consentimiento de datos del
+	 *                             usuario.
+	 */
+	public void setConsentimiento_datos(Date consentimiento_datos) {
+		this.consentimiento_datos = consentimiento_datos;
+	}
+
+	/**
+	 * Obtiene el permiso del usuario en la web.
+	 *
+	 * @return El permiso del usuario en la web.
+	 */
 	public int getPermiso() {
 		return permiso;
 	}
 
+	/**
+	 * Establece el permiso del usuario en la web.
+	 *
+	 * @param permiso El nuevo permiso del usuario en la web.
+	 */
 	public void setPermiso(int permiso) {
 		this.permiso = permiso;
 	}
+
+	/**
+	 * Obtiene la fecha en la que el usuario aceptó los términos en la web.
+	 *
+	 * @return La fecha de aceptación de los términos en la web.
+	 */
+	public Date getAceptacionTerminosWeb() {
+		return aceptacionTerminosWeb;
+	}
+
+	/**
+	 * Establece la fecha en la que el usuario aceptó los términos en la web.
+	 *
+	 * @param aceptacionTerminosWeb La nueva fecha de aceptación de los términos en
+	 *                              la web.
+	 */
+	public void setAceptacionTerminosWeb(Date aceptacionTerminosWeb) {
+		this.aceptacionTerminosWeb = aceptacionTerminosWeb;
+	}
+
 	// MÉTODO TOSTRING
 	// --------------------------------------------------------------------------------------------
 
@@ -296,9 +413,10 @@ public class Usuario {
 	 */
 	@Override
 	public String toString() {
-		return "Usuario [idUsuario=" + idUsuario + ", nombre=" + nombre + ", email=" + email + ", hashContrasena="
-				+ contrasena + ", fechaNacimiento=" + fechaNacimiento + ", intereses=" + intereses + ", permiso="
-				+ permiso + ", rol=" + rol + "]";
+		return "Usuario [idUsuario=" + idUsuario + ", nombre=" + nombre + ", email=" + email + ", contrasena="
+				+ contrasena + ", fechaNacimiento=" + fechaNacimiento + ", recibeNotificaciones=" + recibeNotificaciones
+				+ ", intereses=" + intereses + ", permiso=" + permiso + ", roles=" + roles + ", consentimiento_datos="
+				+ consentimiento_datos + "]";
 	}
 
 	// MÉTODOS DE NEGOCIO

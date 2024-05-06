@@ -48,6 +48,25 @@ input[type="text"], input[type="email"], input[type="password"] {
 input[type="checkbox"] {
   margin-right: 10px;
 }
+/* Estilos para el select de intereses */
+#intereses {
+  color: blue;
+  background-color: var(--fondo-terciario); /* Color de fondo */
+  border: 1px solid var(--borde-principal);
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+
+
+/* Estilos para el texto oculto de intereses seleccionados */
+#interesesSeleccionados-text {
+  display: none;
+}
+
+
 #terminos-condiciones {
   color: var(  --texto-naranja);
 }

@@ -61,40 +61,28 @@ public class DaoInteresPorDefecto {
             }
         }
     }
-
     /**
-     * Recupera una lista de todos los intereses por defecto de la base de datos.
+     * Recupera una lista de nombres de todos los intereses por defecto de la base de datos.
      *
-     * @return una lista de objetos InteresPorDefecto
+     * @return una lista de nombres de interés
      * @throws SQLException si ocurre algún error de SQL
      */
-    public List<InteresPorDefecto> listarInteresesPorDefecto() throws SQLException {
-        List<InteresPorDefecto> intereses = new ArrayList<>();
-        String sql = "SELECT nombreInteres FROM interesesPorDefecto order by nombreInteres";
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+    public List<String> listarNombresInteresesPorDefecto() throws SQLException {
+        List<String> nombresIntereses = new ArrayList<>();
+        String sql = "SELECT nombreInteres FROM interesesPorDefecto ORDER BY nombreInteres";
 
-        try {
-            pstmt = con.prepareStatement(sql);
-            rs = pstmt.executeQuery();
+        try (PreparedStatement pstmt = con.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
 
+            // Iterar sobre el conjunto de resultados y obtener los nombres de interés
             while (rs.next()) {
-             
                 String nombreInteres = rs.getString("nombreInteres");
-
-                InteresPorDefecto interes = new InteresPorDefecto( nombreInteres);
-                intereses.add(interes);
-            }
-
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (pstmt != null) {
-                pstmt.close();
+                nombresIntereses.add(nombreInteres);
             }
         }
 
-        return intereses;
+        // Devolver la lista de nombres de interés
+        return nombresIntereses;
     }
 }
+

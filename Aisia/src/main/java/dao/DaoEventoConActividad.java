@@ -101,7 +101,7 @@ public class DaoEventoConActividad {
 				+ "WHERE e.fechaFinalizacion is null and e.fechapublicacion is not null "
 				+ "ORDER BY e.fechaPublicacion DESC LIMIT ?";
 		PreparedStatement ps = con.prepareStatement(sql);
-		System.out.println(sql);
+		// System.out.println(sql);
 		ps.setInt(1, numEventos);
 
 		// Ejecutar la consulta y procesar los resultados

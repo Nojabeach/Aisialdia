@@ -33,14 +33,14 @@ INSERT INTO interesesPorDefecto (nombreInteres) VALUES
 ('Tecnología');
 
 -- Inserta datos de prueba en la tabla usuarios
-INSERT INTO usuarios (nombre, contrasena, email, fechaNacimiento, recibeNotificaciones, intereses, roles, permiso, consentimiento_datos) VALUES
-('Ane', 'contraseña1', 'ane@example.com', '1995-03-15', false, 'Deportes, Música, Cultura', 'usuario', 1, '2024-04-01 12:00:00'),
-('Jon', 'contraseña2', 'jon@example.com', '1990-08-25', false, 'Arte, Teatro, Deportes', 'usuario', 1, '2024-04-02 12:00:00'),
-('Alejandro', 'contraseña3', 'maite@example.com', '1987-11-10', false, 'Gastronomía, Viajes, Música', 'usuario', 1, '2024-04-03 12:00:00'),
-('Gonzalo', 'contraseña4', 'iker@example.com', '1992-06-20', false, 'Cine, Fotografía, Naturaleza', 'usuario', 1, '2024-04-04 12:00:00'),
-('Leire', 'contraseña5', 'leire@example.com', '1988-09-30', false, 'Moda, Belleza, Cocina', 'usuario', 1, '2024-04-05 12:00:00'),
-('Pelayo', '1234', 'leire@example.com', '1988-09-30', false, 'Moda, Belleza, Cocina', 'usuario', 2, '2024-04-05 12:00:00'),
-('Maitane', '1234', 'maitane@example.com', '1988-09-30', true, 'Moda, Belleza, Cocina', 'usuario', 99, '2024-04-05 12:00:00');
+INSERT INTO usuarios (nombre, contrasena, email, fechaNacimiento, recibeNotificaciones, intereses, roles, permiso, consentimiento_datos,aceptacionTerminosWeb) VALUES
+('Ane', 'contraseña1', 'ane@example.com', '1995-03-15', false, 'Deportes, Música, Cultura', 'usuario', 1, '2024-04-01 12:00:00','2024-04-01 12:00:00'),
+('Jon', 'contraseña2', 'jon@example.com', '1990-08-25', false, 'Arte, Teatro, Deportes', 'usuario', 1, '2024-04-02 12:00:00','2024-04-01 12:00:00'),
+('Alejandro', 'contraseña3', 'maite@example.com', '1987-11-10', false, 'Gastronomía, Viajes, Música', 'usuario', 1, '2024-04-03 12:00:00','2024-04-01 12:00:00'),
+('Gonzalo', 'contraseña4', 'iker@example.com', '1992-06-20', false, 'Cine, Fotografía, Naturaleza', 'usuario', 1, '2024-04-04 12:00:00','2024-04-01 12:00:00'),
+('Leire', 'contraseña5', 'leire@example.com', '1988-09-30', false, 'Moda, Belleza, Cocina', 'usuario', 1, '2024-04-05 12:00:00','2024-04-01 12:00:00'),
+('Pelayo', '1234', 'leire@example.com', '1988-09-30', false, 'Moda, Belleza, Cocina', 'usuario', 2, '2024-04-05 12:00:00','2024-04-01 12:00:00'),
+('Maitane', '1234', 'maitane@example.com', '1988-09-30', true, 'Moda, Belleza, Cocina', 'usuario', 99, '2024-04-05 12:00:00','2024-04-01 12:00:00');
 
 -- Inserta datos de prueba en la tabla eventos
 INSERT INTO eventos (nombre, fechaEvento, detalles, idUsuariocreador, fechaCreacion, fechaAprobacion, idModeradorAprobacion, fechaUltimaModificacion, fechaPublicacion, idModeradorPublicacion, fechaFinalizacion, idModeradorFinalizacion, MotivoFinalizacion, Ubicacion) VALUES
