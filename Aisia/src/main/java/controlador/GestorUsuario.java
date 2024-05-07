@@ -248,19 +248,19 @@ public class GestorUsuario extends HttpServlet {
 			throws IOException, SQLException {
 		// Obtener parámetros del formulario
 		String usuarioSTR = request.getParameter("usuario");
-		System.out.println(usuarioSTR);
+		//System.out.println(usuarioSTR);
 
 		// Iniciar sesión
 		try {
 			// Verificamos el inicio de sesión con la contraseña cifrada
 			Usuario usuario = DaoUsuario.getInstance().iniciarSesion(usuarioSTR,
 					getMD5(request.getParameter("contrasena")));
-			System.out.println("Preparando el inicio");
+			//System.out.println("Preparando el inicio");
 			if (usuario != null) {
 				HttpSession session = request.getSession();
 				session.setAttribute("usuario", usuario);
 				session.setAttribute("permiso", usuario.getPermiso());
-				System.out.println("Inicio de sesión exitoso! Acceso registrado");
+				//System.out.println("Inicio de sesión exitoso! Acceso registrado");
 			} else {
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 				System.out.println("Credenciales incorrectas.");
