@@ -12,6 +12,7 @@ h5,
 h6 {
   font-family: "Lato", sans-serif;
 }
+
 /* Estilos generales */
 * {
   margin: 0;
@@ -104,6 +105,7 @@ img {
 .registroLink a:hover {
   text-decoration: underline;
 }
+
 /* Menú de navegación */
 #navbar {
   background-color: var(--fondo-principal);
@@ -194,9 +196,10 @@ section p {
 }
 
 #aside li img {
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
+  width: 48px;
+  height: 48px;
+  margin-right: 5px;
+  margin-left: 5px;
 }
 
 #aside li a {
@@ -220,157 +223,31 @@ section p {
 }
 
 #aside::-webkit-scrollbar-thumb {
-  background-color: var(--borde-principal);
+  background-color: var(--scrollbar);
   border-radius: 10px;
 }
 
 #aside::-webkit-scrollbar-track {
-  background-color: var(--fondo-secundario);
-}
-/* Formularios */
-form {
-  margin-bottom: 20px;
-  background-color: var(--form-fondo); /* Color de fondo */
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-form label {
-  display: block;
-  margin-bottom: 10px;
-  font-weight: bold;
-  color: var(--form-texto); /* Color del texto */
-}
-
-form input[type="text"],
-form input[type="file"],
-form button {
-  width: calc(100% - 40px); /* Ancho con margen izquierdo y derecho */
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid var(--form-borde); /* Borde */
-  border-radius: 5px;
-  background-color: var(--form-fondo); /* Color de fondo */
-  color: var(--form-texto); /* Color del texto */
-  transition: border-color 0.3s ease; /* Transición suave del borde */
-}
-
-form input[type="text"]:focus,
-form input[type="file"]:focus,
-form button:focus {
-  outline: none; /* Quita el contorno al enfocar */
-  border-color: var(--boton-primario-hover); /* Color del borde al enfocar */
-}
-
-form input[type="file"]::-webkit-file-upload-button {
-  background: var(
-    --boton-primario-fondo
-  ); /* Color de fondo del botón de archivo */
-  color: var(--boton-primario-texto); /* Color del texto del botón de archivo */
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease; /* Transición suave del color de fondo */
-}
-
-form input[type="file"]::-webkit-file-upload-button:hover {
-  background-color: var(
-    --boton-primario-hover
-  ); /* Color de fondo del botón de archivo al pasar el ratón */
-}
-
-/* Estilos para mensajes de validación */
-input:invalid {
-  border-color: red;
-}
-
-input:invalid + label:before {
-  content: "⚠ "; /* Icono de advertencia */
-  color: red;
-  font-weight: bold;
-  margin-right: 5px;
-}
-
-/* Estilos adicionales para botones */
-form button {
-  border: none;
-  border-radius: 5px;
-  background-color: var(--boton-primario-fondo); /* Color de fondo */
-  color: var(--boton-primario-texto); /* Color del texto */
-  cursor: pointer;
-  transition: background-color 0.3s ease; /* Transición suave del color de fondo */
-}
-
-form button:hover {
-  background-color: var(
-    --boton-primario-hover
-  ); /* Color de fondo al pasar el ratón */
+  background-color: var(--scrollbar-track);
 }
 
 /* Pie de página */
-footer {
+#piepagina {
   background-color: var(--footer);
-  color: var(--texto-secundario);
+  color: var(--texto-blanco);
   padding: 20px;
   text-align: center;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  position: fixed;
-  bottom: 0;
-  left: 0;
 }
 
-footer ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
+#piepagina p {
+  margin-bottom: 10px;
 }
 
-footer ul li {
-  margin-right: 20px;
-}
-
-footer form {
-  display: flex;
-}
-
-footer input[type="email"],
-footer input[type="submit"] {
-  padding: 10px;
-  border: 1px solid var(--borde-secundario);
-  border-radius: 5px;
-}
-
-footer input[type="submit"] {
-  padding: 10px 20px;
-  background-color: var(--boton-primario-fondo);
-  color: var(--boton-primario-texto);
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-footer input[type="submit"]:hover {
-  background-color: var(--boton-primario-hover);
-}
-
-/* Estilos para los enlaces del footer */
-footer ul li a {
-  color: var(--texto-terciario);
+#piepagina a {
+  color: var(--texto-blanco);
   text-decoration: none;
 }
 
-footer ul li a:hover {
-  color: var(--texto-blanco);
-}
-
-/* Tamaño de los iconos de eventos */
-#aside li img {
-  width: 48px;
-  height: 48px;
-  margin-right: 10px;
+#piepagina a:hover {
+  text-decoration: underline;
 }

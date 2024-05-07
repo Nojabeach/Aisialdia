@@ -60,6 +60,7 @@ public class DaoUsuario {
 
 		String sql = "INSERT INTO usuarios (nombre, email, contrasena,fechaNacimiento,recibeNotificaciones,intereses,roles,permiso,consentimiento_datos,aceptacionTerminosWeb) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		System.out.println(sql);
+		System.out.println(sql);
 		PreparedStatement ps = con.prepareStatement(sql);
 		ps.setString(1, usuario.getNombre());
 		ps.setString(2, usuario.getEmail());
@@ -84,17 +85,21 @@ public class DaoUsuario {
 	 * @return Objeto Usuario si la autenticación es correcta, null si no lo es.
 	 * @throws Exception Si ocurre un error al iniciar sesión.
 	 */
-	public Usuario iniciarSesion(String email, String contrasena) throws Exception {
+	public Usuario iniciarSesion(String usuario, String contrasena) throws Exception {
 		// Preparar la consulta SQL para validar el usuario y contraseña
-		String sql = "SELECT * FROM usuarios WHERE email =? AND contrasena =?";
+		String sql = "SELECT * FROM usuarios WHERE usuario =? AND contrasena =?";
 		try (PreparedStatement ps = con.prepareStatement(sql)) {
-			ps.setString(1, email);
+			ps.setString(1, usuario);
 			ps.setString(2, contrasena); // Ya se está pasando la contraseña cifrada
+			System.out.println(sql);
+			System.out.println(usuario);
+			System.out.println(contrasena);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				// Registramos el acceso en la tabla de accesos
 				registrarAcceso(rs.getInt("idUsuario"));
-				return new Usuario(rs.getInt("idUsuario"), rs.getString("nombre"), rs.getString("email"), null);
+				return new Usuario(rs.getInt("idUsuario"), rs.getString("nombre"), rs.getString("email"),
+						rs.getInt("permiso"));
 			}
 		}
 		return null;
@@ -130,7 +135,7 @@ public class DaoUsuario {
 			ResultSet rs = stmt.executeQuery();
 			if (rs.next()) {
 				return new Usuario(rs.getInt("idUsuario"), rs.getString("nombre"), rs.getString("email"),
-						rs.getString("hashContrasena"));
+						rs.getInt("permiso"));
 			}
 		}
 		return null;
@@ -374,6 +379,30 @@ public class DaoUsuario {
 		}
 
 		return permiso;
+	}
+
+	/**
+	 * Obtiene la contraseña de un usuario por su ID.
+	 *
+	 * @param idUsuario El ID del usuario del que se desea obtener la contraseña.
+	 * @return La contraseña del usuario como una cadena, o null si el usuario no
+	 *         existe.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public String obtenerContrasena(int idUsuario) throws SQLException {
+		String contrasena = null;
+		String sql = "SELECT contrasena FROM usuarios WHERE id_usuario = ?";
+
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, idUsuario);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					contrasena = rs.getString("contrasena");
+				}
+			}
+		}
+
+		return contrasena;
 	}
 
 }

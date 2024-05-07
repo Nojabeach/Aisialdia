@@ -174,11 +174,11 @@ public class Usuario {
 	 * @param email      El correo electrónico del usuario.
 	 * @param contrasena La contraseña del usuario.
 	 */
-	public Usuario(int idUsuario, String nombre, String email, String contrasena) {
+	public Usuario(int idUsuario, String nombre, String email, int permiso) {
 		this.idUsuario = idUsuario;
 		this.nombre = nombre;
 		this.email = email;
-		this.contrasena = contrasena;
+		this.permiso = permiso;
 	}
 
 	// GETTERS Y SETTERS PARA TODOS LOS ATRIBUTOS

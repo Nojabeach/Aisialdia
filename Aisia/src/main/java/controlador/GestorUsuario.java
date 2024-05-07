@@ -163,47 +163,79 @@ public class GestorUsuario extends HttpServlet {
 	 * @throws IOException  Si se produce un error de entrada/salida.
 	 * @throws SQLException Si se produce un error al acceder a la base de datos.
 	 */
-	private void registrarUsuario(HttpServletRequest request, HttpServletResponse response)
-	        throws IOException {
-	    // Obtener parámetros del formulario
-	    String nombre = request.getParameter("nombre");
-	    String email = request.getParameter("email");
-	    String contrasena = request.getParameter("contrasena");
-	    Date fechaNacimiento = Date.valueOf(request.getParameter("fechaNacimiento"));
-	    boolean recibeNotificaciones = Boolean.parseBoolean(request.getParameter("recibeNotificaciones"));
-	    String intereses = request.getParameter("intereses");
-	    String rolesStr = request.getParameter("roles");
-	    Rol roles = (rolesStr != null && !rolesStr.isEmpty()) ? Rol.valueOf(rolesStr) : Rol.USUARIO;
-	    int permiso = Integer.parseInt(request.getParameter("permiso"));
-	    Date consentimiento_datos = Date.valueOf(request.getParameter("consentimiento_datos"));
-	    Date aceptacionTerminosWeb = Date.valueOf(request.getParameter("aceptacionTerminosWeb"));
 
-	    // Verificar si se proporcionaron todos los datos necesarios
-	    if (nombre == null || email == null || contrasena == null || nombre.isEmpty() || email.isEmpty() || contrasena.isEmpty()) {
-	        ControlErrores.mostrarErrorGenerico("Todos los campos son obligatorios. Por favor, complete el formulario.", response);
-	        return;
-	    }
+	private void registrarUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-	    // Crear un nuevo usuario
-	    Usuario usuario = new Usuario(nombre, email, contrasena);
-	    usuario.setFechaNacimiento(fechaNacimiento);
-	    usuario.setRecibeNotificaciones(recibeNotificaciones);
-	    usuario.setIntereses(intereses);
-	    usuario.setRoles(roles);
-	    usuario.setPermiso(permiso);
-	    usuario.setConsentimiento_datos(consentimiento_datos);
-	    usuario.setAceptacionTerminosWeb(aceptacionTerminosWeb);
+		// Obtener parámetros del formulario
+		System.out.println("Registrando usuario...");
 
-	    // Registrar el usuario en la base de datos
-	    try {
-	        DaoUsuario.getInstance().registrarUsuario(usuario);
-	        response.setStatus(HttpServletResponse.SC_CREATED);
-	        response.getWriter().println("Usuario registrado exitosamente!");
-	    } catch (SQLException e) {
-	        ControlErrores.mostrarErrorGenerico("Error al registrar el usuario. Intente de nuevo.", response);
-	    }
+		String nombre = request.getParameter("nombre");
+		System.out.println("Nombre: " + nombre);
+
+		String email = request.getParameter("email");
+		System.out.println("Email: " + email);
+		
+
+		Date fechaNacimiento = Date.valueOf(request.getParameter("fechaNacimiento"));
+		System.out.println("Fecha de nacimiento: " + fechaNacimiento);
+
+		boolean recibeNotificaciones = Boolean.parseBoolean(request.getParameter("recibeNotificaciones"));
+		System.out.println("Recibe notificaciones: " + recibeNotificaciones);
+
+		String intereses = request.getParameter("intereses");
+		System.out.println("Intereses: " + intereses);
+
+		String rolesStr = request.getParameter("roles");
+		Rol roles = (rolesStr != null && !rolesStr.isEmpty()) ? Rol.valueOf(rolesStr) : Rol.USUARIO;
+		System.out.println("Roles: " + roles);
+
+		int permiso = (request.getParameter("permiso") != null) ? Integer.parseInt(request.getParameter("permiso")) : 1;
+
+		System.out.println("Permiso: " + permiso);
+
+		System.out.println("Consentimiento de datos: " + request.getParameter("consentimiento_datos"));
+		System.out.println("Aceptación de términos y condiciones: " + request.getParameter("aceptacionTerminosWeb"));
+
+		boolean consentimientoDatos ="on".equalsIgnoreCase(request.getParameter("consentimiento_datos"));
+		Date fechaConsentimientoDatos = consentimientoDatos ? new Date(System.currentTimeMillis()) : null;
+		System.out.println("Consentimiento de datos: " + fechaConsentimientoDatos);
+
+		boolean aceptacionTerminosWeb = "on".equalsIgnoreCase(request.getParameter("aceptacionTerminosWeb"));
+		Date fechaAceptacionTerminosWeb = aceptacionTerminosWeb ? new Date(System.currentTimeMillis()) : null;
+		System.out.println("Aceptación de términos y condiciones web: " + fechaAceptacionTerminosWeb);
+
+
+		// Verificar si se proporcionaron todos los datos necesarios
+		if (nombre == null || email == null || nombre.isEmpty() || email.isEmpty()) {
+			ControlErrores.mostrarErrorGenerico("Todos los campos son obligatorios. Por favor, complete el formulario.",
+					response);
+			return;
+		}
+
+		// Crear un nuevo usuario
+		Usuario usuario = new Usuario(nombre, email, getMD5(request.getParameter("contrasena")));
+		usuario.setFechaNacimiento(fechaNacimiento);
+		usuario.setRecibeNotificaciones(recibeNotificaciones);
+		usuario.setIntereses(intereses);
+		usuario.setRoles(roles);
+		usuario.setPermiso(permiso);
+		usuario.setConsentimiento_datos(fechaConsentimientoDatos);
+		usuario.setAceptacionTerminosWeb(fechaAceptacionTerminosWeb);
+
+		// Registrar el usuario en la base de datos
+		 try {
+		        DaoUsuario.getInstance().registrarUsuario(usuario);
+		        response.setStatus(HttpServletResponse.SC_CREATED);
+		        response.getWriter().println("Usuario registrado exitosamente!");
+		        
+		        // Establecer permiso del usuario en la sesión
+		        HttpSession session = request.getSession();
+		        session.setAttribute("usuario", usuario);
+		        session.setAttribute("permiso", usuario.getPermiso());
+		    } catch (SQLException e) {
+		        ControlErrores.mostrarErrorGenerico("Error al registrar el usuario. Intente de nuevo.", response);
+		    }
 	}
-
 
 	/**
 	 * Inicia sesión de un usuario en el sistema.
@@ -217,20 +249,22 @@ public class GestorUsuario extends HttpServlet {
 	private void iniciarSesion(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, SQLException {
 		// Obtener parámetros del formulario
-		String email = request.getParameter("email");
-
+		String usuarioSTR = request.getParameter("usuario");
+		System.out.println(usuarioSTR);
+		
 		// Iniciar sesión
 		try {
 			// Verificamos el inicio de sesión con la contraseña cifrada
-			Usuario usuario = DaoUsuario.getInstance().iniciarSesion(email, getMD5(request.getParameter("contrasena")));
-			if (usuario != null) {
-				HttpSession session = request.getSession();
-				session.setAttribute("usuario", usuario);
-				response.getWriter().println("Inicio de sesión exitoso!");
-			} else {
-				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-				response.getWriter().println("Credenciales incorrectas.");
-			}
+			Usuario usuario = DaoUsuario.getInstance().iniciarSesion(usuarioSTR, getMD5(request.getParameter("contrasena")));
+			if (usuario!= null) {
+		        HttpSession session = request.getSession();
+		        session.setAttribute("usuario", usuario);
+		        session.setAttribute("permiso", usuario.getPermiso());
+		        response.getWriter().println("Inicio de sesión exitoso!");
+		    } else {
+		        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		        response.getWriter().println("Credenciales incorrectas.");
+		    }
 		} catch (Exception e) {
 			ControlErrores.mostrarErrorGenerico("Error al iniciar sesión. Intente de nuevo.", response);
 		}
@@ -369,11 +403,15 @@ public class GestorUsuario extends HttpServlet {
 	/**
 	 * Método para editar un usuario en la base de datos.
 	 * 
-	 * @param request  Objeto HttpServletRequest que contiene los parámetros del formulario.
-	 * @param response Objeto HttpServletResponse utilizado para enviar la respuesta al cliente.
+	 * @param request  Objeto HttpServletRequest que contiene los parámetros del
+	 *                 formulario.
+	 * @param response Objeto HttpServletResponse utilizado para enviar la respuesta
+	 *                 al cliente.
 	 * 
-	 * @throws IOException  Si ocurre un error de entrada/salida al escribir la respuesta.
-	 * @throws SQLException Si ocurre un error de base de datos al editar el usuario.
+	 * @throws IOException  Si ocurre un error de entrada/salida al escribir la
+	 *                      respuesta.
+	 * @throws SQLException Si ocurre un error de base de datos al editar el
+	 *                      usuario.
 	 */
 	private void editarUsuario(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, SQLException {
@@ -534,13 +572,48 @@ public class GestorUsuario extends HttpServlet {
 		String contrasenaActual = request.getParameter("contrasenaActual");
 		String contrasenaNueva = request.getParameter("contrasenaNueva");
 
-		// Cambiar la contraseña del usuario
-		try {
-			DaoUsuario.getInstance().cambiarContrasena(idUsuario, contrasenaActual, contrasenaNueva);
-			response.getWriter().println("Contraseña cambiada exitosamente!");
-		} catch (Exception e) {
-			ControlErrores.mostrarErrorGenerico("Error al cambiar la contraseña. Intente de nuevo.", response);
+		// Obtener la contraseña actual del usuario desde la base de datos
+		String contrasenaAlmacenada = DaoUsuario.getInstance().obtenerContrasena(idUsuario);
+
+		// Cifrar la contraseña actual proporcionada por el usuario
+		String contrasenaActualCifrada = getMD5(contrasenaActual);
+
+		// Verificar si la contraseña actual coincide con la almacenada
+		if (contrasenaActualCifrada.equals(contrasenaAlmacenada)) {
+			// Cifrar la nueva contraseña
+			String contrasenaNuevaCifrada = getMD5(contrasenaNueva);
+
+			// Actualizar la contraseña en la base de datos con la nueva contraseña cifrada
+			try {
+				DaoUsuario.getInstance().cambiarContrasena(idUsuario, contrasenaActualCifrada, contrasenaNuevaCifrada);
+				response.getWriter().println("Contraseña cambiada exitosamente!");
+			} catch (Exception e) {
+				ControlErrores.mostrarErrorGenerico("Error al cambiar la contraseña. Intente de nuevo.", response);
+			}
+		} else {
+			// La contraseña actual proporcionada no coincide con la almacenada
+			ControlErrores.mostrarErrorGenerico("La contraseña actual no es correcta.", response);
 		}
+
+	}
+	
+	/**
+	 * Obtiene el permiso del usuario actual y lo envía como respuesta.
+	 * Si el usuario no está logueado, devuelve un estado de "No autorizado".
+	 * 
+	 * @param request  La solicitud HTTP
+	 * @param response La respuesta HTTP
+	 * @throws IOException Si hay algún error de entrada/salida al escribir en el flujo de salida
+	 */
+	private void obtenerPermisoUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	    HttpSession session = request.getSession();
+	    Usuario usuario = (Usuario) session.getAttribute("usuario");
+	    if (usuario!= null) {
+	        response.getWriter().write(String.valueOf(usuario.getPermiso()));
+	    } else {
+	        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+	        response.getWriter().write("No estás logueado.");
+	    }
 	}
 
 }
