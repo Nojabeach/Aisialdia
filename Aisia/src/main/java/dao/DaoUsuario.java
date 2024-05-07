@@ -402,4 +402,30 @@ public class DaoUsuario {
 		return contrasena;
 	}
 
+	/**
+	 * Obtiene el permiso de un usuario por su nombre.
+	 * 
+	 * @param nombreUsuario el nombre del usuario del cual obtener el permiso
+	 * @return el permiso del usuario, -1 si el usuario no se encuentra o no tiene
+	 *         un permiso válido
+	 * @throws SQLException si ocurre un error al interactuar con la base de datos
+	 */
+	public String obtenerPermisoPorNombre(String nombreUsuario) throws SQLException {
+
+		String permiso = "-1"; // Valor por defecto si no se encuentra el usuario o no tiene permiso válido
+
+		String sql = "SELECT permiso FROM usuarios WHERE nombre = ?";
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setString(1, nombreUsuario);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					int permisoInt = rs.getInt("permiso");
+					permiso = String.valueOf(permisoInt); // Parse int to String
+				}
+			}
+		}
+		return permiso;
+	}
+
 }

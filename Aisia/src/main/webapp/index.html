@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Enlace de scripts -->
     <script src="js/index_ultimosEventos.js"></script>
-    <script src="js/index.js" defer></script>
 </head>
 
 <body>
@@ -28,10 +27,11 @@
             <div id="loginFormContainer">
                 <!-- Contenedor para el formulario de inicio de sesión -->
                 <div id="formularioInicioSesionContainer">
-                    <form id="formularioInicioSesion">
+                    <form id="formularioInicioSesion" action="GestorUsuario" method="POST">
+                        <input type="hidden" name="action" value="iniciarSesion">
                         <div class="input-group">
-                            <input type="text" id="inputUsuario" placeholder="Usuario" required>
-                            <input type="password" id="inputContrasena" placeholder="Contraseña" required>
+                            <input type="text" id="inputUsuario" name="usuario" placeholder="Usuario" required>
+                            <input type="password" id="inputContrasena" name="contrasena" placeholder="Contraseña" required>
                             <button id="botonIniciarSesion">Iniciar sesión</button>
                         </div>
                         <div class="registroLink">
@@ -44,7 +44,7 @@
                 <!-- Contenedor para el nombre del usuario y botón de cerrar sesión -->
                 <div id="userInfoContainer" style="display: none;">
                     <p id="nombreUsuario"></p>
-                    <p id="PermisoUsuario"></p>
+                    <input type="hidden" id="permisoUsuario">
                     <button id="botonCerrarSesion">Cerrar sesión</button>
                 </div>
             </div>

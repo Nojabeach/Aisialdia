@@ -18,6 +18,8 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.google.gson.Gson;
+
 import dao.DaoUsuario;
 
 /**
@@ -80,9 +82,8 @@ public class GestorUsuario extends HttpServlet {
 			case "comprobarLogin":
 				comprobarLogin(request, response);
 				break;
-			case "verificarPermiso":
-				verificarPermiso(request, response);
-				break;
+			case "obtenerPermiso":
+				obtenerPermiso(request, response);
 			default:
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				ControlErrores.mostrarErrorGenerico("{\"error\": \"Acción no válida\"}", response);
@@ -230,6 +231,9 @@ public class GestorUsuario extends HttpServlet {
 			HttpSession session = request.getSession();
 			session.setAttribute("usuario", usuario);
 			session.setAttribute("permiso", usuario.getPermiso());
+
+			response.sendRedirect("eventos.html");
+
 		} catch (SQLException e) {
 			ControlErrores.mostrarErrorGenerico("Error al registrar el usuario. Intente de nuevo.", response);
 		}
@@ -248,21 +252,43 @@ public class GestorUsuario extends HttpServlet {
 			throws IOException, SQLException {
 		// Obtener parámetros del formulario
 		String usuarioSTR = request.getParameter("usuario");
-		//System.out.println(usuarioSTR);
 
 		// Iniciar sesión
 		try {
 			// Verificamos el inicio de sesión con la contraseña cifrada
+			System.out.println(usuarioSTR);
+			System.out.println(request.getParameter("contrasena"));
+
 			Usuario usuario = DaoUsuario.getInstance().iniciarSesion(usuarioSTR,
 					getMD5(request.getParameter("contrasena")));
-			//System.out.println("Preparando el inicio");
+
+			System.out.println(usuario);
+
 			if (usuario != null) {
 				HttpSession session = request.getSession();
 				session.setAttribute("usuario", usuario);
 				session.setAttribute("permiso", usuario.getPermiso());
-				//System.out.println("Inicio de sesión exitoso! Acceso registrado");
+
+				// Establecer el estado de la respuesta como OK
+				response.setStatus(HttpServletResponse.SC_OK);
+
+				int permiso = usuario.getPermiso();
+				System.out.println("Permiso: " + permiso); // Debugging
+				if (permiso == 1) {
+					System.out.println("entro en 1"); // Debugging
+					response.sendRedirect("eventos.html");
+				} else if (permiso == 2) {
+					System.out.println("entro en 2"); // Debugging
+					response.sendRedirect("moderador.html");
+				} else if (permiso == 99) {
+					System.out.println("entro en 99"); // Debugging
+					response.sendRedirect("admin.html");
+				} else {
+					response.sendRedirect("index.html");
+				}
 			} else {
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+				response.sendRedirect("index.html");
 				System.out.println("Credenciales incorrectas.");
 			}
 		} catch (Exception e) {
@@ -314,42 +340,10 @@ public class GestorUsuario extends HttpServlet {
 		Usuario usuario = (Usuario) session.getAttribute("usuario");
 		if (usuario != null) {
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().println("Estás logueado!");
-		} else {
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			response.getWriter().println("No estás logueado.");
-		}
-	}
 
-	/**
-	 * Verifica si el usuario tiene permiso para acceder a cierta funcionalidad.
-	 *
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws IOException Si se produce un error de entrada/salida.
-	 */
-	private void verificarPermiso(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		HttpSession session = request.getSession();
-		Usuario usuario = (Usuario) session.getAttribute("usuario");
-		if (usuario != null) {
-			String permisoStr = request.getParameter("permiso");
-			if (permisoStr != null) {
-				int permiso = Integer.parseInt(permisoStr);
-				if (usuario.tienePermiso(permiso)) {
-					response.setStatus(HttpServletResponse.SC_OK);
-					response.getWriter().println("Tienes permiso para acceder.");
-				} else {
-					response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-					response.getWriter().println("No tienes permiso para acceder.");
-				}
-			} else {
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().println("Falta el parámetro 'permiso'.");
-			}
 		} else {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			response.getWriter().println("No estás logueado.");
+
 		}
 	}
 
@@ -606,14 +600,37 @@ public class GestorUsuario extends HttpServlet {
 	 * @throws IOException Si hay algún error de entrada/salida al escribir en el
 	 *                     flujo de salida
 	 */
-	private void obtenerPermisoUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		HttpSession session = request.getSession();
-		Usuario usuario = (Usuario) session.getAttribute("usuario");
-		if (usuario != null) {
-			response.getWriter().write(String.valueOf(usuario.getPermiso()));
-		} else {
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			response.getWriter().write("No estás logueado.");
+	private void obtenerPermiso(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		try {
+			HttpSession session = request.getSession();
+			Usuario usuario = (Usuario) session.getAttribute("usuario");
+			if (usuario == null) {
+				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+				return;
+			}
+
+			String nombreUsuario = usuario.getNombre(); // Obtenemos el nombre del usuario
+
+			try {
+				String permiso = DaoUsuario.getInstance().obtenerPermisoPorNombre(nombreUsuario);
+
+				// Convertir el permiso a JSON
+				String permisoJSON = new Gson().toJson(permiso);
+
+				// Establecer el tipo de contenido y encabezados de la respuesta
+				response.setContentType("application/json");
+				response.setCharacterEncoding("UTF-8");
+
+				// Enviar el permiso como respuesta
+				response.getWriter().write(permisoJSON);
+
+			} catch (Exception e) {
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				response.getWriter().write("{\"error\": \"Error al obtener el permiso.\"}");
+			}
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().write("{\"error\": \"Error interno del servidor.\"}");
 		}
 	}
 
