@@ -87,13 +87,10 @@ public class DaoUsuario {
 	 */
 	public Usuario iniciarSesion(String usuario, String contrasena) throws Exception {
 		// Preparar la consulta SQL para validar el usuario y contraseña
-		String sql = "SELECT * FROM usuarios WHERE usuario =? AND contrasena =?";
+		String sql = "SELECT * FROM usuarios WHERE nombre =? AND contrasena =?";
 		try (PreparedStatement ps = con.prepareStatement(sql)) {
 			ps.setString(1, usuario);
 			ps.setString(2, contrasena); // Ya se está pasando la contraseña cifrada
-			System.out.println(sql);
-			System.out.println(usuario);
-			System.out.println(contrasena);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				// Registramos el acceso en la tabla de accesos

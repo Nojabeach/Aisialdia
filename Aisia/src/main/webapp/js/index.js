@@ -31,13 +31,7 @@ function manejarPermiso(permission) {
 
 // Función para verificar la respuesta del servlet
 function verificarRespuesta(response) {
-  if (response.ok) {
-    return response.json();
-  } else {
-    throw new Error(
-      `Error al obtener los datos del servlet: ${response.status}`
-    );
-  }
+  return response.json();
 }
 
 // Función para iniciar la sesión del usuario

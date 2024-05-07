@@ -174,7 +174,6 @@ public class GestorUsuario extends HttpServlet {
 
 		String email = request.getParameter("email");
 		System.out.println("Email: " + email);
-		
 
 		Date fechaNacimiento = Date.valueOf(request.getParameter("fechaNacimiento"));
 		System.out.println("Fecha de nacimiento: " + fechaNacimiento);
@@ -196,14 +195,13 @@ public class GestorUsuario extends HttpServlet {
 		System.out.println("Consentimiento de datos: " + request.getParameter("consentimiento_datos"));
 		System.out.println("Aceptación de términos y condiciones: " + request.getParameter("aceptacionTerminosWeb"));
 
-		boolean consentimientoDatos ="on".equalsIgnoreCase(request.getParameter("consentimiento_datos"));
+		boolean consentimientoDatos = "on".equalsIgnoreCase(request.getParameter("consentimiento_datos"));
 		Date fechaConsentimientoDatos = consentimientoDatos ? new Date(System.currentTimeMillis()) : null;
 		System.out.println("Consentimiento de datos: " + fechaConsentimientoDatos);
 
 		boolean aceptacionTerminosWeb = "on".equalsIgnoreCase(request.getParameter("aceptacionTerminosWeb"));
 		Date fechaAceptacionTerminosWeb = aceptacionTerminosWeb ? new Date(System.currentTimeMillis()) : null;
 		System.out.println("Aceptación de términos y condiciones web: " + fechaAceptacionTerminosWeb);
-
 
 		// Verificar si se proporcionaron todos los datos necesarios
 		if (nombre == null || email == null || nombre.isEmpty() || email.isEmpty()) {
@@ -223,18 +221,18 @@ public class GestorUsuario extends HttpServlet {
 		usuario.setAceptacionTerminosWeb(fechaAceptacionTerminosWeb);
 
 		// Registrar el usuario en la base de datos
-		 try {
-		        DaoUsuario.getInstance().registrarUsuario(usuario);
-		        response.setStatus(HttpServletResponse.SC_CREATED);
-		        response.getWriter().println("Usuario registrado exitosamente!");
-		        
-		        // Establecer permiso del usuario en la sesión
-		        HttpSession session = request.getSession();
-		        session.setAttribute("usuario", usuario);
-		        session.setAttribute("permiso", usuario.getPermiso());
-		    } catch (SQLException e) {
-		        ControlErrores.mostrarErrorGenerico("Error al registrar el usuario. Intente de nuevo.", response);
-		    }
+		try {
+			DaoUsuario.getInstance().registrarUsuario(usuario);
+			response.setStatus(HttpServletResponse.SC_CREATED);
+			response.getWriter().println("Usuario registrado exitosamente!");
+
+			// Establecer permiso del usuario en la sesión
+			HttpSession session = request.getSession();
+			session.setAttribute("usuario", usuario);
+			session.setAttribute("permiso", usuario.getPermiso());
+		} catch (SQLException e) {
+			ControlErrores.mostrarErrorGenerico("Error al registrar el usuario. Intente de nuevo.", response);
+		}
 	}
 
 	/**
@@ -251,20 +249,22 @@ public class GestorUsuario extends HttpServlet {
 		// Obtener parámetros del formulario
 		String usuarioSTR = request.getParameter("usuario");
 		System.out.println(usuarioSTR);
-		
+
 		// Iniciar sesión
 		try {
 			// Verificamos el inicio de sesión con la contraseña cifrada
-			Usuario usuario = DaoUsuario.getInstance().iniciarSesion(usuarioSTR, getMD5(request.getParameter("contrasena")));
-			if (usuario!= null) {
-		        HttpSession session = request.getSession();
-		        session.setAttribute("usuario", usuario);
-		        session.setAttribute("permiso", usuario.getPermiso());
-		        response.getWriter().println("Inicio de sesión exitoso!");
-		    } else {
-		        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-		        response.getWriter().println("Credenciales incorrectas.");
-		    }
+			Usuario usuario = DaoUsuario.getInstance().iniciarSesion(usuarioSTR,
+					getMD5(request.getParameter("contrasena")));
+			System.out.println("Preparando el inicio");
+			if (usuario != null) {
+				HttpSession session = request.getSession();
+				session.setAttribute("usuario", usuario);
+				session.setAttribute("permiso", usuario.getPermiso());
+				System.out.println("Inicio de sesión exitoso! Acceso registrado");
+			} else {
+				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+				System.out.println("Credenciales incorrectas.");
+			}
 		} catch (Exception e) {
 			ControlErrores.mostrarErrorGenerico("Error al iniciar sesión. Intente de nuevo.", response);
 		}
@@ -596,24 +596,25 @@ public class GestorUsuario extends HttpServlet {
 		}
 
 	}
-	
+
 	/**
-	 * Obtiene el permiso del usuario actual y lo envía como respuesta.
-	 * Si el usuario no está logueado, devuelve un estado de "No autorizado".
+	 * Obtiene el permiso del usuario actual y lo envía como respuesta. Si el
+	 * usuario no está logueado, devuelve un estado de "No autorizado".
 	 * 
 	 * @param request  La solicitud HTTP
 	 * @param response La respuesta HTTP
-	 * @throws IOException Si hay algún error de entrada/salida al escribir en el flujo de salida
+	 * @throws IOException Si hay algún error de entrada/salida al escribir en el
+	 *                     flujo de salida
 	 */
 	private void obtenerPermisoUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException {
-	    HttpSession session = request.getSession();
-	    Usuario usuario = (Usuario) session.getAttribute("usuario");
-	    if (usuario!= null) {
-	        response.getWriter().write(String.valueOf(usuario.getPermiso()));
-	    } else {
-	        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-	        response.getWriter().write("No estás logueado.");
-	    }
+		HttpSession session = request.getSession();
+		Usuario usuario = (Usuario) session.getAttribute("usuario");
+		if (usuario != null) {
+			response.getWriter().write(String.valueOf(usuario.getPermiso()));
+		} else {
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			response.getWriter().write("No estás logueado.");
+		}
 	}
 
 }
