@@ -8,7 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import modelo.Evento;
+import com.google.gson.Gson;
+
 import modelo.EventoConActividad;
 
 public class DaoEventoConActividad {
@@ -126,5 +127,41 @@ public class DaoEventoConActividad {
 		ps.close();
 
 		return eventosConActividad;
+	}
+
+	// ---------------------------------------------------------------------------------
+	// VOLCADOS JSON
+	// ---------------------------------------------------------------------------------
+
+	/**
+	 * Genera una representación JSON de Obtiene una lista de los últimos eventos
+	 * publicados no finalizados, ordenados por fecha de publicación descendente.
+	 * 
+	 * @param numEventos Filtra la cantidad de num eventos para listar
+	 * @return Una cadena JSON que representa los últimos eventos publicados no
+	 *         finalizados, ordenados por fecha de publicación descendente.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public String listarJsonUltimosEventos(int numEventos) throws SQLException {
+		String json = "";
+		Gson gson = new Gson();
+		json = gson.toJson(this.obtenerUltimosEventos(numEventos));
+		return json;
+	}
+
+	/**
+	 * Genera un objeto JSON que representa un evento con actividad a partir de su
+	 * ID.
+	 *
+	 * @param idEvento El ID del evento con actividad.
+	 * @return Una cadena JSON que representa el evento con actividad.
+	 * @throws SQLException Si ocurre un error al obtener el evento con actividad de
+	 *                      la base de datos.
+	 */
+	public String listarJsonEventosConActividad(int idEvento) throws SQLException {
+		String json = "";
+		Gson gson = new Gson();
+		json = gson.toJson(this.obtenerEventoConActividad(idEvento));
+		return json;
 	}
 }

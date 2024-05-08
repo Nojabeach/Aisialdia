@@ -20,14 +20,14 @@ import dao.DaoFavorito;
  */
 public class GestorFavorito extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public GestorFavorito() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public GestorFavorito() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * Maneja las solicitudes GET enviadas al servlet.
@@ -44,9 +44,7 @@ public class GestorFavorito extends HttpServlet {
 
 		try {
 			switch (action) {
-			case "verificarEventoFavorito":
-				verificarEventoFavorito(request, response);
-				break;
+
 			case "obtenerEventosFavoritos":
 				obtenerEventosFavoritos(request, response);
 				break;
@@ -136,29 +134,6 @@ public class GestorFavorito extends HttpServlet {
 	}
 
 	/**
-	 * Verifica si un evento es favorito de un usuario.
-	 *
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws IOException  Si se produce un error de entrada/salida.
-	 * @throws SQLException Si se produce un error al acceder a la base de datos.
-	 */
-	private void verificarEventoFavorito(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, SQLException {
-		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
-		try {
-			boolean esFavorito = DaoFavorito.getInstance().verificarEventoFavoritoUsuario(idEvento, request);
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().write("{\"esFavorito\": " + esFavorito + "}");
-		} catch (SQLException e) {
-			ControlErrores.mostrarErrorGenerico("Error al verificar si el evento es favorito. Intente de nuevo.",
-					response);
-		}
-	}
-
-	/**
 	 * Obtiene la lista de eventos favoritos de un usuario.
 	 *
 	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
@@ -185,4 +160,3 @@ public class GestorFavorito extends HttpServlet {
 		}
 	}
 }
-

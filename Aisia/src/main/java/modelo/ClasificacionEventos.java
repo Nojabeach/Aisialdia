@@ -173,7 +173,5 @@ public class ClasificacionEventos {
 	public List<Actividad> obtenerActividadesPorEventoID(int idEvento) throws SQLException {
 		return DaoClasificacionEventos.getInstance().obtenerActividadesPorEventoID(idEvento);
 	}
-	
-   
 
 }

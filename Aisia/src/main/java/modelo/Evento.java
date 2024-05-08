@@ -536,37 +536,41 @@ public class Evento {
 	}
 
 	/**
-	 * Obtiene un evento de la base de datos por su identificador.
-	 * 
-	 * @param idEvento El identificador del evento a buscar.
-	 * @return El evento encontrado, o null si no se encuentra.
-	 * @throws SQLException Si ocurre un error al obtener el evento.
-	 */
-	public Evento obtenerEventoPorId(int idEvento) throws SQLException {
-		return DaoEvento.getInstance().obtenerEventoPorId(idEvento);
-
-	}
-
-	/**
-	 * Obtiene la lista de eventos organizados por un usuario específico.
-	 * 
-	 * @param idUsuario El identificador del usuario.
-	 * @return Lista de eventos organizados por el usuario indicado.
-	 * @throws SQLException Si ocurre un error al obtener los eventos.
-	 */
-	public static List<Evento> obtenerEventosPorUsuario(int idUsuario) throws SQLException {
-		return DaoEvento.getInstance().obtenerEventosPorUsuario(idUsuario);
-	}
-
-	/**
 	 * Obtiene la lista de eventos que están pendientes de aprobación.
 	 * 
 	 * @return Lista de eventos pendientes de aprobación.
 	 * @throws SQLException Si ocurre un error al obtener los eventos.
 	 */
 
-	public static List<Evento> obtenerEventosPendientesAprobacion() throws SQLException {
+	public List<Evento> obtenerEventosPendientesAprobacion() throws SQLException {
 		return DaoEvento.getInstance().obtenerEventosPendientesAprobacion();
+	}
+
+	/**
+	 * Obtiene una lista de eventos pendientes de publicación.
+	 *
+	 * @return Una lista de eventos pendientes de publicación.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public List<Evento> obtenerEventosPendientesPublicacion() throws SQLException {
+		return DaoEvento.getInstance().obtenerEventosPendientesPublicacion();
+	}
+
+	/**
+	 * Obtiene todos los eventos publicados activos de la base de datos (sin
+	 * finalizar) que coinciden con los filtros especificados.
+	 *
+	 * @param actividad   Filtro por actividad (opcional).
+	 * @param descripcion Filtro por descripción (opcional).
+	 * @param ubicacion   Filtro por ubicación (opcional).
+	 * @param fecha       Filtro por fecha (opcional).
+	 * @return Una lista de objetos Evento que representan todos los eventos en la
+	 *         base de datos que coinciden con los filtros especificados.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public List<Evento> obtenerTodosLosEventosActivos(String actividad, String descripcion, String ubicacion,
+			Date fecha) throws SQLException {
+		return DaoEvento.getInstance().obtenerTodosLosEventosActivos(actividad, descripcion, ubicacion, fecha);
 	}
 
 	/**
@@ -581,6 +585,29 @@ public class Evento {
 	 */
 	public void aprobarPublicacionEvento(int idEvento, HttpServletRequest request) throws SQLException {
 		DaoEvento.getInstance().aprobarPublicacionEvento(idEvento, request);
+	}
+
+	/**
+	 * Busca eventos en la base de datos que coincidan con el criterio especificado.
+	 *
+	 * @param criterio El criterio de búsqueda.
+	 * @return Una lista de eventos que coinciden con el criterio de búsqueda.
+	 * @throws Exception Si ocurre un error al buscar eventos.
+	 */
+	public List<Evento> buscarEventos(String criterio) throws Exception {
+		return DaoEvento.getInstance().buscarEventos(criterio);
+	}
+
+	/**
+	 * Finaliza la publicación de un evento en la base de datos.
+	 *
+	 * @param idEvento    El ID del evento que se va a finalizar.
+	 * @param idModerador El ID del moderador que realiza la acción.
+	 * @throws SQLException Si ocurre un error al finalizar la publicación del
+	 *                      evento.
+	 */
+	public void finalizarPublicacionEvento(int idEvento, int idModerador) throws SQLException {
+		DaoEvento.getInstance().finalizarPublicacionEvento(idEvento, idModerador);
 	}
 
 	/**

@@ -526,72 +526,6 @@ public class Usuario {
 	}
 
 	/**
-	 * Obtiene la lista de eventos a los que está asistiendo un usuario.
-	 *
-	 * @param idUsuario Identificador del usuario. Debe ser un valor positivo mayor
-	 *                  que 0.
-	 * @return Lista de objetos Evento con la información de los eventos. La lista
-	 *         puede estar vacía si el usuario no asiste a ningún evento.
-	 * @throws Exception Si ocurre un error al obtener los eventos. Las posibles
-	 *                   excepciones incluyen:
-	 *                   <ul>
-	 *                   <li>SQLException: Si ocurre un error al acceder a la base
-	 *                   de datos.</li>
-	 *                   <li>IllegalArgumentException: Si el idUsuario es menor o
-	 *                   igual a 0.</li>
-	 *                   <li>DataAccessException: Si ocurre un error inesperado al
-	 *                   obtener los eventos.</li>
-	 *                   </ul>
-	 */
-	public List<Evento> obtenerEventos(int idUsuario) throws Exception {
-		return DaoUsuario.getInstance().obtenerEventos(idUsuario);
-	}
-
-	/**
-	 * Busca eventos por un criterio de búsqueda.
-	 *
-	 * @param criterio Criterio de búsqueda (nombre, fecha, etc.). No puede ser nulo
-	 *                 ni vacío.
-	 * @return Lista de objetos Evento con la información de los eventos
-	 *         coincidentes. La lista puede estar vacía si no se encuentran eventos.
-	 * @throws Exception Si ocurre un error al buscar los eventos. Las posibles
-	 *                   excepciones incluyen:
-	 *                   <ul>
-	 *                   <li>SQLException: Si ocurre un error al acceder a la base
-	 *                   de datos.</li>
-	 *                   <li>IllegalArgumentException: Si el criterio de búsqueda es
-	 *                   nulo o vacío.</li>
-	 *                   <li>DataAccessException: Si ocurre un error inesperado al
-	 *                   buscar los eventos.</li>
-	 *                   </ul>
-	 */
-	public List<Evento> buscarEventos(String criterio) throws Exception {
-		return DaoUsuario.getInstance().buscarEventos(criterio);
-	}
-
-	/**
-	 * Obtiene la información de un evento por su ID.
-	 *
-	 * @param idEvento Identificador del evento. Debe ser un valor positivo mayor
-	 *                 que 0.
-	 * @return Objeto Evento con la información del evento, o null si no se
-	 *         encuentra.
-	 * @throws Exception Si ocurre un error al obtener el evento. Las posibles
-	 *                   excepciones incluyen:
-	 *                   <ul>
-	 *                   <li>SQLException: Si ocurre un error al acceder a la base
-	 *                   de datos.</li>
-	 *                   <li>IllegalArgumentException: Si el idEvento es menor o
-	 *                   igual a 0.</li>
-	 *                   <li>DataAccessException: Si ocurre un error inesperado al
-	 *                   obtener el evento.</li>
-	 *                   </ul>
-	 */
-	public Evento verEvento(int idEvento) throws Exception {
-		return DaoUsuario.getInstance().verEvento(idEvento);
-	}
-
-	/**
 	 * Marca un evento como favorito para un usuario.
 	 *
 	 * @param idUsuario Identificador del usuario. Debe ser un valor positivo mayor
@@ -678,26 +612,4 @@ public class Usuario {
 		return DaoUsuario.getInstance().obtenerUsuarios();
 	}
 
-	/**
-	 * Verifica si el usuario tiene permiso para realizar cierta acción.
-	 *
-	 * @param permisoNecesario El nivel de permiso necesario para realizar la
-	 *                         acción.
-	 * @return true si el usuario tiene permiso, false de lo contrario.
-	 */
-	public boolean tienePermiso(int permisoNecesario) {
-		PermisoUsuario permisoUsuario = buscarPermisoUsuario(idUsuario);
-		return permisoUsuario != null && permisoUsuario.getPermiso() >= permisoNecesario;
-	}
-
-	// OTROS MÉTODOS
-	// --------------------------------------------------------------------------------------------
-	private PermisoUsuario buscarPermisoUsuario(int idUsuario) {
-		try {
-			return DaoUsuario.getInstance().buscarPermisoUsuario(idUsuario);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
 }

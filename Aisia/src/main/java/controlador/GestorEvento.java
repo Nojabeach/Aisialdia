@@ -49,12 +49,7 @@ public class GestorEvento extends HttpServlet {
 		String action = request.getParameter("action");
 		try {
 			switch (action) {
-			case "obtenerEventoPorId":
-				obtenerEventoPorId(request, response);
-				break;
-			case "obtenerEventosPorUsuario":
-				obtenerEventosPorUsuario(request, response);
-				break;
+
 			case "obtenerEventosPendientesAprobacion":
 				obtenerEventosPendientesAprobacion(request, response);
 				break;
@@ -300,63 +295,6 @@ public class GestorEvento extends HttpServlet {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().println("Error al finalizar el evento. Intente de nuevo.");
-		}
-	}
-
-	/**
-	 * Obtiene un evento específico por su ID.
-	 * 
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws SQLException Si se produce un error en la base de datos.
-	 * @throws IOException  Si se produce un error de entrada/salida.
-	 */
-	private void obtenerEventoPorId(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, IOException {
-		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
-		try {
-			Evento evento = DaoEvento.getInstance().obtenerEventoPorId(idEvento);
-			if (evento != null) {
-				response.getWriter().println("Evento encontrado: " + evento.toString());
-			} else {
-				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-				response.getWriter().println("Evento no encontrado.");
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().println("Error al obtener el evento. Intente de nuevo.");
-		}
-	}
-
-	/**
-	 * Obtiene la lista de eventos organizados por un usuario específico.
-	 * 
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws SQLException Si se produce un error en la base de datos.
-	 * @throws IOException  Si se produce un error de entrada/salida.
-	 */
-	private void obtenerEventosPorUsuario(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, IOException {
-		int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
-		try {
-			List<Evento> eventos = DaoEvento.getInstance().obtenerEventosPorUsuario(idUsuario);
-			if (eventos != null && !eventos.isEmpty()) {
-				response.getWriter().println("Eventos del usuario: ");
-				for (Evento evento : eventos) {
-					response.getWriter().println(evento.toString());
-				}
-			} else {
-				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-				response.getWriter().println("No se encontraron eventos para el usuario.");
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().println("Error al obtener los eventos del usuario. Intente de nuevo.");
 		}
 	}
 

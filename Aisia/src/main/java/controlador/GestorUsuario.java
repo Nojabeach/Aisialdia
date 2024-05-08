@@ -68,19 +68,13 @@ public class GestorUsuario extends HttpServlet {
 			case "verUsuario":
 				verUsuario(request, response);
 				break;
-			case "verEventosUsuario":
-				verEventosUsuario(request, response);
-				break;
-			case "verEventoUsuario":
-				verEventoUsuario(request, response);
-				break;
 			case "cerrarSesion":
 				cerrarSesion(request, response);
 				break;
 			case "comprobarLogin":
 				comprobarLogin(request, response);
 				break;
-			case "obtenerPermiso":
+			case "obtenerPermisoUsuario":
 				obtenerPermiso(request, response);
 
 			default:
@@ -160,11 +154,12 @@ public class GestorUsuario extends HttpServlet {
 	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
 	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
 	 *                 respuesta HTTP.
-	 * @throws IOException  Si se produce un error de entrada/salida.
 	 * @throws SQLException Si se produce un error al acceder a la base de datos.
+	 * @throws IOException
 	 */
 
-	private void registrarUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	private void registrarUsuario(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException {
 
 		// Obtener parámetros del formulario
 		System.out.println("Registrando usuario...");
@@ -227,16 +222,18 @@ public class GestorUsuario extends HttpServlet {
 			response.getWriter().println("Usuario registrado exitosamente!");
 
 			// Establecer permiso del usuario en la sesión
-			HttpSession session = request.getSession();
-			session.setAttribute("usuario", usuario);
-			session.setAttribute("permiso", usuario.getPermiso());
+			// SUSTITUIDO POR FUNCION INICIO SESION QUE ME REGISTRA ACCESO
+			// HttpSession session = request.getSession();
+			// session.setAttribute("usuario", usuario);
+			// session.setAttribute("permiso", usuario.getPermiso());
 
+			DaoUsuario.getInstance().iniciarSesion(nombre, usuario.getContrasena());
 			response.sendRedirect("eventos.html");
 
 		} catch (SQLException e) {
 			ControlErrores.mostrarErrorGenerico("Error al registrar el usuario. Intente de nuevo.", response);
 		}
-	}
+	};
 
 	/**
 	 * Inicia sesión de un usuario en el sistema.
@@ -335,81 +332,8 @@ public class GestorUsuario extends HttpServlet {
 	 * @param response HttpServletResponse Objeto de respuesta HTTP
 	 * @throws IOException Excepción de E/S
 	 */
+
 	private void comprobarLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		HttpSession session = request.getSession();
-		Usuario usuario = (Usuario) session.getAttribute("usuario");
-
-		Gson gson = new Gson();
-		if (usuario != null) {
-			System.out.println("Entro con login comprobado");
-			String jsonRespuesta = gson.toJson(new Logeo("OK", usuario.getNombre(), usuario.getPermiso()));
-			System.out.println(jsonRespuesta);
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().write(jsonRespuesta);
-		} else {
-			System.out.println("No entra en login");
-			String jsonRespuesta = gson.toJson(new Logeo("NOT_LOGGED_IN"));
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().write(jsonRespuesta);
-		}
-	}
-
-	/**
-	 * Clase auxiliar para estructurar la respuesta de inicio de sesión.
-	 */
-	class Logeo {
-		private String status;
-		private String usuario;
-		private int permiso;
-
-		/**
-		 * Constructor para respuesta de inicio de sesión sin usuario ni permiso.
-		 * 
-		 * @param status Estado del inicio de sesión
-		 */
-		public Logeo(String status) {
-			this.status = status;
-		}
-
-		/**
-		 * Constructor para respuesta de inicio de sesión con usuario y permiso.
-		 * 
-		 * @param status  Estado del inicio de sesión
-		 * @param usuario Nombre de usuario
-		 * @param permiso Permiso del usuario
-		 */
-		public Logeo(String status, String usuario, int permiso) {
-			this.status = status;
-			this.usuario = usuario;
-			this.permiso = permiso;
-		}
-
-		// Getters y setters
-		public String getStatus() {
-			return status;
-		}
-
-		public void setStatus(String status) {
-			this.status = status;
-		}
-
-		public String getUsuario() {
-			return usuario;
-		}
-
-		public void setUsuario(String usuario) {
-			this.usuario = usuario;
-		}
-
-		public int getPermiso() {
-			return permiso;
-		}
-
-		public void setPermiso(int permiso) {
-			this.permiso = permiso;
-		}
 
 	}
 
@@ -516,58 +440,6 @@ public class GestorUsuario extends HttpServlet {
 	}
 
 	/**
-	 * Obtiene la lista de eventos asociados a un usuario.
-	 *
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws IOException  Si se produce un error de entrada/salida.
-	 * @throws SQLException Si se produce un error al acceder a la base de datos.
-	 */
-	private void verEventosUsuario(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, SQLException {
-		// Obtener parámetro del ID del usuario
-		int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
-
-		// Obtener lista de eventos del usuario
-		try {
-			List<Evento> eventos = DaoUsuario.getInstance().obtenerEventos(idUsuario);
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().write(eventos.toString());
-		} catch (Exception e) {
-			ControlErrores.mostrarErrorGenerico("Error al obtener la lista de eventos del usuario. Intente de nuevo.",
-					response);
-		}
-	}
-
-	/**
-	 * Obtiene la información de un evento.
-	 *
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws IOException  Si se produce un error de entrada/salida.
-	 * @throws SQLException Si se produce un error al acceder a la base de datos.
-	 */
-	private void verEventoUsuario(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, SQLException {
-		// Obtener parámetro del ID del evento
-		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
-
-		// Obtener información del evento
-		try {
-			Evento evento = DaoUsuario.getInstance().verEvento(idEvento);
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().write(evento.toString());
-		} catch (Exception e) {
-			ControlErrores.mostrarErrorGenerico("Error al obtener la información del evento. Intente de nuevo.",
-					response);
-		}
-	}
-
-	/**
 	 * Marca un evento como favorito para un usuario.
 	 *
 	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
@@ -617,13 +489,15 @@ public class GestorUsuario extends HttpServlet {
 	}
 
 	/**
-	 * Cambia la contraseña de un usuario.
-	 *
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws IOException  Si se produce un error de entrada/salida.
-	 * @throws SQLException Si se produce un error al acceder a la base de datos.
+	 * Cambia la contraseña de un usuario en la base de datos.
+	 * 
+	 * @param request  HttpServletRequest que contiene los parámetros del
+	 *                 formulario.
+	 * @param response HttpServletResponse para enviar la respuesta.
+	 * @throws IOException  Si ocurre algún error de entrada/salida al escribir la
+	 *                      respuesta.
+	 * @throws SQLException Si ocurre algún error de SQL al intentar cambiar la
+	 *                      contraseña.
 	 */
 	private void cambiarContrasena(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, SQLException {
@@ -635,17 +509,11 @@ public class GestorUsuario extends HttpServlet {
 		// Obtener la contraseña actual del usuario desde la base de datos
 		String contrasenaAlmacenada = DaoUsuario.getInstance().obtenerContrasena(idUsuario);
 
-		// Cifrar la contraseña actual proporcionada por el usuario
-		String contrasenaActualCifrada = getMD5(contrasenaActual);
-
-		// Verificar si la contraseña actual coincide con la almacenada
-		if (contrasenaActualCifrada.equals(contrasenaAlmacenada)) {
-			// Cifrar la nueva contraseña
-			String contrasenaNuevaCifrada = getMD5(contrasenaNueva);
-
-			// Actualizar la contraseña en la base de datos con la nueva contraseña cifrada
+		// Verificar si la contraseña actual proporcionada coincide con la almacenada
+		if (contrasenaAlmacenada != null && contrasenaAlmacenada.equals(contrasenaActual)) {
+			// Cambiar la contraseña
 			try {
-				DaoUsuario.getInstance().cambiarContrasena(idUsuario, contrasenaActualCifrada, contrasenaNuevaCifrada);
+				DaoUsuario.getInstance().cambiarContrasena(idUsuario, contrasenaActual, contrasenaNueva);
 				response.getWriter().println("Contraseña cambiada exitosamente!");
 			} catch (Exception e) {
 				ControlErrores.mostrarErrorGenerico("Error al cambiar la contraseña. Intente de nuevo.", response);
@@ -654,7 +522,6 @@ public class GestorUsuario extends HttpServlet {
 			// La contraseña actual proporcionada no coincide con la almacenada
 			ControlErrores.mostrarErrorGenerico("La contraseña actual no es correcta.", response);
 		}
-
 	}
 
 	/**
@@ -675,10 +542,10 @@ public class GestorUsuario extends HttpServlet {
 				return;
 			}
 
-			String nombreUsuario = usuario.getNombre(); // Obtenemos el nombre del usuario
+			int idUsuario = usuario.getIdUsuario(); // Obtenemos el nombre del usuario
 
 			try {
-				String permiso = DaoUsuario.getInstance().obtenerPermisoPorNombre(nombreUsuario);
+				int permiso = DaoUsuario.getInstance().buscarPermisoUsuario(idUsuario);
 
 				// Establecer el tipo de contenido y encabezados de la respuesta
 				response.setContentType("text/plain");

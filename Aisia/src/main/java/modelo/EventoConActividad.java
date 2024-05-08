@@ -249,8 +249,27 @@ public class EventoConActividad {
 
 	// MÉTODOS DE NEGOCIO
 	// --------------------------------------------------------------------------------------------
-	public static List<EventoConActividad> obtenerUltimosEventos(int numEventos) throws SQLException {
+	/**
+	 * Obtiene los últimos eventos con actividad asociada de la base de datos.
+	 *
+	 * @param numEventos El número de eventos a obtener.
+	 * @return Lista de objetos EventoConActividad que representan los últimos
+	 *         eventos con actividad asociada.
+	 * @throws SQLException Si ocurre un error al obtener los eventos.
+	 */
+	public List<EventoConActividad> obtenerUltimosEventos(int numEventos) throws SQLException {
 		return DaoEventoConActividad.getInstance().obtenerUltimosEventos(numEventos);
 	}
 
+	/**
+	 * Obtiene un evento con actividad asociada por su ID.
+	 *
+	 * @param idEvento El ID del evento.
+	 * @return Objeto EventoConActividad que representa el evento con su actividad
+	 *         asociada.
+	 * @throws SQLException Si ocurre un error al obtener el evento.
+	 */
+	public EventoConActividad obtenerEventoConActividad(int idEvento) throws SQLException {
+		return DaoEventoConActividad.getInstance().obtenerEventoConActividad(idEvento);
+	}
 }

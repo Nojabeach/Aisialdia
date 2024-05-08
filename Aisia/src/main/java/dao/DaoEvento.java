@@ -10,10 +10,11 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
+
 import jakarta.servlet.http.HttpServletRequest;
 import modelo.Actividad;
 import modelo.Evento;
-import modelo.Evento.MotivoFinalizacion;
 
 public class DaoEvento {
 
@@ -208,67 +209,26 @@ public class DaoEvento {
 	}
 
 	/**
-	 * Obtiene un evento específico de la base de datos a partir de su
-	 * identificador.
+	 * Obtiene la lista de eventos que están pendientes de aprobación que no hayan
+	 * sido finalizados (rechazos, por ejemplo)
 	 * 
-	 * @param idEvento El identificador del evento a buscar.
-	 * @return Un objeto Evento con la información del evento encontrado, o null si
-	 *         no se encuentra ningún evento con ese identificador.
-	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
-	 */
-	public Evento obtenerEventoPorId(int idEvento) throws SQLException {
-		String sql = "SELECT * FROM eventos WHERE idEvento = ?";
-		Evento evento = null;
-
-		try (PreparedStatement ps = con.prepareStatement(sql)) {
-			ps.setInt(1, idEvento);
-			try (ResultSet rs = ps.executeQuery()) {
-				if (rs.next()) {
-					evento = new Evento();
-					evento.setIdEvento(rs.getInt("idEvento"));
-					evento.setNombre(rs.getString("nombre"));
-					evento.setDetalles(rs.getString("detalles"));
-					evento.setFechaPublicacion(rs.getDate("fechaPublicacion"));
-					evento.setIdModeradorPublicacion(rs.getInt("idModeradorPublicacion"));
-					evento.setFechaFinalizacion(rs.getDate("fechaFinalizacion"));
-					evento.setIdModeradorFinalizacion(rs.getInt("idModeradorFinalizacion"));
-					evento.setMotivoFinalizacion(MotivoFinalizacion.valueOf(rs.getString("motivoFinalizacion")));
-					evento.setUbicacion(rs.getString("ubicacion"));
-				}
-			}
-		}
-
-		return evento;
-	}
-
-	/**
-	 * Obtiene la lista de eventos organizados por un usuario específico.
-	 * 
-	 * @param idUsuario El identificador del usuario.
-	 * @return Lista de eventos organizados por el usuario indicado.
+	 * @return Lista de eventos pendientes de aprobación.
 	 * @throws SQLException Si ocurre un error al obtener los eventos.
 	 */
-	public List<Evento> obtenerEventosPorUsuario(int idUsuario) throws SQLException {
-		String sql = "SELECT * FROM eventos WHERE idUsuarioCreador = ?";
+	public List<Evento> obtenerEventosPendientesAprobacion() throws SQLException {
+		String sql = "SELECT * FROM eventos WHERE fechaAprobacion IS NULL and fechaFinalizacion is null";
 		List<Evento> eventos = new ArrayList<>();
 
-		try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-			pstmt.setInt(1, idUsuario);
-			try (ResultSet rs = pstmt.executeQuery()) {
-				while (rs.next()) {
-					Evento evento = new Evento();
-					evento.setIdEvento(rs.getInt("idEvento"));
-					evento.setNombre(rs.getString("nombre"));
-					evento.setDetalles(rs.getString("detalles"));
-					evento.setFechaPublicacion(rs.getDate("fechaPublicacion"));
-					evento.setIdModeradorPublicacion(rs.getInt("idModeradorPublicacion"));
-					evento.setFechaFinalizacion(rs.getDate("fechaFinalizacion"));
-					evento.setIdModeradorFinalizacion(rs.getInt("idModeradorFinalizacion"));
-					evento.setMotivoFinalizacion(MotivoFinalizacion.valueOf(rs.getString("motivoFinalizacion")));
-					evento.setUbicacion(rs.getString("ubicacion"));
+		try (PreparedStatement pstmt = con.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
+			while (rs.next()) {
+				Evento evento = new Evento();
+				evento.setIdEvento(rs.getInt("idEvento"));
+				evento.setNombre(rs.getString("nombre"));
+				evento.setDetalles(rs.getString("detalles"));
+				evento.setFechaUltimaModificacion(rs.getDate("fechaUltimaModificacion"));
+				evento.setUbicacion(rs.getString("ubicacion"));
 
-					eventos.add(evento);
-				}
+				eventos.add(evento);
 			}
 		}
 
@@ -276,13 +236,13 @@ public class DaoEvento {
 	}
 
 	/**
-	 * Obtiene la lista de eventos que están pendientes de aprobación.
+	 * Obtiene la lista de eventos que están pendientes de publicacion.
 	 * 
 	 * @return Lista de eventos pendientes de aprobación.
 	 * @throws SQLException Si ocurre un error al obtener los eventos.
 	 */
-	public List<Evento> obtenerEventosPendientesAprobacion() throws SQLException {
-		String sql = "SELECT * FROM eventos WHERE fechaPublicacion IS NULL";
+	public List<Evento> obtenerEventosPendientesPublicacion() throws SQLException {
+		String sql = "SELECT * FROM eventos WHERE fechaPublicacion IS NULL and fechaAprobacion IS not NULL";
 		List<Evento> eventos = new ArrayList<>();
 
 		try (PreparedStatement pstmt = con.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
@@ -366,20 +326,96 @@ public class DaoEvento {
 	}
 
 	/**
-	 * Obtiene el último ID de evento almacenado en la base de datos.
-	 *
-	 * @return El último ID de evento almacenado.
-	 * @throws SQLException si ocurre algún error al interactuar con la base de
-	 *                      datos.
+	 * Busca eventos por un criterio de búsqueda.
+	 * 
+	 * @param criterio Criterio de búsqueda (nombre, fecha, etc.).
+	 * @return Lista de objetos Evento con la información de los eventos
+	 *         coincidentes.
+	 * @throws Exception Si ocurre un error al buscar los eventos.
 	 */
-	public int obtenerUltimoIdEvento() throws SQLException {
-		String sql = "SELECT MAX(idEvento) FROM eventos";
-		PreparedStatement ps = con.prepareStatement(sql);
-		ResultSet rs = ps.executeQuery();
-		if (rs.next()) {
-			return rs.getInt(1);
-		} else {
-			throw new SQLException("No se encontró ningún evento en la base de datos.");
+	public List<Evento> buscarEventos(String criterio) throws Exception {
+		// Preparar la consulta SQL para buscar eventos con el criterio especificado
+		String sql = "SELECT * FROM eventos WHERE nombre LIKE? OR descripcion LIKE?";
+		List<Evento> eventos = new ArrayList<>();
+		try (PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setString(1, "%" + criterio + "%");
+			stmt.setString(2, "%" + criterio + "%");
+			try (ResultSet rs = stmt.executeQuery()) {
+				while (rs.next()) {
+					eventos.add(new Evento(rs.getInt("idEvento"), rs.getString("nombre"), rs.getString("detalles"),
+							rs.getDate("fechaEvento")));
+				}
+			}
+		} catch (SQLException e) {
+			throw new Exception("Error al buscar eventos", e);
 		}
+		return eventos;
 	}
+
+	// ---------------------------------------------------------------------------------
+	// VOLCADOS JSON
+	// ---------------------------------------------------------------------------------
+
+	/**
+	 * Genera un objeto JSON que representa todos los eventos activos que coinciden
+	 * con los filtros especificados.
+	 *
+	 * @param actividad   Filtro por actividad.
+	 * @param descripcion Filtro por descripción.
+	 * @param ubicacion   Filtro por ubicación.
+	 * @param fecha       Filtro por fecha.
+	 * @return Una cadena JSON que representa los eventos activos que coinciden con
+	 *         los filtros especificados.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public String listarJsonObtenerTodosLosEventosActivos(String actividad, String descripcion, String ubicacion,
+			Date fecha) throws SQLException {
+		String json = "";
+		Gson gson = new Gson();
+		json = gson.toJson(this.obtenerTodosLosEventosActivos(actividad, descripcion, ubicacion, fecha));
+		return json;
+	}
+
+	/**
+	 * Genera un objeto JSON que representa los eventos pendientes de aprobación.
+	 *
+	 * @return Una cadena JSON que representa los eventos pendientes de aprobación.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public String listarJsonPendientesAprobacion() throws SQLException {
+		String json = "";
+		Gson gson = new Gson();
+		json = gson.toJson(this.obtenerEventosPendientesAprobacion());
+		return json;
+	}
+
+	/**
+	 * Genera un objeto JSON que representa los eventos pendientes de publicación.
+	 *
+	 * @return Una cadena JSON que representa los eventos pendientes de publicación.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public String listarJsonPendientesPublicacion() throws SQLException {
+		String json = "";
+		Gson gson = new Gson();
+		json = gson.toJson(this.obtenerEventosPendientesPublicacion());
+		return json;
+	}
+
+	/**
+	 * Genera un objeto JSON que representa los eventos que coinciden con el
+	 * criterio de búsqueda.
+	 *
+	 * @param criterio Criterio de búsqueda.
+	 * @return Una cadena JSON que representa los eventos coincidentes con el
+	 *         criterio de búsqueda.
+	 * @throws Exception Si ocurre un error al buscar los eventos.
+	 */
+	public String listarJsonBuscarEventos(String criterio) throws Exception {
+		String json = "";
+		Gson gson = new Gson();
+		json = gson.toJson(this.buscarEventos(criterio));
+		return json;
+	}
+
 }

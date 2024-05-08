@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
+
 import jakarta.servlet.http.HttpServletRequest;
 import modelo.Evento;
 import modelo.Evento.MotivoFinalizacion;
@@ -80,34 +82,6 @@ public class DaoFavorito {
 	}
 
 	/**
-	 * Verifica si un evento es favorito de un usuario.
-	 *
-	 * @param idEvento  El identificador del evento a verificar.
-	 * @param idUsuario El identificador del usuario.
-	 * @return `true` si el evento es favorito del usuario, `false` en caso
-	 *         contrario.
-	 * @throws SQLException Si ocurre un error al verificar el favorito.
-	 */
-	public boolean verificarEventoFavoritoUsuario(int idEvento, HttpServletRequest request) throws SQLException {
-		String sql = "SELECT COUNT(*) FROM favoritos WHERE idEvento = ? AND idUsuario = ?";
-		PreparedStatement ps = con.prepareStatement(sql);
-		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
-		ResultSet rs = null;
-		int count = 0;
-
-		ps = con.prepareStatement(sql);
-		ps.setInt(1, idEvento);
-		ps.setInt(2, idUsuarioActual);
-		rs = ps.executeQuery();
-
-		if (rs.next()) {
-			count = rs.getInt(1);
-		}
-
-		return count > 0;
-	}
-
-	/**
 	 * Obtiene una lista de eventos favoritos de un usuario específico.
 	 *
 	 * @param idUsuario El identificador del usuario del que se desean obtener los
@@ -152,32 +126,30 @@ public class DaoFavorito {
 			evento.setIdEvento(rs.getInt("idEvento"));
 			evento.setNombre(rs.getString("nombre"));
 			evento.setDetalles(rs.getString("detalles"));
-			evento.setIdUsuarioCreador(rs.getInt("idUsuariocreador"));
-			evento.setFechaAprobacion(rs.getDate("fechaAprobacion"));
-			evento.setIdModeradorAprobacion(rs.getInt("idModeradorAprobacion"));
-			evento.setFechaPublicacion(rs.getDate("fechaPublicacion"));
-			evento.setIdModeradorPublicacion(rs.getInt("idModeradorPublicacion"));
-			evento.setFechaFinalizacion(rs.getDate("fechaFinalizacion"));
-			evento.setIdModeradorFinalizacion(rs.getInt("idModeradorFinalizacion"));
-
-			// Control de que no sea null el motivoFinalización
-			String motivoFinalizacionString = rs.getString("motivoFinalizacion");
-			if (motivoFinalizacionString != null) {
-				try {
-					MotivoFinalizacion motivoFinalizacion = MotivoFinalizacion.valueOf(motivoFinalizacionString);
-					evento.setMotivoFinalizacion(motivoFinalizacion);
-				} catch (IllegalArgumentException e) {
-					System.err.println("Error al convertir motivoFinalizacion: " + motivoFinalizacionString);
-				}
-			} else {
-				evento.setMotivoFinalizacion(null);
-			}
-
+			evento.setFechaEvento(rs.getDate("fechaEvento"));
 			evento.setUbicacion(rs.getString("ubicacion"));
 
 			eventosFavoritos.add(evento); // Agregar evento a la lista de favoritos
 		}
 
 		return eventosFavoritos; // Retornar la lista de eventos favoritos
+	}
+
+	// ---------------------------------------------------------------------------------
+	// VOLCADOS JSON
+	// ---------------------------------------------------------------------------------
+
+	/**
+	 * Genera un objeto JSON que representa los eventos favoritos de un usuario.
+	 *
+	 * @param idUsuario ID del usuario.
+	 * @return Una cadena JSON que representa los eventos favoritos del usuario.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public String listarJsonFavoritosUsuario(int idUsuario) throws SQLException {
+		String json = "";
+		Gson gson = new Gson();
+		json = gson.toJson(this.obtenerEventosFavoritosUsuario(idUsuario));
+		return json;
 	}
 }

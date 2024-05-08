@@ -1,16 +1,15 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+
+import com.google.gson.Gson;
 
 import jakarta.servlet.http.HttpServletRequest;
-import modelo.Evento;
-import modelo.PermisoUsuario;
+
 import modelo.Usuario;
 import modelo.Usuario.Rol;
 
@@ -83,9 +82,9 @@ public class DaoUsuario {
 	 * @param contrasena Contraseña del usuario (no se almacena, solo se utiliza
 	 *                   para autenticar).
 	 * @return Objeto Usuario si la autenticación es correcta, null si no lo es.
-	 * @throws Exception Si ocurre un error al iniciar sesión.
+	 * @throws SQLException Si ocurre un error al iniciar sesión.
 	 */
-	public Usuario iniciarSesion(String usuario, String contrasena) throws Exception {
+	public Usuario iniciarSesion(String usuario, String contrasena) throws SQLException {
 		// Preparar la consulta SQL para validar el usuario y contraseña
 		String sql = "SELECT * FROM usuarios WHERE nombre =? AND contrasena =?";
 		try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -117,7 +116,8 @@ public class DaoUsuario {
 	}
 
 	/**
-	 * Obtiene un usuario por su ID.
+	 * Obtiene un usuario por su ID. (verUsuario en el servlet GestorUsuario y en
+	 * cambiarContrasena)
 	 * 
 	 * @param idUsuario Identificador del usuario.
 	 * @return Objeto Usuario con la información del usuario, o null si no se
@@ -144,14 +144,24 @@ public class DaoUsuario {
 	 * @param usuario Objeto Usuario con la información actualizada del usuario.
 	 * @throws Exception Si ocurre un error al editar el usuario.
 	 */
-	public void editarUsuario(Usuario usuario) throws Exception {
-		// Preparar la consulta SQL para actualizar el usuario
-		String sql = "UPDATE usuarios SET nombre = ?, email = ? WHERE idUsuario = ?";
-		try (PreparedStatement stmt = con.prepareStatement(sql)) {
-			stmt.setString(1, usuario.getNombre());
-			stmt.setString(2, usuario.getEmail());
-			stmt.setInt(3, usuario.getIdUsuario());
-			stmt.executeUpdate();
+	/**
+	 * Edita un usuario en la base de datos con los nuevos datos proporcionados.
+	 * 
+	 * @param usuario El objeto Usuario con los datos actualizados.
+	 * @throws SQLException Si ocurre algún error de SQL al intentar editar el
+	 *                      usuario.
+	 */
+	public void editarUsuario(Usuario usuario) throws SQLException {
+		String sql = "UPDATE usuarios SET nombre = ?, contraseña = ?, email = ?, fechaNacimiento = ?, intereses = ?, recibeNotificaciones = ? WHERE idUsuario = ?";
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, usuario.getNombre());
+			ps.setString(2, usuario.getContrasena());
+			ps.setString(3, usuario.getEmail());
+			ps.setDate(4, usuario.getFechaNacimiento());
+			ps.setString(5, usuario.getIntereses());
+			ps.setBoolean(6, usuario.isRecibeNotificaciones());
+			ps.setInt(7, usuario.getIdUsuario());
+			ps.executeUpdate();
 		}
 	}
 
@@ -168,77 +178,6 @@ public class DaoUsuario {
 			stmt.setInt(1, idUsuario);
 			stmt.executeUpdate();
 		}
-	}
-
-	/**
-	 * Obtiene la lista de eventos a los que está asistiendo un usuario.
-	 * 
-	 * @param idUsuario Identificador del usuario.
-	 * @return Lista de objetos Evento con la información de los eventos.
-	 * @throws Exception Si ocurre un error al obtener los eventos.
-	 */
-	public List<Evento> obtenerEventos(int idUsuario) throws Exception {
-		// Preparar la consulta SQL para obtener los eventos del usuario
-		String sql = "SELECT e.* FROM eventos e JOIN asistencia a ON e.idEvento = a.idEvento WHERE a.idUsuario = ?";
-		try (PreparedStatement stmt = con.prepareStatement(sql)) {
-			stmt.setInt(1, idUsuario);
-			ResultSet rs = stmt.executeQuery();
-			List<Evento> eventos = new ArrayList<>();
-			while (rs.next()) {
-				eventos.add(new Evento(rs.getInt("idEvento"), rs.getString("nombre"), rs.getString("detalles"),
-						rs.getDate("fechaEvento")));
-			}
-			return eventos;
-		}
-	}
-
-	/**
-	 * Busca eventos por un criterio de búsqueda.
-	 * 
-	 * @param criterio Criterio de búsqueda (nombre, fecha, etc.).
-	 * @return Lista de objetos Evento con la información de los eventos
-	 *         coincidentes.
-	 * @throws Exception Si ocurre un error al buscar los eventos.
-	 */
-	public List<Evento> buscarEventos(String criterio) throws Exception {
-		// Preparar la consulta SQL para buscar eventos con el criterio especificado
-		String sql = "SELECT * FROM eventos WHERE nombre LIKE? OR descripcion LIKE?";
-		List<Evento> eventos = new ArrayList<>();
-		try (PreparedStatement stmt = con.prepareStatement(sql)) {
-			stmt.setString(1, "%" + criterio + "%");
-			stmt.setString(2, "%" + criterio + "%");
-			try (ResultSet rs = stmt.executeQuery()) {
-				while (rs.next()) {
-					eventos.add(new Evento(rs.getInt("idEvento"), rs.getString("nombre"), rs.getString("detalles"),
-							rs.getDate("fechaEvento")));
-				}
-			}
-		} catch (SQLException e) {
-			throw new Exception("Error al buscar eventos", e);
-		}
-		return eventos;
-	}
-
-	/**
-	 * Obtiene la información de un evento por su ID.
-	 * 
-	 * @param idEvento Identificador del evento.
-	 * @return Objeto Evento con la información del evento, o null si no se
-	 *         encuentra.
-	 * @throws Exception Si ocurre un error al obtener el evento.
-	 */
-	public Evento verEvento(int idEvento) throws Exception {
-		// Preparar la consulta SQL para obtener el evento por ID
-		String sql = "SELECT * FROM eventos WHERE idEvento = ?";
-		try (PreparedStatement stmt = con.prepareStatement(sql)) {
-			stmt.setInt(1, idEvento);
-			ResultSet rs = stmt.executeQuery();
-			if (rs.next()) {
-				return new Evento(rs.getInt("idEvento"), rs.getString("nombre"), rs.getString("detalles"),
-						rs.getDate("fechaEvento"));
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -301,44 +240,93 @@ public class DaoUsuario {
 	}
 
 	/**
-	 * Obtiene una lista de todos los usuarios.
+	 * Obtiene la lista de todos los usuarios de la base de datos.
 	 * 
-	 * Este método consulta la tabla `usuarios` de la base de datos y devuelve una
-	 * lista de objetos `Usuario` que representan a todos los usuarios registrados.
-	 * 
-	 * @return La lista de usuarios o una lista vacía si no se encuentran usuarios.
-	 * @throws SQLException Si ocurre un error al consultar la base de datos.
+	 * @return ArrayList de Usuario que contiene todos los usuarios obtenidos de la
+	 *         base de datos.
+	 * @throws SQLException Si se produce un error al acceder a la base de datos.
 	 */
-	public List<Usuario> obtenerUsuarios() throws SQLException {
+	public ArrayList<Usuario> obtenerUsuarios() throws SQLException {
+
 		String sql = "SELECT * FROM usuarios";
-		List<Usuario> usuarios = new ArrayList<>();
+		PreparedStatement ps = con.prepareStatement(sql);
+		ResultSet rs = ps.executeQuery();
 
-		try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-
-			while (rs.next()) {
-				int idUsuario = rs.getInt("idUsuario");
-				String nombre = rs.getString("nombre");
-				String email = rs.getString("email");
-				String contrasena = rs.getString("contrasena");
-				Date fechaNacimiento = rs.getDate("fechaNacimiento");
-				boolean recibeNotificaciones = rs.getBoolean("recibeNotificaciones");
-				String intereses = rs.getString("intereses");
-				int permiso = rs.getInt("permiso");
-				Rol rol = Rol.valueOf(rs.getString("roles"));
-				Date consentimiento_datos = rs.getDate("consentimiento_datos");
-				Date aceptacionTerminosWeb = rs.getDate("aceptacionTerminosWeb");
-
-				Usuario usuario = new Usuario(idUsuario, nombre, email, contrasena, fechaNacimiento,
-						recibeNotificaciones, intereses, permiso, rol, consentimiento_datos, aceptacionTerminosWeb);
-				usuarios.add(usuario);
+		ArrayList<Usuario> ls = null;
+		/*
+		 * next-> . null [4][5][6][7][8][7] null
+		 */
+		while (rs.next()) {
+			if (ls == null) {
+				ls = new ArrayList<Usuario>();
 			}
-		}
 
-		return usuarios;
+			ls.add(new Usuario(rs.getInt("idUsuario"), // Obtener el ID del usuario de la consulta SQL
+					rs.getString("nombre"), // Obtener el nombre del usuario de la consulta SQL
+					rs.getString("email"), // Obtener el email del usuario de la consulta SQL
+					rs.getString("contrasena"), // Obtener la contraseña del usuario de la consulta SQL
+					rs.getDate("fechaNacimiento"), // Obtener la fecha de nacimiento del usuario de la consulta SQL
+					rs.getBoolean("recibeNotificaciones"), // Obtener si recibe notificaciones del usuario de la
+															// consulta SQL
+					rs.getString("intereses"), // Obtener los intereses del usuario de la consulta SQL
+					rs.getInt("permiso"), // Obtener el permiso del usuario de la consulta SQL
+					Rol.valueOf(rs.getString("rol")), // Obtener el rol del usuario de la consulta SQL y convertirlo en
+														// un enum
+					rs.getDate("consentimiento_datos"), // Obtener la fecha de consentimiento de datos del usuario de la
+														// consulta SQL
+					rs.getDate("aceptacionTerminosWeb") // Obtener la fecha de aceptación de términos web del usuario de
+														// la consulta SQL
+			));
+
+		}
+		return ls;
+
 	}
 
 	/**
-	 * Obtiene el ID del usuario actual de la sesión HTTP.
+	 * Retorna una lista de usuarios filtrada por tipo de permiso.
+	 * 
+	 * @param tipo El tipo de permiso por el que se desea filtrar los usuarios.
+	 * @return Una lista de usuarios que tienen el permiso especificado.
+	 * @throws SQLException Si ocurre algún error de SQL al intentar obtener los
+	 *                      usuarios.
+	 */
+	public ArrayList<Usuario> obtenerUsuarios(int PERMISO) throws SQLException {
+		String sql = "SELECT * FROM usuarios WHERE permiso=?";
+		PreparedStatement ps = con.prepareStatement(sql);
+		ps.setInt(1, PERMISO);
+		ResultSet rs = ps.executeQuery();
+
+		ArrayList<Usuario> ls = null;
+
+		while (rs.next()) {
+			if (ls == null) {
+				ls = new ArrayList<Usuario>();
+			}
+
+			ls.add(new Usuario(rs.getInt("idUsuario"), // Obtener el ID del usuario de la consulta SQL
+					rs.getString("nombre"), // Obtener el nombre del usuario de la consulta SQL
+					rs.getString("email"), // Obtener el email del usuario de la consulta SQL
+					rs.getString("contrasena"), // Obtener la contraseña del usuario de la consulta SQL
+					rs.getDate("fechaNacimiento"), // Obtener la fecha de nacimiento del usuario de la consulta SQL
+					rs.getBoolean("recibeNotificaciones"), // Obtener si recibe notificaciones del usuario de la
+															// consulta SQL
+					rs.getString("intereses"), // Obtener los intereses del usuario de la consulta SQL
+					rs.getInt("permiso"), // Obtener el permiso del usuario de la consulta SQL
+					Rol.valueOf(rs.getString("rol")), // Obtener el rol del usuario de la consulta SQL y convertirlo en
+														// un enum
+					rs.getDate("consentimiento_datos"), // Obtener la fecha de consentimiento de datos del usuario de la
+														// consulta SQL
+					rs.getDate("aceptacionTerminosWeb") // Obtener la fecha de aceptación de términos web del usuario de
+														// la consulta SQL
+			));
+		}
+		return ls;
+	}
+
+	/**
+	 * Obtiene el ID del usuario actual de la sesión HTTP. Se necesita STATIC por
+	 * que se hace uso de este metodo en la clase DaoFavorito.
 	 * 
 	 * @param request Objeto HttpServletRequest para obtener la información de la
 	 *                sesión.
@@ -347,85 +335,82 @@ public class DaoUsuario {
 	 */
 	public static int obtenerIdUsuarioActual(HttpServletRequest request) {
 		Usuario usuarioSesion = (Usuario) request.getSession().getAttribute("usuario");
+		int IdUsuario = -1;
 		if (usuarioSesion != null) {
-			return usuarioSesion.getIdUsuario();
+			IdUsuario = usuarioSesion.getIdUsuario();
 		}
-		return -1;
+		return IdUsuario;
 	}
 
 	/**
-	 * Busca el permiso de un usuario en la base de datos según su ID.
-	 *
-	 * @param idUsuario ID del usuario del cual se desea obtener el permiso.
-	 * @return Objeto PermisoUsuario que representa el permiso del usuario.
+	 * Busca el permiso de un usuario en la base de datos.
+	 * 
+	 * @param idUsuario El ID del usuario cuyo permiso se desea buscar.
+	 * @return El permiso del usuario.
+	 * @throws SQLException Si ocurre algún error de SQL al intentar buscar el
+	 *                      permiso del usuario.
 	 */
-	public PermisoUsuario buscarPermisoUsuario(int idUsuario) {
-		PermisoUsuario permiso = null;
-
+	public int buscarPermisoUsuario(int idUsuario) throws SQLException {
+		int permiso = 0;
 		String sql = "SELECT permiso FROM usuario WHERE id = ?";
 		try (PreparedStatement ps = con.prepareStatement(sql)) {
 			ps.setInt(1, idUsuario);
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-				int permisoNumero = rs.getInt("permiso");
-				permiso = new PermisoUsuario(permisoNumero);
+				permiso = rs.getInt("permiso");
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
-
 		return permiso;
 	}
 
 	/**
 	 * Obtiene la contraseña de un usuario por su ID.
-	 *
-	 * @param idUsuario El ID del usuario del que se desea obtener la contraseña.
-	 * @return La contraseña del usuario como una cadena, o null si el usuario no
-	 *         existe.
-	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 * 
+	 * @param idUsuario El ID del usuario.
+	 * @return La contraseña del usuario, o null si no se encuentra.
+	 * @throws SQLException Si ocurre un error al obtener la contraseña del usuario.
 	 */
 	public String obtenerContrasena(int idUsuario) throws SQLException {
-		String contrasena = null;
-		String sql = "SELECT contrasena FROM usuarios WHERE id_usuario = ?";
-
-		try (PreparedStatement ps = con.prepareStatement(sql)) {
-			ps.setInt(1, idUsuario);
-			try (ResultSet rs = ps.executeQuery()) {
-				if (rs.next()) {
-					contrasena = rs.getString("contrasena");
-				}
+		// Preparar la consulta SQL para obtener la contraseña por ID de usuario
+		String sql = "SELECT contrasena FROM usuarios WHERE idUsuario = ?";
+		try (PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setInt(1, idUsuario);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				return rs.getString("contrasena");
 			}
 		}
-
-		return contrasena;
+		return null;
 	}
 
 	/**
-	 * Obtiene el permiso de un usuario por su nombre.
+	 * Genera una representación JSON de la lista de usuarios.
 	 * 
-	 * @param nombreUsuario el nombre del usuario del cual obtener el permiso
-	 * @return el permiso del usuario, -1 si el usuario no se encuentra o no tiene
-	 *         un permiso válido
-	 * @throws SQLException si ocurre un error al interactuar con la base de datos
+	 * @return Una cadena JSON que representa la lista de usuarios.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
 	 */
-	public String obtenerPermisoPorNombre(String nombreUsuario) throws SQLException {
+	public String listarUsuariosJson() throws SQLException {
+		String json = "";
+		Gson gson = new Gson();
+		json = gson.toJson(this.obtenerUsuarios());
+		return json;
+	}
 
-		String permiso = "-1"; // Valor por defecto si no se encuentra el usuario o no tiene permiso válido
-
-		String sql = "SELECT permiso FROM usuarios WHERE nombre = ?";
-		try (PreparedStatement ps = con.prepareStatement(sql)) {
-
-			ps.setString(1, nombreUsuario);
-			try (ResultSet rs = ps.executeQuery()) {
-				if (rs.next()) {
-					int permisoInt = rs.getInt("permiso");
-					permiso = String.valueOf(permisoInt); // Parse int to String
-				}
-			}
-		}
-		return permiso;
+	/**
+	 * Genera una representación JSON de la lista de usuarios filtrada por tipo de
+	 * permiso.
+	 * 
+	 * @param tipo El tipo de permiso por el que se desea filtrar los usuarios.
+	 * @return Una cadena JSON que representa la lista de usuarios filtrada por tipo
+	 *         de permiso.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public String listarUsuariosJson(int tipo) throws SQLException {
+		String json = "";
+		Gson gson = new Gson();
+		json = gson.toJson(this.obtenerUsuarios(tipo));
+		return json;
 	}
 
 }

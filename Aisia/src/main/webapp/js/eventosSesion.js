@@ -2,10 +2,9 @@ document.addEventListener("DOMContentLoaded", function () {
   
   // Mostrar el nombre de usuario logueado
   const nombreUsuarioElement = document.getElementById("nombreUsuario");
+  const permisoUsuarioElement = document.getElementById("PermisoUsuario");
   const userInfoContainer = document.getElementById("userInfoContainer");
   const botonCerrarSesion = document.getElementById("botonCerrarSesion");
-
-
 
   // Agregar evento al botón de cerrar sesión
   botonCerrarSesion.addEventListener("click", () => {
@@ -19,28 +18,19 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch((error) => console.error(error));
   });
 
-
-
-
-  fetch("GestorUsuario?action=obtenerNombreUsuario")
-    .then((response) => response.text())
-    .then((nombreUsuario) => {
-      if (nombreUsuario) {
-        nombreUsuarioElement.textContent = nombreUsuario;
+  // Comprobar el estado de inicio de sesión y obtener información del usuario
+  fetch("GestorUsuario?action=comprobarLogin")
+  alert("hola")
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "OK") {
+        nombreUsuarioElement.textContent = data.nombreUsuario;
+        permisoUsuarioElement.textContent = `Permiso: ${data.permiso}`;
         userInfoContainer.style.display = "block";
-
-        // Obtener permiso del usuario
-        fetch("GestorUsuario?action=obtenerPermisoUsuario")
-          .then((response) => response.text())
-          .then((permiso) => {
-            const userPermisoElement = document.getElementById("PermisoUsuario");
-            userPermisoElement.textContent = `Permiso: ${permiso}`;
-          })
-          .catch((error) => console.error("Error al obtener permiso: ", error));
       } else {
         userInfoContainer.style.display = "none";
       }
     })
-    .catch((error) => console.error("Error al obtener nombre de usuario: ", error));
+    .catch((error) => console.error("Error al comprobar el inicio de sesión: ", error));
 
 });

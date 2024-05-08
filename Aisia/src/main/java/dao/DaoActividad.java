@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
+
 import modelo.Actividad;
 
 public class DaoActividad {
@@ -117,6 +119,7 @@ public class DaoActividad {
 		}
 		return actividades;
 	}
+
 	/**
 	 * Obtiene una actividad de la base de datos por su ID.. Metodo usado en JUNIT
 	 *
@@ -125,49 +128,69 @@ public class DaoActividad {
 	 * @throws SQLException Si ocurre un error al obtener la actividad.
 	 */
 	public Actividad obtenerActividadPorId(int idActividad) throws SQLException {
-	    Actividad actividad = null;
-	    String sql = "SELECT * FROM actividades WHERE idactividad = ?";
-	    
-	    try (PreparedStatement ps = con.prepareStatement(sql)) {
-	        ps.setInt(1, idActividad);
-	        
-	        try (ResultSet rs = ps.executeQuery()) {
-	            if (rs.next()) {
-	                actividad = new Actividad();
-	                actividad.setIdActividad(rs.getInt("idactividad"));
-	                actividad.setTipoActividad(rs.getString("tipoActividad"));
-	                actividad.setFotoActividad(rs.getString("fotoActividad"));
-	            }
-	        }
-	    }
-	    
-	    return actividad;
+		Actividad actividad = null;
+		String sql = "SELECT * FROM actividades WHERE idactividad = ?";
+
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, idActividad);
+
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					actividad = new Actividad();
+					actividad.setIdActividad(rs.getInt("idactividad"));
+					actividad.setTipoActividad(rs.getString("tipoActividad"));
+					actividad.setFotoActividad(rs.getString("fotoActividad"));
+				}
+			}
+		}
+
+		return actividad;
 	}
 
 	/**
-	 * Obtiene toda la información de la última actividad creada en la base de datos. Metodo usado en JUNIT
+	 * Obtiene toda la información de la última actividad creada en la base de
+	 * datos. Metodo usado en JUNIT
 	 *
 	 * @return La última actividad creada.
 	 * @throws SQLException Si ocurre un error al obtener la actividad.
 	 */
 	public Actividad obtenerUltimaActividad() throws SQLException {
-	    // Consulta SQL para obtener la última actividad creada
-	    String sql = "SELECT * FROM actividades WHERE idactividad = (SELECT MAX(idactividad) FROM actividades)";
-	    Actividad actividad = null;
+		// Consulta SQL para obtener la última actividad creada
+		String sql = "SELECT * FROM actividades WHERE idactividad = (SELECT MAX(idactividad) FROM actividades)";
+		Actividad actividad = null;
 
-	    try (PreparedStatement ps = con.prepareStatement(sql);
-	         ResultSet rs = ps.executeQuery()) {
-	        // Si hay resultados en el conjunto de resultados
-	        if (rs.next()) {
-	            // Crear una nueva actividad con los datos obtenidos
-	            actividad = new Actividad();
-	            actividad.setIdActividad(rs.getInt("idactividad"));
-	            actividad.setTipoActividad(rs.getString("tipoactividad"));
-	            actividad.setFotoActividad(rs.getString("fotoactividad"));
-	        }
-	    }
-	    // Devolver la actividad obtenida
-	    return actividad;
+		try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+			// Si hay resultados en el conjunto de resultados
+			if (rs.next()) {
+				// Crear una nueva actividad con los datos obtenidos
+				actividad = new Actividad();
+				actividad.setIdActividad(rs.getInt("idactividad"));
+				actividad.setTipoActividad(rs.getString("tipoactividad"));
+				actividad.setFotoActividad(rs.getString("fotoactividad"));
+			}
+		}
+		// Devolver la actividad obtenida
+		return actividad;
 	}
+	// ---------------------------------------------------------------------------------
+	// VOLCADOS JSON
+	// ---------------------------------------------------------------------------------
 
+	/**
+	 * Genera un objeto JSON que representa todas las actividades.
+	 *
+	 * @return Una cadena JSON que representa todas las actividades.
+	 * @throws SQLException Si ocurre un error al obtener las actividades de la base
+	 *                      de datos.
+	 */
+	public String listarJsonTodasActividades() throws SQLException {
+
+		String json = "";
+		Gson gson = new Gson();
+
+		json = gson.toJson(this.obtenerTodasLasActividades());
+
+		return json;
+
+	}
 }

@@ -147,18 +147,6 @@ public class Favorito {
 		DaoFavorito.getInstance().eliminarFavoritoEvento(idEvento, request);
 	}
 
-	/**
-	 * Comprueba si un evento es favorito de un usuario específico.
-	 *
-	 * @param idEvento  Identificador del evento que se desea verificar.
-	 * @param idUsuario Identificador del usuario dueño del favorito.
-	 * @return `true` si el evento es favorito del usuario, `false` en caso
-	 *         contrario.
-	 * @throws Exception Si ocurre un error al acceder a la base de datos.
-	 */
-	public static boolean esFavorito(int idEvento, HttpServletRequest request) throws SQLException {
-		return DaoFavorito.getInstance().verificarEventoFavoritoUsuario(idEvento, request);
-	}
 
 	/**
 	 * Obtiene la lista de eventos favoritos de un usuario específico.

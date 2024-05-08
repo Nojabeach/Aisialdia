@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
+
 import modelo.Actividad;
 import modelo.Evento;
 import modelo.Evento.MotivoFinalizacion;
@@ -108,7 +110,7 @@ public class DaoClasificacionEventos {
 
 		return actividades;
 	}
-	
+
 	/**
 	 * Obtiene la lista de eventos asociados a una actividad específica.
 	 * 
@@ -117,38 +119,72 @@ public class DaoClasificacionEventos {
 	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
 	 */
 	public List<Evento> obtenerEventosPorActividadID(int idActividad) throws SQLException {
-	    List<Evento> eventos = new ArrayList<>();
+		List<Evento> eventos = new ArrayList<>();
 
-	    // Preparar la consulta SQL para obtener los eventos de la actividad
-	    String sql = "SELECT e.idEvento, e.nombre, e.detalles, e.fechaPublicacion, e.idModeradorPublicacion, e.fechaFinalizacion, e.idModeradorFinalizacion, e.motivoFinalizacion, e.ubicacion " +
-	                 "FROM eventos e JOIN clasificacionEventos ce ON e.idEvento = ce.idEvento WHERE ce.idActividad = ?";
-	    PreparedStatement ps = con.prepareStatement(sql);
-	    ps.setInt(1, idActividad);
+		// Preparar la consulta SQL para obtener los eventos de la actividad
+		String sql = "SELECT e.idEvento, e.nombre, e.detalles, e.fechaPublicacion, e.idModeradorPublicacion, e.fechaFinalizacion, e.idModeradorFinalizacion, e.motivoFinalizacion, e.ubicacion "
+				+ "FROM eventos e JOIN clasificacionEventos ce ON e.idEvento = ce.idEvento WHERE ce.idActividad = ?";
+		PreparedStatement ps = con.prepareStatement(sql);
+		ps.setInt(1, idActividad);
 
-	    // Ejecutar la consulta y procesar los resultados
-	    ResultSet rs = ps.executeQuery();
-	    while (rs.next()) {
-	        Evento evento = new Evento();
-	        evento.setIdEvento(rs.getInt("idEvento"));
-	        evento.setNombre(rs.getString("nombre"));
-	        evento.setDetalles(rs.getString("detalles"));
-	        evento.setFechaPublicacion(rs.getDate("fechaPublicacion"));
-	        evento.setIdModeradorPublicacion(rs.getInt("idModeradorPublicacion"));
-	        evento.setFechaFinalizacion(rs.getDate("fechaFinalizacion"));
-	        evento.setIdModeradorFinalizacion(rs.getInt("idModeradorFinalizacion"));
-	        evento.setMotivoFinalizacion(MotivoFinalizacion.valueOf(rs.getString("motivoFinalizacion")));
-	        evento.setUbicacion(rs.getString("ubicacion"));
+		// Ejecutar la consulta y procesar los resultados
+		ResultSet rs = ps.executeQuery();
+		while (rs.next()) {
+			Evento evento = new Evento();
+			evento.setIdEvento(rs.getInt("idEvento"));
+			evento.setNombre(rs.getString("nombre"));
+			evento.setDetalles(rs.getString("detalles"));
+			evento.setFechaPublicacion(rs.getDate("fechaPublicacion"));
+			evento.setIdModeradorPublicacion(rs.getInt("idModeradorPublicacion"));
+			evento.setFechaFinalizacion(rs.getDate("fechaFinalizacion"));
+			evento.setIdModeradorFinalizacion(rs.getInt("idModeradorFinalizacion"));
+			evento.setMotivoFinalizacion(MotivoFinalizacion.valueOf(rs.getString("motivoFinalizacion")));
+			evento.setUbicacion(rs.getString("ubicacion"));
 
-	        eventos.add(evento);
-	    }
+			eventos.add(evento);
+		}
 
-	    // Cerrar recursos
-	    rs.close();
-	    ps.close();
+		// Cerrar recursos
+		rs.close();
+		ps.close();
 
-	    return eventos;
+		return eventos;
 	}
-	
-	
+
+	// ---------------------------------------------------------------------------------
+	// VOLCADOS JSON
+	// ---------------------------------------------------------------------------------
+
+	/**
+	 * Genera un objeto JSON que representa las actividades asociadas a un evento
+	 * específico.
+	 *
+	 * @param IdEvento El ID del evento.
+	 * @return Una cadena JSON que representa las actividades asociadas al evento.
+	 * @throws SQLException Si ocurre un error al obtener las actividades asociadas
+	 *                      al evento de la base de datos.
+	 */
+	public String listarJsonActividadesPorEventoID(int IdEvento) throws SQLException {
+		String json = "";
+		Gson gson = new Gson();
+		json = gson.toJson(this.obtenerActividadesPorEventoID(IdEvento));
+		return json;
+	}
+
+	/**
+	 * Genera un objeto JSON que representa los eventos asociados a una actividad
+	 * específica.
+	 *
+	 * @param IdActividad El ID de la actividad.
+	 * @return Una cadena JSON que representa los eventos asociados a la actividad.
+	 * @throws SQLException Si ocurre un error al obtener los eventos asociados a la
+	 *                      actividad de la base de datos.
+	 */
+	public String listarJsonEventosporActividadID(int IdActividad) throws SQLException {
+		String json = "";
+		Gson gson = new Gson();
+		json = gson.toJson(this.obtenerEventosPorActividadID(IdActividad));
+		return json;
+	}
 
 }
