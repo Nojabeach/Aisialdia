@@ -255,13 +255,13 @@ public class GestorUsuario extends HttpServlet {
 		// Iniciar sesión
 		try {
 			// Verificamos el inicio de sesión con la contraseña cifrada
-			System.out.println(usuarioSTR);
-			System.out.println(request.getParameter("contrasena"));
+			// System.out.println(usuarioSTR);
+			// System.out.println(request.getParameter("contrasena"));
 
 			Usuario usuario = DaoUsuario.getInstance().iniciarSesion(usuarioSTR,
 					getMD5(request.getParameter("contrasena")));
 
-			System.out.println(usuario);
+			// System.out.println(usuario);
 
 			if (usuario != null) {
 				HttpSession session = request.getSession();
@@ -272,15 +272,15 @@ public class GestorUsuario extends HttpServlet {
 				response.setStatus(HttpServletResponse.SC_OK);
 
 				int permiso = usuario.getPermiso();
-				System.out.println("Permiso: " + permiso); // Debugging
+				// System.out.println("Permiso: " + permiso); // Debugging
 				if (permiso == 1) {
-					System.out.println("entro en 1"); // Debugging
+					// System.out.println("entro en 1"); // Debugging
 					response.sendRedirect("eventos.html");
 				} else if (permiso == 2) {
-					System.out.println("entro en 2"); // Debugging
+					// System.out.println("entro en 2"); // Debugging
 					response.sendRedirect("moderador.html");
 				} else if (permiso == 99) {
-					System.out.println("entro en 99"); // Debugging
+					// System.out.println("entro en 99"); // Debugging
 					response.sendRedirect("admin.html");
 				} else {
 					response.sendRedirect("index.html");

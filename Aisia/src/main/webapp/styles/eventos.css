@@ -2,14 +2,14 @@
 
 /* Contenedor principal */
 .container {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Columnas automáticas */
+  grid-gap: 20px; /* Espacio entre columnas */
 }
 
 /* Buscador y listado de eventos */
 .search-and-events {
-  flex: 1; /* Ocupa el ancho disponible */
-  margin-right: 20px; /* Espacio entre el buscador y el aside */
+  grid-column: 1 / -1; /* Ocupa todas las columnas */
 }
 
 .search-form {
@@ -17,41 +17,57 @@
 }
 
 .events-container {
-  flex: 1; /* Ocupa el ancho disponible */
+  grid-column: 1 / span 3; /* Ocupa 3 columnas */
 }
 
 /* Apartado de favoritos y aside de crearEvento */
 .aside-container {
-  flex: 0 0 300px; /* Ancho fijo de 300px */
-  margin-left: 20px; /* Espacio entre el buscador y el aside */
+  grid-column: 4 / -1; /* A partir de la columna 4 hasta el final */
 }
 
-.favorites-container,
+.favorites-container {
+  background-color: var(--fondo-terciario);
+  padding: 20px;
+  border: 1px solid var(--borde-principal);
+  border-radius: 5px;
+  box-shadow: 0 2px 4px var(--sombra-principal);
+}
+
+.favorites-container h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: var(--titulo-principal);
+}
+
+.favorites-list {
+  list-style: none;
+  padding: 0;
+}
+
+.favorites-list li {
+  margin-bottom: 10px;
+}
+
 #aside {
   background-color: var(--fondo-terciario);
   padding: 20px;
   border: 1px solid var(--borde-principal);
   border-radius: 5px;
   box-shadow: 0 2px 4px var(--sombra-principal);
-  margin-bottom: 20px;
 }
 
-.favorites-container h2,
 #aside h2 {
   font-size: 24px;
   margin-bottom: 15px;
   color: var(--titulo-principal);
 }
 
-.favorites-list,
-#new-event-form {
-  list-style: none;
-  padding: 0;
-}
-
-.favorites-list li,
+/* Formulario de nuevo evento */
 #new-event-form label {
+  display: block;
   margin-bottom: 10px;
+  font-weight: bold;
+  color: var(--titulo-principal);
 }
 
 #new-event-form input[type="text"],
@@ -80,22 +96,16 @@
   background-color: var(--boton-primario-hover);
 }
 
+/* Separación entre el main y el footer */
+main {
+  margin-bottom: 30px;
+}
+
 /* Media queries para dispositivos móviles y tablets */
 @media (max-width: 768px) {
   /* Contenedor principal */
   .container {
-    flex-direction: column; /* Cambia a columna para que los elementos estén apilados verticalmente */
-  }
-
-  /* Buscador y listado de eventos */
-  .search-and-events,
-  .aside-container {
-    width: 100%; /* Ancho completo */
-    margin: 0; /* Elimina el margen */
-  }
-
-  .search-and-events {
-    margin-bottom: 20px; /* Espacio entre el buscador y la lista de eventos */
+    grid-template-columns: 1fr; /* Cambia a una sola columna */
   }
 
   /* Formulario de nuevo evento */
@@ -103,5 +113,21 @@
   #new-event-form input[type="date"],
   #new-event-form textarea {
     width: 100%; /* Ancho completo */
+  }
+
+  /* Ajuste para colocar aside debajo del main */
+  .aside-container {
+    grid-column: 1 / -1; /* Ocupa todas las columnas */
+  }
+}
+
+/* Ajuste para colocar la sección de favoritos y el aside en pantallas grandes */
+@media (min-width: 769px) {
+  .container {
+    grid-template-columns: repeat(3, 1fr) minmax(300px, 1fr); /* 3 columnas y 1 aside */
+  }
+
+  .aside-container {
+    grid-column: 4 / -1; /* A partir de la columna 4 hasta el final */
   }
 }

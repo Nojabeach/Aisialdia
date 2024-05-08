@@ -9,6 +9,8 @@
 // 4. Crear, editar y eliminar eventos
 // 5. Crear, editar y eliminar usuarios
 // 6. Publicar, rechazar y aprobar eventos
+// 7. Crear una tabla con los datos proporcionados
+// 8. Agregar evento al botón de cerrar sesión
 
 //**************************************************************************
 // OBTENER REFERENCIAS A LOS ELEMENTOS DEL DOM
@@ -462,3 +464,18 @@ function crearTabla(data, headers) {
 obtenerActividades();
 obtenerEventos();
 obtenerUsuarios();
+
+
+
+
+ // Agregar evento al botón de cerrar sesión
+ botonCerrarSesion.addEventListener("click", () => {
+  // Llamar al servlet para cerrar sesión
+  fetch("GestorUsuario?action=cerrarSesion")
+    .then((response) => response.text())
+    .then(() => {
+      // Redirigir a index.html
+      window.location.href = "index.html";
+    })
+    .catch((error) => console.error(error));
+});

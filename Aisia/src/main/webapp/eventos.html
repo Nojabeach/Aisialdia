@@ -41,13 +41,20 @@
             <ul>
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="acercade.html">Acerca de</a></li>
-                <li><a href="contacto.html">Contacto</a></li>
                 <li><a href="events.html">Eventos</a></li>
                 <li><a href="perfilusuario.html">Mi Perfil</a></li>
             </ul>
         </nav>
 
         <main id="seccionCuerpo">
+
+            <section class="favorites-container">
+                <h2>Mis Eventos Favoritos</h2>
+                <ul class="favorites-list">
+                    <!-- Eventos favoritos del usuario -->
+                </ul>
+            </section>
+
             <section class="events-container">
                 <h2>Buscar Eventos</h2>
                 <form id="search-form">
@@ -79,12 +86,7 @@
                 <div id="events-container"></div>
             </section>
 
-            <section class="favorites-container">
-                <h2>Mis Eventos Favoritos</h2>
-                <ul class="favorites-list">
-                    <!-- Eventos favoritos del usuario -->
-                </ul>
-            </section>
+
 
             <section class="comments-container">
                 <h2>Comentarios</h2>
@@ -100,34 +102,42 @@
 
             <aside id="aside">
                 <h2>Crear Nuevo Evento</h2>
-                <form id="new-event-form" action="GestorEventos?action=crearEvento?" method="POST">
+                <form id="new-event-form" action="GestorEventos?action=crearEvento" method="POST">
                     <fieldset>
                         <legend>Datos del Evento</legend>
-
+            
                         <div class="form-group">
                             <label for="name">Nombre:</label>
                             <input type="text" id="name" name="name" required>
                         </div>
-
+            
                         <div class="form-group">
                             <label for="details">Detalles:</label>
                             <textarea id="details" name="details" required></textarea>
                         </div>
-
+            
                         <div class="form-group">
                             <label for="date">Fecha:</label>
                             <input type="date" id="date" name="date" required>
                         </div>
-
+            
                         <div class="form-group">
                             <label for="location">Ubicación:</label>
                             <input type="text" id="location" name="location" required>
                         </div>
-
+            
+                        <div class="form-group">
+                            <label for="activity">Actividad:</label>
+                            <select id="activity" name="activity" required>
+                            <!-- Se cargan las actividades -->    
+                            </select>
+                        </div>
+            
                         <button type="submit" id="create-event-button">Crear Evento</button>
                     </fieldset>
                 </form>
             </aside>
+            
         </main>
 
         <footer>
@@ -138,6 +148,12 @@
                 <li><a href="accesibilidad.html">Accesibilidad</a></li>
                 <li><a href="contacto.html">Contacto</a></li>
             </ul>
+            <div class="social-links">
+                <a href="https://discord.com/users/maitane_82" target="_blank"><i class="fab fa-discord"></i></a>
+                <a href="https://www.linkedin.com/in/maitane-ibanez-irazabal" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://github.com/Nojabeach" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+            <p>&copy; 2024 AisiAldia. Todos los derechos reservados.</p>
         </footer>
     </div>
 
