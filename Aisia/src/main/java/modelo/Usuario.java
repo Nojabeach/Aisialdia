@@ -2,9 +2,11 @@ package modelo;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import dao.DaoUsuario;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Clase que representa un usuario del sistema.
@@ -612,4 +614,75 @@ public class Usuario {
 		return DaoUsuario.getInstance().obtenerUsuarios();
 	}
 
+	/**
+	 * Obtiene una lista de usuarios filtrada por tipo de permiso.
+	 *
+	 * @param PERMISO El tipo de permiso por el que se desea filtrar los usuarios.
+	 * @return Una lista de usuarios que tienen el permiso especificado.
+	 * @throws SQLException Si ocurre algún error de SQL al intentar obtener los
+	 *                      usuarios.
+	 */
+	public ArrayList<Usuario> obtenerUsuarios(int PERMISO) throws SQLException {
+		return DaoUsuario.getInstance().obtenerUsuarios(PERMISO);
+	}
+
+	/**
+	 * Obtiene el ID del usuario actual de la sesión HTTP.
+	 *
+	 * @param request Objeto HttpServletRequest para obtener la información de la
+	 *                sesión.
+	 * @return El ID del usuario actual, o -1 si no se encuentra el usuario en la
+	 *         sesión.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public int obtenerIdUsuarioActual(HttpServletRequest request) throws SQLException {
+		DaoUsuario.getInstance();
+		return DaoUsuario.obtenerIdUsuarioActual(request);
+	}
+
+	/**
+	 * Obtiene la contraseña de un usuario por su ID.
+	 *
+	 * @param idUsuario El ID del usuario.
+	 * @return La contraseña del usuario, o null si no se encuentra.
+	 * @throws SQLException Si ocurre un error al obtener la contraseña del usuario.
+	 */
+	public String obtenerContrasena(int idUsuario) throws SQLException {
+		return DaoUsuario.getInstance().obtenerContrasena(idUsuario);
+	}
+
+	/**
+	 * Genera una representación JSON de la lista de usuarios.
+	 * 
+	 * @return Una cadena JSON que representa la lista de usuarios.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public String listarUsuariosJson() throws SQLException {
+		return DaoUsuario.getInstance().listarUsuariosJson();
+	}
+
+	/**
+	 * Genera una representación JSON de la lista de usuarios filtrada por tipo de
+	 * permiso.
+	 * 
+	 * @param tipo El tipo de permiso por el que se desea filtrar los usuarios.
+	 * @return Una cadena JSON que representa la lista de usuarios filtrada por tipo
+	 *         de permiso.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public String listarUsuariosJson(int tipo) throws SQLException {
+		return DaoUsuario.getInstance().listarUsuariosJson(tipo);
+	}
+
+	/**
+	 * Busca el permiso de un usuario en la base de datos.
+	 * 
+	 * @param idUsuario El ID del usuario cuyo permiso se desea buscar.
+	 * @return El permiso del usuario.
+	 * @throws SQLException Si ocurre algún error de SQL al intentar buscar el
+	 *                      permiso del usuario.
+	 */
+	public int buscarPermisoUsuario(int idUsuario) throws SQLException {
+		return DaoUsuario.getInstance().buscarPermisoUsuario(idUsuario);
+	}
 }

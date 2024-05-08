@@ -179,7 +179,13 @@ public class DaoEvento {
 	 * @throws SQLException En caso de error con la BD.
 	 */
 	public void aprobarPublicacionEvento(int idEvento, HttpServletRequest request) throws SQLException {
-		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
+		int idUsuarioActual = 0;
+		try {
+			idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		String sql = "UPDATE eventos SET fechaAprobacion = current_date,fechaUltimaModificacion=current_date,"
 				+ " idModeradorAprobacion = ? WHERE idEvento = ?";
 		PreparedStatement ps = con.prepareStatement(sql);

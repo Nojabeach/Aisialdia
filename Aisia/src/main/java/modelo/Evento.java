@@ -636,4 +636,57 @@ public class Evento {
 		DaoEvento.getInstance().publicarEvento(idEvento, request);
 	}
 
+	/**
+	 * Genera un objeto JSON que representa todos los eventos activos de la base de
+	 * datos que coinciden con los filtros especificados.
+	 *
+	 * @param actividad   Filtro por actividad (opcional).
+	 * @param descripcion Filtro por descripción (opcional).
+	 * @param ubicacion   Filtro por ubicación (opcional).
+	 * @param fecha       Filtro por fecha (opcional).
+	 * @return Una cadena JSON que contiene la información de los eventos activos
+	 *         que coinciden con los filtros especificados.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public String listarJsonObtenerTodosLosEventosActivos(String actividad, String descripcion, String ubicacion,
+			Date fecha) throws SQLException {
+		return DaoEvento.getInstance().listarJsonObtenerTodosLosEventosActivos(actividad, descripcion, ubicacion,
+				fecha);
+	}
+
+	/**
+	 * Genera un objeto JSON que representa los eventos que coinciden con un
+	 * criterio de búsqueda.
+	 *
+	 * @param criterio Criterio de búsqueda (nombre, fecha, etc.).
+	 * @return Una cadena JSON que contiene la información de los eventos
+	 *         coincidentes con el criterio de búsqueda.
+	 * @throws Exception Si ocurre un error al buscar los eventos.
+	 */
+	public String listarJsonBuscarEventos(String criterio) throws Exception {
+		return DaoEvento.getInstance().listarJsonBuscarEventos(criterio);
+	}
+
+	/**
+	 * Genera un objeto JSON que representa los eventos pendientes de aprobación.
+	 *
+	 * @return Una cadena JSON que contiene la información de los eventos pendientes
+	 *         de aprobación.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public String listarJsonPendientesAprobacion() throws SQLException {
+		return DaoEvento.getInstance().listarJsonPendientesAprobacion();
+	}
+
+	/**
+	 * Genera un objeto JSON que representa los eventos pendientes de publicación.
+	 *
+	 * @return Una cadena JSON que contiene la información de los eventos pendientes
+	 *         de publicación.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public String listarJsonPendientesPublicacion() throws SQLException {
+		return DaoEvento.getInstance().listarJsonPendientesPublicacion();
+	}
+
 }
