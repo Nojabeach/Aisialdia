@@ -11,11 +11,16 @@
 }
 
 body {
-  font-family: "Lato", sans-serif;
+  font-family: "Lato",  Arial, Helvetica, sans-serif;
   font-size: 16px;
   line-height: 1.6;
   background-color: var(--fondo-principal);
   color: var(--texto-principal);
+}
+
+/* Hereda el tipo de letra en todos los elementos de formulario */
+input, select, textarea {
+  font-family: inherit;
 }
 
 a {
@@ -186,16 +191,16 @@ form {
   box-shadow: 0px 0px 10px var(--sombra-principal);
 }
 
-form label {
+.formulario-comun label {
   display: block;
   margin-bottom: 10px;
   font-weight: bold;
   color: var(--form-texto);
 }
 
-form input[type="text"],
-form input[type="password"],
-form input[type="file"],
+.formulario-comun input[type="text"],
+.formulario-comun input[type="password"],
+.formulario-comun input[type="file"],
 form button {
   width: calc(100% - 40px);
   padding: 10px;
@@ -207,15 +212,15 @@ form button {
   transition: border-color 0.3s ease;
 }
 
-form input[type="text"]:focus,
-form input[type="password"]:focus,
-form input[type="file"]:focus,
-form button:focus {
+.formulario-comun input[type="text"]:focus,
+.formulario-comun input[type="password"]:focus,
+.formulario-comun input[type="file"]:focus,
+.formulario-comun button:focus {
   outline: none;
   border-color: var(--boton-primario-hover);
 }
 
-form input[type="file"]::-webkit-file-upload-button {
+.formulario-comun input[type="file"]::-webkit-file-upload-button {
   background: var(--boton-primario-fondo);
   color: var(--boton-primario-texto);
   border: none;
@@ -225,7 +230,7 @@ form input[type="file"]::-webkit-file-upload-button {
   transition: background-color 0.3s ease;
 }
 
-form input[type="file"]::-webkit-file-upload-button:hover {
+.formulario-comun input[type="file"]::-webkit-file-upload-button:hover {
   background-color: var(--boton-primario-hover);
 }
 
@@ -275,7 +280,7 @@ form button:hover {
   border-color: var(--boton-primario-hover);
 }
 
-/* Estilos para el campo de asunto */
+/* Estilos para el campo de text */
 .formulario-comun input[type="text"] {
   width: 100%;
   padding: 10px;

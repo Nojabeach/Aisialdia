@@ -8,8 +8,8 @@
     <!-- Icono de la pestaña -->
     <link rel="shortcut icon" href="img/Logos/logo_transparent - noText.png" type="image/x-icon" />
     <!-- Enlace de estilos -->
-    <link rel="stylesheet" href="styles/index.css">
     <link rel="stylesheet" href="styles/estilocomun.css">
+    <link rel="stylesheet" href="styles/index.css">
     <!-- Enlace de fonts, iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Enlace de scripts -->
@@ -20,6 +20,7 @@
 
     <div id="contenedor">
         <header id="cabecera">
+            <img src="img/Logos/LogoRecortado_noText.png" alt="Logo de AisiAldia" id="logo">
             <div id="divTitulo">
                 <h1>AisiAldia</h1>
                 <p>Ocio para todos</p>
@@ -27,11 +28,12 @@
             <div id="loginFormContainer">
                 <!-- Contenedor para el formulario de inicio de sesión -->
                 <div id="formularioInicioSesionContainer">
-                    <form id="formularioInicioSesion" action="GestorUsuario" method="POST">
+                    <form id="formulario-comun" action="GestorUsuario" method="POST">
                         <input type="hidden" name="action" value="iniciarSesion">
                         <div class="input-group">
                             <input type="text" id="inputUsuario" name="usuario" placeholder="Usuario" required>
-                            <input type="password" id="inputContrasena" name="contrasena" placeholder="Contraseña" required>
+                            <input type="password" id="inputContrasena" name="contrasena" placeholder="Contraseña"
+                                required>
                             <button id="botonIniciarSesion">Iniciar sesión</button>
                         </div>
                         <div class="registroLink">
@@ -57,37 +59,40 @@
             </ul>
         </nav>
 
-        <main id="seccionCuerpo">
-            <article id="article">
-                <section id="QueEs">
-                    <h2>¿Qué es AisiAldia?</h2>
-                    <p>AisiAldia es una plataforma de ocio para todos los públicos. En ella podrás encontrar eventos,
-                        actividades y lugares de interés para disfrutar de tu tiempo libre. Además, podrás compartir tus
-                        propias experiencias y recomendaciones con otros usuarios.</p>
-                </section>
-                <section id="PorQueElegir">
-                    <h2>¿Por qué elegir AisiAldia?</h2>
-                    <p>AisiAldia es la plataforma de ocio más completa y actualizada del mercado. Nuestro equipo de
-                        expertos en ocio se encarga de recopilar y actualizar la información de todos los eventos,
-                        actividades y lugares de interés disponibles en tu ciudad. Además, nuestra plataforma es muy
-                        fácil de usar y te permite encontrar rápidamente lo que estás buscando.</p>
-                </section>
-                <section id="ComoFunciona">
-                    <h2>¿Cómo funciona?</h2>
-                    <p>Para empezar a disfrutar de AisiAldia, solo tienes que registrarte en nuestra plataforma. Una vez
-                        registrado, podrás buscar eventos, actividades y lugares de interés en función de tus
-                        preferencias y ubicación. También podrás compartir tus propias experiencias y recomendaciones
-                        con otros usuarios.</p>
-                </section>
-            </article>
-
-            <aside id="aside">
-                <h2>Últimos Eventos</h2>
-                <ul id="ultimosEventosList">
-                </ul>
-            </aside>
-        </main>
-
+            <main id="seccionCuerpo">
+                <article id="article">
+                    <section id="QueEs">
+                        <h2>¿Qué es AisiAldia?</h2>
+                        <p>AisiAldia es una plataforma de ocio para todos los públicos. En ella podrás encontrar
+                            eventos,
+                            actividades y lugares de interés para disfrutar de tu tiempo libre. Además, podrás compartir
+                            tus
+                            propias experiencias y recomendaciones con otros usuarios.</p>
+                    </section>
+                    <section id="PorQueElegir">
+                        <h2>¿Por qué elegir AisiAldia?</h2>
+                        <p>AisiAldia es la plataforma de ocio más completa y actualizada del mercado. Nuestro equipo de
+                            expertos en ocio se encarga de recopilar y actualizar la información de todos los eventos,
+                            actividades y lugares de interés disponibles en tu ciudad. Además, nuestra plataforma es muy
+                            fácil de usar y te permite encontrar rápidamente lo que estás buscando.</p>
+                    </section>
+                    <section id="ComoFunciona">
+                        <h2>¿Cómo funciona?</h2>
+                        <p>Para empezar a disfrutar de AisiAldia, solo tienes que registrarte en nuestra plataforma. Una
+                            vez
+                            registrado, podrás buscar eventos, actividades y lugares de interés en función de tus
+                            preferencias y ubicación. También podrás compartir tus propias experiencias y
+                            recomendaciones
+                            con otros usuarios.</p>
+                    </section>
+                </article>
+                <aside id="aside">
+                    <h2>Últimos Eventos</h2>
+                    <ul id="ultimosEventosList">
+                    </ul>
+                </aside>
+            </main>
+     
         <footer role="contentinfo">
 
             <ul>
@@ -99,7 +104,8 @@
             </ul>
             <div class="social-links">
                 <a href="https://discord.com/users/maitane_82" target="_blank"><i class="fab fa-discord"></i></a>
-                <a href="https://www.linkedin.com/in/maitane-ibanez-irazabal" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://www.linkedin.com/in/maitane-ibanez-irazabal" target="_blank"><i
+                        class="fab fa-linkedin-in"></i></a>
                 <a href="https://github.com/Nojabeach" target="_blank"><i class="fab fa-github"></i></a>
             </div>
             <p>&copy; 2024 AisiAldia. Todos los derechos reservados.</p>

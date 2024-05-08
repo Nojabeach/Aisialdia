@@ -36,6 +36,7 @@
   --form-borde: var(--color-secundario); /* Verde pastel */
   --form-texto: var(--texto-principal); /* Verde pastel oscuro */
   --form-texto2: var(--color-acento); /* Blanco verdoso */
+  --form-fondo2: var(--color-acento); /* Blanco verdoso */
 
   /* Colores de botones */
   --boton-primario-fondo: var(--color-primario); /* Verde pastel oscuro */

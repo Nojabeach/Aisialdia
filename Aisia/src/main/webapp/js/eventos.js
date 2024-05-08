@@ -1,19 +1,17 @@
-/*
-Resumen:
-1. Carga las actividades posibles desde el servlet GestorActividad y el método visualizarActividades.
-2. Llama a la función obtenerTodosLosEventosActivos al cargar la página.
-3. Agrega el evento submit al formulario de búsqueda.
-4. Muestra los eventos en el contenedor.
-5. Busca eventos por actividad.
-6. Busca eventos por descripción.
-7. Busca eventos por ubicación.
-8. Busca eventos por fecha.
-*/
-
 document.addEventListener("DOMContentLoaded", function () {
   const eventsContainer = document.getElementById("events-container");
 
-  // Función para cargar las actividades
+  cargarActividades();
+  cargarEventos();
+
+  const searchForm = document.getElementById("search-form");
+  searchForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const searchOption = document.getElementById("search-option").value;
+      const searchTerm = document.getElementById("search").value;
+      buscarEventos(searchOption, searchTerm);
+  });
+
   function cargarActividades() {
       fetch("GestorActividad?action=visualizarActividades")
           .then((response) => response.json())
@@ -31,7 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
           });
   }
 
-  // Función para cargar los eventos activos
   function cargarEventos() {
       obtenerTodosLosEventosActivos()
           .then((eventos) => {
@@ -42,7 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
           });
   }
 
-  // Función para mostrar los eventos en el contenedor
   function mostrarEventos(eventos) {
       eventsContainer.innerHTML = "";
       eventos.forEach((evento) => {
@@ -79,9 +75,14 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
-  // Función para buscar eventos
   function buscarEventos(option, term) {
-      obtenerTodosLosEventosActivos(null, option === "fecha" ? term : null, option === "ubicacion" ? term : null, option === "actividad" ? term : null, option === "descripcion" ? term : null)
+      obtenerTodosLosEventosActivos(
+          null,
+          option === "fecha" ? term : null,
+          option === "ubicacion" ? term : null,
+          option === "actividad" ? term : null,
+          option === "descripcion" ? term : null
+      )
           .then((eventos) => {
               mostrarEventos(eventos);
           })
@@ -90,49 +91,16 @@ document.addEventListener("DOMContentLoaded", function () {
           });
   }
 
-  // Cargar las actividades al cargar la página
-  cargarActividades();
-
-  // Cargar los eventos al cargar la página
-  cargarEventos();
-
-  // Agregar evento al formulario de búsqueda
-  const searchForm = document.getElementById("search-form");
-  searchForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const searchOption = document.getElementById("search-option").value;
-      const searchTerm = document.getElementById("search").value;
-      buscarEventos(searchOption, searchTerm);
-  });
-
-  // Agregar evento al botón de crear evento
-  const createEventButton = document.getElementById("create-event-button");
-  createEventButton.addEventListener("click", (e) => {
-      e.preventDefault();
-      const formData = new FormData(document.getElementById("new-event-form"));
-      fetch("GestorEvento?action=crearEvento", {
-          method: "POST",
-          body: formData,
-      })
-          .then((response) => response.text())
-          .then((data) => {
-              console.log("Evento creado con éxito");
-              // Redirigir a events.html o mostrar un mensaje de éxito
+  function obtenerTodosLosEventosActivos() {
+      return fetch('UltimosEventos')
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error('Error al obtener los eventos');
+              }
+              return response.json();
           })
-          .catch((error) => {
-              console.error("Error al crear evento: ", error);
+          .catch(error => {
+              throw new Error('Error al obtener los eventos: ' + error.message);
           });
-  });
-
-  // Agregar evento al botón de cerrar sesión
-  const logoutButton = document.getElementById("logoutButton");
-  logoutButton.addEventListener("click", () => {
-      fetch("GestorUsuario?action=cerrarSesion")
-          .then((response) => response.text())
-          .then(() => {
-              window.location.href = "index.html";
-          })
-          .catch((error) => console.error(error));
-  });
-
+  }
 });

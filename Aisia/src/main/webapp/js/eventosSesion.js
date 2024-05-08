@@ -1,41 +1,46 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const eventsContainer = document.getElementById("events-container");
+// Función para comprobar la sesión del usuario al cargar la página
+function comprobarSesion() {
+  // Realizar una petición fetch para comprobar el estado de la sesión
+  fetch("GestionUsuario?action=comprobarLogin")
+    .then((response) => {
+      // Verificar si la respuesta es exitosa
+      if (!response.ok) {
+        // Si la respuesta no es exitosa, lanzar un error
+        throw new Error("RESPUESTA DEL SERVLET LOGIN.Sin respuesta del servidor.");
+      }
+      // Parsear la respuesta como JSON y devolverla
+      return response.json();
+    })
+    .then((data) => {
+      // Verificar el estado de la sesión en los datos recibidos
+      if (data.status === "OK") {
+        // Si el usuario está logueado
+        var usuario = data.usuario;
+        var permiso = data.permiso;
+        console.log("Usuario:", usuario);
+        console.log("Permiso:", permiso);
 
-  // Mostrar el nombre de usuario logueado
-  const nombreUsuarioElement = document.getElementById("nombreUsuario");
-  const userInfoContainer = document.getElementById("userInfoContainer");
-  const botonCerrarSesion = document.getElementById("botonCerrarSesion");
-
-  fetch("GestorUsuario?action=obtenerNombreUsuario")
-    .then((response) => response.text())
-    .then((nombreUsuario) => {
-      if (nombreUsuario) {
-        nombreUsuarioElement.textContent = nombreUsuario;
-        userInfoContainer.style.display = "block";
-
-        // Obtener permiso del usuario
-        fetch("GestorUsuario?action=obtenerPermisoUsuario")
-          .then((response) => response.text())
-          .then((permiso) => {
-            const userPermisoElement = document.getElementById("PermisoUsuario");
-            userPermisoElement.textContent = `Permiso: ${permiso}`;
-          })
-          .catch((error) => console.error("Error al obtener permiso: ", error));
+        // Mostrar el nombre de usuario y permiso en el HTML
+        document.getElementById("nombreUsuario").innerText = usuario;
+        document.getElementById("PermisoUsuario").innerText = permiso;
+        document.getElementById("userInfoContainer").style.display = "block";
       } else {
-        userInfoContainer.style.display = "none";
+        // Si el usuario no está logueado, mostrar mensaje de error en el HTML
+        console.log("El usuario no está logueado");
+        document.getElementById("errorMessage").innerText =
+          "Usuario no está logueado";
       }
     })
-    .catch((error) => console.error("Error al obtener nombre de usuario: ", error));
+    .catch((error) => {
+      // Manejar cualquier error ocurrido durante la petición
+      console.error("Error al comprobar la sesión:", error);
+      // Mostrar mensaje de error en el HTML
+      document.getElementById("errorMessage").innerText =
+        "Error al comprobar la sesión";
+    });
+}
 
-  // Agregar evento al botón de cerrar sesión
-  botonCerrarSesion.addEventListener("click", () => {
-    // Llamar al servlet para cerrar sesión
-    fetch("GestorUsuario?action=cerrarSesion")
-      .then((response) => response.text())
-      .then(() => {
-        // Redirigir a index.html
-        window.location.href = "index.html";
-      })
-      .catch((error) => console.error(error));
-  });
+// Llamar a la función para comprobar la sesión al cargar la página
+document.addEventListener("DOMContentLoaded", function () {
+  comprobarSesion();
 });

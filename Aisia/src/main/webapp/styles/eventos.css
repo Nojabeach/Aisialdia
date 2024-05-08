@@ -26,7 +26,8 @@
   margin-left: 20px; /* Espacio entre el buscador y el aside */
 }
 
-.favorites-container {
+.favorites-container,
+#aside {
   background-color: var(--fondo-terciario);
   padding: 20px;
   border: 1px solid var(--borde-principal);
@@ -35,41 +36,22 @@
   margin-bottom: 20px;
 }
 
-.favorites-container h2 {
-  font-size: 24px;
-  margin-bottom: 15px;
-  color: var(--titulo-principal);
-}
-
-.favorites-list {
-  list-style: none;
-  padding: 0;
-}
-
-.favorites-list li {
-  margin-bottom: 10px;
-}
-
-#aside {
-  background-color: var(--fondo-terciario);
-  padding: 20px;
-  border: 1px solid var(--borde-principal);
-  border-radius: 5px;
-  box-shadow: 0 2px 4px var(--sombra-principal);
-}
-
+.favorites-container h2,
 #aside h2 {
   font-size: 24px;
   margin-bottom: 15px;
   color: var(--titulo-principal);
 }
 
-/* Formulario de nuevo evento */
+.favorites-list,
+#new-event-form {
+  list-style: none;
+  padding: 0;
+}
+
+.favorites-list li,
 #new-event-form label {
-  display: block;
   margin-bottom: 10px;
-  font-weight: bold;
-  color: var(--titulo-principal);
 }
 
 #new-event-form input[type="text"],
@@ -96,4 +78,30 @@
 
 #new-event-form button[type="submit"]:hover {
   background-color: var(--boton-primario-hover);
+}
+
+/* Media queries para dispositivos móviles y tablets */
+@media (max-width: 768px) {
+  /* Contenedor principal */
+  .container {
+    flex-direction: column; /* Cambia a columna para que los elementos estén apilados verticalmente */
+  }
+
+  /* Buscador y listado de eventos */
+  .search-and-events,
+  .aside-container {
+    width: 100%; /* Ancho completo */
+    margin: 0; /* Elimina el margen */
+  }
+
+  .search-and-events {
+    margin-bottom: 20px; /* Espacio entre el buscador y la lista de eventos */
+  }
+
+  /* Formulario de nuevo evento */
+  #new-event-form input[type="text"],
+  #new-event-form input[type="date"],
+  #new-event-form textarea {
+    width: 100%; /* Ancho completo */
+  }
 }

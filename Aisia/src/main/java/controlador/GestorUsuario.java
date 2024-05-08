@@ -1,15 +1,5 @@
 package controlador;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import modelo.Evento;
-import modelo.Usuario;
-import modelo.Usuario.Rol;
-
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -21,6 +11,14 @@ import java.util.List;
 import com.google.gson.Gson;
 
 import dao.DaoUsuario;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import modelo.Evento;
+import modelo.Usuario;
+import modelo.Usuario.Rol;
 
 /**
  * Servlet implementation class GestorUsuario
@@ -84,6 +82,7 @@ public class GestorUsuario extends HttpServlet {
 				break;
 			case "obtenerPermiso":
 				obtenerPermiso(request, response);
+
 			default:
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				ControlErrores.mostrarErrorGenerico("{\"error\": \"Acción no válida\"}", response);
@@ -328,23 +327,90 @@ public class GestorUsuario extends HttpServlet {
 	}
 
 	/**
-	 * Comprueba si el usuario ha iniciado sesión.
-	 *
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws IOException Si se produce un error de entrada/salida.
+	 * Método para comprobar si el usuario ha iniciado sesión. Si el usuario está
+	 * logueado, se devuelve su nombre de usuario y permiso. Si no está logueado, se
+	 * devuelve un estado de "NO_LOGUEADO".
+	 * 
+	 * @param request  HttpServletRequest Objeto de solicitud HTTP
+	 * @param response HttpServletResponse Objeto de respuesta HTTP
+	 * @throws IOException Excepción de E/S
 	 */
 	private void comprobarLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession();
 		Usuario usuario = (Usuario) session.getAttribute("usuario");
+
+		Gson gson = new Gson();
 		if (usuario != null) {
-			response.setStatus(HttpServletResponse.SC_OK);
-
+			System.out.println("Entro con login comprobado");
+			String jsonRespuesta = gson.toJson(new Logeo("OK", usuario.getNombre(), usuario.getPermiso()));
+			System.out.println(jsonRespuesta);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(jsonRespuesta);
 		} else {
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
+			System.out.println("No entra en login");
+			String jsonRespuesta = gson.toJson(new Logeo("NOT_LOGGED_IN"));
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(jsonRespuesta);
 		}
+	}
+
+	/**
+	 * Clase auxiliar para estructurar la respuesta de inicio de sesión.
+	 */
+	class Logeo {
+		private String status;
+		private String usuario;
+		private int permiso;
+
+		/**
+		 * Constructor para respuesta de inicio de sesión sin usuario ni permiso.
+		 * 
+		 * @param status Estado del inicio de sesión
+		 */
+		public Logeo(String status) {
+			this.status = status;
+		}
+
+		/**
+		 * Constructor para respuesta de inicio de sesión con usuario y permiso.
+		 * 
+		 * @param status  Estado del inicio de sesión
+		 * @param usuario Nombre de usuario
+		 * @param permiso Permiso del usuario
+		 */
+		public Logeo(String status, String usuario, int permiso) {
+			this.status = status;
+			this.usuario = usuario;
+			this.permiso = permiso;
+		}
+
+		// Getters y setters
+		public String getStatus() {
+			return status;
+		}
+
+		public void setStatus(String status) {
+			this.status = status;
+		}
+
+		public String getUsuario() {
+			return usuario;
+		}
+
+		public void setUsuario(String usuario) {
+			this.usuario = usuario;
+		}
+
+		public int getPermiso() {
+			return permiso;
+		}
+
+		public void setPermiso(int permiso) {
+			this.permiso = permiso;
+		}
+
 	}
 
 	/**
@@ -614,23 +680,20 @@ public class GestorUsuario extends HttpServlet {
 			try {
 				String permiso = DaoUsuario.getInstance().obtenerPermisoPorNombre(nombreUsuario);
 
-				// Convertir el permiso a JSON
-				String permisoJSON = new Gson().toJson(permiso);
-
 				// Establecer el tipo de contenido y encabezados de la respuesta
-				response.setContentType("application/json");
+				response.setContentType("text/plain");
 				response.setCharacterEncoding("UTF-8");
 
 				// Enviar el permiso como respuesta
-				response.getWriter().write(permisoJSON);
+				response.getWriter().write(permiso);
 
 			} catch (Exception e) {
 				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				response.getWriter().write("{\"error\": \"Error al obtener el permiso.\"}");
+				response.getWriter().write("Error al obtener el permiso.");
 			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().write("{\"error\": \"Error interno del servidor.\"}");
+			response.getWriter().write("Error interno del servidor.");
 		}
 	}
 

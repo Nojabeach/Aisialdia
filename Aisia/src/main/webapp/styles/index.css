@@ -1,5 +1,5 @@
 /* Importación de la paleta de colores */
-@import url("./paletacolores.css");
+@import url("paletacolores.css");
 /* Importación de fuentes */
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap");
 
@@ -21,9 +21,28 @@ h6 {
 }
 
 body {
-  font-family: "Lato", sans-serif;
+  font-family: "Lato", Arial, Helvetica, sans-serif;
   font-size: 16px;
   line-height: 1.6;
+  background-color: var(--fondo-principal);
+  color: var(--texto-principal);
+}
+
+/* Hereda el tipo de letra en todos los elementos de formulario */
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+#cabecera {
+  display: flex;
+  justify-content: space-between;
+}
+
+#cabecera img {
+  max-height: 150px;
+  margin: 10px;
 }
 
 a {
@@ -40,7 +59,7 @@ img {
 #cabecera {
   background-color: var(--header);
   color: var(--texto-blanco);
-  padding: 20px;
+  padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -49,7 +68,7 @@ img {
 #divTitulo h1 {
   font-size: 36px;
   margin-bottom: 10px;
-  color: var(--titulo-blanco); /* Cambio de color del título */
+  color: var(--titulo-blanco);
 }
 
 #divTitulo p {
@@ -59,41 +78,26 @@ img {
 
 #loginFormContainer {
   display: flex;
-  align-items: center;
+  flex-direction: row;
 }
 
-/* Estilos para el formulario de login */
-#LoginForm {
-  display: flex;
-  flex-direction: column;
-  margin-right: 20px;
-}
-
-#LoginForm input[type="text"],
-#LoginForm input[type="password"] {
-  padding: 10px;
-  border: 1px solid var(--borde-principal);
+#formulario-comun input[type="text"],
+#formulario-comun input[type="password"] {
+  background-color: var(--form-fondo2);
+  color: var(--form-texto);
+  border: 2px solid var(--form-borde);
+  padding: 5px;
+  margin-bottom: 5px;
+  width: 100%;
   border-radius: 5px;
-  width: 200px;
-  margin-bottom: 10px; /* Agrega un margen inferior */
 }
 
-#LoginForm input[type="submit"] {
-  padding: 10px 20px;
-  background-color: var(--boton-primario-fondo);
-  color: var(--boton-primario-texto);
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#LoginForm input[type="submit"]:hover {
-  background-color: var(--boton-primario-hover);
+#botonIniciarSesion {
+  width: 100%;
 }
 
 .registroLink {
-  text-align: center; /* Centra el texto */
+  text-align: center;
 }
 
 .registroLink a {
@@ -130,19 +134,17 @@ img {
 /* Secciones principales */
 #seccionCuerpo {
   display: flex;
-  flex-wrap: wrap; /* Permitir que los elementos se envuelvan */
-  background-image: url("./img/home-bg.jpg"); /* Imagen de fondo para el main */
+  flex-wrap: wrap;
+  background-image: url("./img/home-bg.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  padding: 20px; /* Espacio interior */
-  min-height: calc(
-    100vh - 250px
-  ); /* Altura mínima menos el espacio del encabezado */
+  padding: 20px;
+  min-height: calc(100vh - 250px);
 }
 
 article {
-  flex: 1; /* Que el article tome todo el espacio disponible */
+  flex: 1;
   padding: 20px;
 }
 
@@ -151,8 +153,8 @@ section {
   border: 1px solid var(--borde-principal);
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: rgba(255, 255, 255, 0.6); /* Fondo transparente */
-  margin-bottom: 30px; /* Espacio entre secciones */
+  background-color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 30px;
 }
 
 section h2 {
@@ -167,22 +169,27 @@ section p {
 }
 
 /* Barra lateral */
+
 #aside {
   width: 280px;
+  max-height: calc(100vh - 350px);
   background-color: var(--fondo-secundario);
-  margin-left: 20px;
-  overflow-y: auto; /* Agregamos scroll vertical */
-  flex: 0 0 280px;
-  max-height: 570px; /* Altura máxima para el aside */
-  border-radius: 10px; /* Esquinas redondeadas */
+  border-radius: 10px;
+  overflow: scroll;
 }
+
+#main {
+  flex: 1;
+}
+
 #aside h2 {
   font-size: 18px;
   margin-bottom: 10px;
   color: var(--titulo-terciario);
-  background-color: var(--fondo-oscuro); /* Color de fondo para el título */
-  padding: 10px; /* Espacio alrededor del título */
+  background-color: var(--fondo-oscuro);
+  padding: 10px;
 }
+
 #aside ul {
   list-style: none;
   padding: 0;
@@ -232,22 +239,79 @@ section p {
 }
 
 /* Pie de página */
-#piepagina {
+#footer {
   background-color: var(--footer);
   color: var(--texto-blanco);
   padding: 20px;
   text-align: center;
 }
 
-#piepagina p {
+#footer p {
   margin-bottom: 10px;
 }
 
-#piepagina a {
+#footer a {
   color: var(--texto-blanco);
   text-decoration: none;
 }
 
-#piepagina a:hover {
+#footer a:hover {
   text-decoration: underline;
 }
+
+/* Media queries para dispositivos móviles y tablets */
+@media (max-width: 768px) {
+  #cabecera {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #cabecera img {
+    margin: 0;
+  }
+
+  #loginFormContainer {
+    flex-direction: column;
+  }
+
+  #formulario-comun input[type="text"],
+  #formulario-comun input[type="password"] {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  #botonIniciarSesion {
+    width: 100%;
+  }
+
+  #seccionCuerpo {
+    flex-direction: column; /* Cambia a columna para que aside esté debajo */
+    align-items: center; /* Centra el contenido */
+    padding-bottom: 300px; /* La altura del footer */
+  }
+
+  #main {
+    width: 100%; /* Ancho completo */
+  }
+
+  #aside {
+    width: 100%; /* Ancho completo */
+    max-width: 100%; /* Ancho completo */
+    min-height: 50%; /* Altura mínima */
+    overflow: scroll;
+    margin-bottom: 20px; /* Espacio entre aside y footer */
+    background-color: var(--fondo-secundario);
+  }
+
+  #footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--footer);
+    color: var(--texto-blanco);
+    padding: 20px;
+    text-align: center;
+  }
+}
+
+

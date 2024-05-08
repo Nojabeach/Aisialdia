@@ -1,5 +1,3 @@
-<!-- events.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,8 +13,8 @@
     <!-- Enlace de fonts, iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Enlace de scripts -->
-    <script src="js/eventosSesion.js" defer ></script>
-    <script src="js/eventos.js" defer></script>
+    <script src="js/eventosSesion.js"></script>
+    <script src="js/eventos.js"></script>
 </head>
 
 <body>
@@ -35,6 +33,7 @@
                     <p id="PermisoUsuario"></p>
                     <button id="botonCerrarSesion">Cerrar sesión</button>
                 </div>
+                <p id="errorMessage"></p>
             </div>
         </header>
 
@@ -59,24 +58,34 @@
                         <option value="ubicacion">Ubicación</option>
                         <option value="fecha">Fecha</option>
                     </select>
-                    <div id="actividad-container" style="display: none;">
-                        <label for="actividad">Actividad:</label>
-                        <select id="actividad"></select>
-                    </div>
-                    <label for="search">Buscar:</label>
-                    <input type="text" id="search" name="search">
-                    <button type="submit">Buscar</button>
+
+                    <fieldset id="search-fields">
+                        <legend>Opciones de búsqueda</legend>
+
+                        <div id="actividad-container" style="display: none;">
+                            <label for="actividad">Actividad:</label>
+                            <select id="actividad"></select>
+                        </div>
+
+                        <div id="search-inputs">
+                            <label for="search">Buscar:</label>
+                            <input type="text" id="search" name="search">
+                            <button type="submit">Buscar</button>
+                        </div>
+                    </fieldset>
                 </form>
+
                 <h2>Eventos Publicados y Activos</h2>
                 <div id="events-container"></div>
             </section>
+
             <section class="favorites-container">
                 <h2>Mis Eventos Favoritos</h2>
                 <ul class="favorites-list">
                     <!-- Eventos favoritos del usuario -->
                 </ul>
             </section>
-            <!-- Zona para evoluciones futuras -->
+
             <section class="comments-container">
                 <h2>Comentarios</h2>
                 <ul class="comments-list">
@@ -88,30 +97,45 @@
                     <button type="submit">Enviar</button>
                 </form>
             </section>
+
             <aside id="aside">
                 <h2>Crear Nuevo Evento</h2>
-                <form id="new-event-form">
-                  <label for="name">Nombre:</label>
-                  <input type="text" id="name" name="name" required>
-              
-                  <label for="details">Detalles:</label>
-                  <textarea id="details" name="details" required></textarea>
-                  <label for="date">Fecha:</label>
-                  <input type="date" id="date" name="date" required>
-              
-                  <label for="location">Ubicación:</label>
-                  <input type="text" id="location" name="location" required>
-              
-                  <button type="submit" id="create-event-button">Crear Evento</button>
+                <form id="new-event-form" action="GestorEventos?action=crearEvento?" method="POST">
+                    <fieldset>
+                        <legend>Datos del Evento</legend>
+
+                        <div class="form-group">
+                            <label for="name">Nombre:</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="details">Detalles:</label>
+                            <textarea id="details" name="details" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="date">Fecha:</label>
+                            <input type="date" id="date" name="date" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="location">Ubicación:</label>
+                            <input type="text" id="location" name="location" required>
+                        </div>
+
+                        <button type="submit" id="create-event-button">Crear Evento</button>
+                    </fieldset>
                 </form>
-              </aside>
+            </aside>
         </main>
 
         <footer>
             <ul>
                 <li><a href="ayuda.html">Ayuda</a></li>
                 <li><a href="politicadeprivacidad.html">Política de privacidad</a></li>
-                <li><a href="condicionesdeuso.html">Condiciones de uso</a></li><li><a href="accesibilidad.html">Accesibilidad</a></li>
+                <li><a href="condicionesdeuso.html">Condiciones de uso</a></li>
+                <li><a href="accesibilidad.html">Accesibilidad</a></li>
                 <li><a href="contacto.html">Contacto</a></li>
             </ul>
         </footer>
