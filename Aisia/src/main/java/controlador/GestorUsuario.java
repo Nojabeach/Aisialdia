@@ -8,15 +8,17 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.google.gson.Gson;
+import jakarta.servlet.annotation.WebServlet;
+import java.io.PrintWriter;
 
+import dao.DaoActividad;
 import dao.DaoUsuario;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import modelo.Evento;
+
 import modelo.Usuario;
 import modelo.Usuario.Rol;
 
@@ -38,16 +40,20 @@ public class GestorUsuario extends HttpServlet {
 	}
 
 	/**
-	 * Maneja las solicitudes GET enviadas al servlet de las siguientes
-	 * <strong>acciones</strong>:
-	 * 
+	 * Maneja las solicitudes GET enviadas al servlet. Las acciones disponibles son:
 	 * <ul>
-	 * <li><b>verUsuarios</b>: Obtiene la lista de usuarios del sistema.</li>
-	 * <li><b>verUsuario</b>: Obtiene la información de un usuario específico.</li>
-	 * <li><b>verEventosUsuario</b>: Obtiene la lista de eventos asociados a un
-	 * usuario.</li>
-	 * <li><b>verEventoUsuario</b>: Obtiene la información detallada de un evento
-	 * específico.</li>
+	 * <li><b>obtenerUsuarios:</b> Obtiene la lista de usuarios y los devuelve en
+	 * formato JSON.</li>
+	 * <li><b>obtenerUsuariosSegunPermiso:</b> Obtiene la lista de usuarios según su
+	 * permiso y los devuelve en formato JSON.</li>
+	 * <li><b>obtenerInfoUsuario:</b> Obtiene la información de un usuario por ID y
+	 * la devuelve en formato JSON.</li>
+	 * <li><b>obtenerContrasena:</b> Obtiene la contraseña de un usuario por ID y la
+	 * devuelve en formato JSON.</li>
+	 * <li><b>buscarPermisoUsuario:</b> Busca el permiso de un usuario por ID y lo
+	 * devuelve en formato JSON.</li>
+	 * <li><b>checkLogin:</b> Comprueba si hay una sesión de usuario activa y
+	 * devuelve la información del usuario y su permiso en formato JSON.</li>
 	 * </ul>
 	 *
 	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
@@ -59,24 +65,28 @@ public class GestorUsuario extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String action = request.getParameter("action");
+		PrintWriter out = response.getWriter();
 
 		try {
 			switch (action) {
-			case "verUsuarios":
-				verUsuarios(request, response);
+			case "obtenerUsuarios":
+				obtenerUsuarios(request, response, out);
 				break;
-			case "verUsuario":
-				verUsuario(request, response);
+			case "obtenerUsuariosSegunPermiso":
+				obtenerUsuariosPermiso(request, response, out);
 				break;
-			case "cerrarSesion":
-				cerrarSesion(request, response);
+			case "obtenerInfoUsuario":
+				obtenerINFOUsuario(request, response, out);
 				break;
-			case "comprobarLogin":
-				comprobarLogin(request, response);
+			case "obtenerContrasena":
+				obtenerContrasena(request, response, out);
 				break;
-			case "obtenerPermisoUsuario":
-				obtenerPermiso(request, response);
-
+			case "buscarPermisoUsuario":
+				buscarPermisoUsuario(request, response, out);
+				break;
+			case "checkLogin":
+				checkLogin(request, response);
+				break;
 			default:
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				ControlErrores.mostrarErrorGenerico("{\"error\": \"Acción no válida\"}", response);
@@ -88,29 +98,6 @@ public class GestorUsuario extends HttpServlet {
 		}
 	}
 
-	/**
-	 * Maneja las solicitudes POST enviadas al servlet de las siguientes
-	 * <strong>acciones</strong>:
-	 * 
-	 * <ul>
-	 * <li><b>registrarUsuario</b>: Registra un nuevo usuario en el sistema.</li>
-	 * <li><b>iniciarSesion</b>: Inicia sesión en el sistema.</li>
-	 * <li><b>editarUsuario</b>: Edita la información de un usuario existente.</li>
-	 * <li><b>eliminarUsuario</b>: Elimina un usuario del sistema.</li>
-	 * <li><b>marcarEventoFavorito</b>: Marca un evento como favorito para el
-	 * usuario.</li>
-	 * <li><b>desmarcarEventoFavorito</b>: Desmarca un evento como favorito para el
-	 * usuario.</li>
-	 * <li><b>cambiarContrasena</b>: Cambia la contraseña de un usuario.</li>
-	 * </ul>
-	 *
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws ServletException Si se produce un error en el servlet.
-	 * @throws IOException      Si se produce un error de entrada/salida.
-	 */
-
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String action = request.getParameter("action");
@@ -118,9 +105,6 @@ public class GestorUsuario extends HttpServlet {
 			switch (action) {
 			case "registrarUsuario":
 				registrarUsuario(request, response);
-				break;
-			case "iniciarSesion":
-				iniciarSesion(request, response);
 				break;
 			case "editarUsuario":
 				editarUsuario(request, response);
@@ -137,6 +121,13 @@ public class GestorUsuario extends HttpServlet {
 			case "cambiarContrasena":
 				cambiarContrasena(request, response);
 				break;
+			case "cerrarSesion":
+				cerrarSesion(request, response);
+				break;
+			case "iniciarSesion":
+				iniciarSesion(request, response);
+				break;
+
 			default:
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				ControlErrores.mostrarErrorGenerico("{\"error\": \"Acción no válida\"}", response);
@@ -145,6 +136,160 @@ public class GestorUsuario extends HttpServlet {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
+		}
+	}
+
+	/**
+	 * Obtiene la lista de usuarios y los devuelve en formato JSON.
+	 * 
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
+	 * @param out      El escritor de salida para escribir la lista de usuarios en
+	 *                 formato JSON en la respuesta.
+	 * @throws IOException Si ocurre un error de entrada/salida al escribir en el
+	 *                     PrintWriter.
+	 */
+	private void obtenerUsuarios(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
+			throws IOException {
+		try {
+			DaoUsuario usuario = new DaoUsuario();
+			out.print(usuario.listarUsuariosJson());
+		} catch (SQLException e) {
+			ControlErrores.mostrarErrorGenerico("Error al obtener los usuarios. Intente de nuevo.", response);
+		}
+	}
+
+	/**
+	 * Obtiene la lista de usuarios según su permiso y los devuelve en formato JSON.
+	 * 
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
+	 * @param out      El escritor de salida para escribir la lista de usuarios en
+	 *                 formato JSON en la respuesta.
+	 * @throws IOException Si ocurre un error de entrada/salida al escribir en el
+	 *                     PrintWriter.
+	 */
+	private void obtenerUsuariosPermiso(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
+			throws IOException {
+		try {
+			int permiso = Integer.parseInt(request.getParameter("permiso"));
+
+			DaoUsuario usuario = new DaoUsuario();
+			out.print(usuario.listarUsuariosJson(permiso));
+		} catch (SQLException e) {
+			ControlErrores.mostrarErrorGenerico("Error al obtener los usuarios según su permiso. Intente de nuevo.",
+					response);
+		}
+	}
+
+	/**
+	 * Obtiene la información de un usuario y la devuelve en formato JSON.
+	 * 
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
+	 * @param out      El escritor de salida para escribir la información del
+	 *                 usuario en formato JSON en la respuesta.
+	 * @throws IOException Si ocurre un error de entrada/salida al escribir en el
+	 *                     PrintWriter.
+	 */
+	private void obtenerINFOUsuario(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
+			throws IOException {
+		try {
+			int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+
+			DaoUsuario usuario = new DaoUsuario();
+			out.print(usuario.listariNFOUsuarioJson(idUsuario));
+		} catch (SQLException e) {
+			ControlErrores.mostrarErrorGenerico("Error al obtener la información del usuario. Intente de nuevo.",
+					response);
+		}
+	}
+
+	/**
+	 * Obtiene la contraseña de un usuario y la devuelve en formato JSON.
+	 * 
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
+	 * @param out      El escritor de salida para escribir la contraseña del usuario
+	 *                 en formato JSON en la respuesta.
+	 * @throws IOException Si ocurre un error de entrada/salida al escribir en el
+	 *                     PrintWriter.
+	 */
+	private void obtenerContrasena(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
+			throws IOException {
+		try {
+			int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+
+			DaoUsuario usuario = new DaoUsuario();
+			out.print(usuario.ObtenerContrasenaJson(idUsuario));
+		} catch (SQLException e) {
+			ControlErrores.mostrarErrorGenerico("Error al obtener la contraseña del usuario. Intente de nuevo.",
+					response);
+		}
+	}
+
+	/**
+	 * Busca el permiso de un usuario y lo devuelve en formato JSON.
+	 * 
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
+	 * @param out      El escritor de salida para escribir el permiso del usuario en
+	 *                 formato JSON en la respuesta.
+	 * @throws IOException Si ocurre un error de entrada/salida al escribir en el
+	 *                     PrintWriter.
+	 */
+	private void buscarPermisoUsuario(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
+			throws IOException {
+		try {
+			int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+
+			DaoUsuario usuario = new DaoUsuario();
+			out.print(usuario.BuscarPermisoJson(idUsuario));
+		} catch (SQLException e) {
+			ControlErrores.mostrarErrorGenerico("Error al buscar el permiso del usuario. Intente de nuevo.", response);
+		}
+	}
+
+	/**
+	 * Comprueba si hay una sesión de usuario activa y devuelve la información del
+	 * usuario y su permiso en formato JSON.
+	 * 
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
+	 * @throws ServletException Si se produce un error grave durante la ejecución
+	 *                          del servlet.
+	 * @throws IOException      Si ocurre un error de entrada/salida al escribir en
+	 *                          el PrintWriter o al redirigir al usuario.
+	 */
+	private void checkLogin(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession session = request.getSession(false); // No crea una nueva sesión si no existe
+
+		if (session != null && session.getAttribute("usuario") != null && session.getAttribute("permiso") != null) {
+			Usuario usuario = (Usuario) session.getAttribute("usuario");
+			String nombreUsuario = usuario.getNombre(); // Obtener el nombre de usuario del objeto Usuario
+			int permiso = (int) session.getAttribute("permiso");
+
+			/*
+			 * Cuando se recupera un objeto de una sesión (en este caso, los atributos
+			 * "usuario" y "permiso"), se almacena como un objeto Object. Para utilizar
+			 * estos objetos como String, es necesario realizar una conversión explícita de
+			 * tipo, ya que getAttribute() devuelve un objeto de tipo Object. Por lo tanto,
+			 * (String) se utiliza para convertir el objeto recuperado de la sesión al tipo
+			 * String, de modo que pueda ser utilizado como tal.
+			 */
+			System.out.println("{\"nombreUsuario\": \"" + nombreUsuario + "\", \"permiso\": \"" + permiso + "\"}");
+			// Devolver información del usuario y su permiso en formato JSON
+			response.getWriter().write("{\"nombreUsuario\": \"" + nombreUsuario + "\", \"permiso\": " + permiso + "}");
+		} else {
+			// Si no hay sesión activa, redirigir al usuario a la página de inicio de sesión
+			response.sendRedirect("index.html");
 		}
 	}
 
@@ -236,151 +381,32 @@ public class GestorUsuario extends HttpServlet {
 	};
 
 	/**
-	 * Inicia sesión de un usuario en el sistema.
+	 * Calcula el valor hash MD5 de una cadena de entrada.
 	 *
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws IOException  Si se produce un error de entrada/salida.
-	 * @throws SQLException Si se produce un error al acceder a la base de datos.
+	 * @param input La cadena de entrada para la cual se calculará el hash MD5.
+	 * @return La representación hexadecimal del hash MD5 de la cadena de entrada.
 	 */
-	private void iniciarSesion(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, SQLException {
-		// Obtener parámetros del formulario
-		String usuarioSTR = request.getParameter("usuario");
-
-		// Iniciar sesión
-		try {
-			// Verificamos el inicio de sesión con la contraseña cifrada
-			// System.out.println(usuarioSTR);
-			// System.out.println(request.getParameter("contrasena"));
-
-			Usuario usuario = DaoUsuario.getInstance().iniciarSesion(usuarioSTR,
-					getMD5(request.getParameter("contrasena")));
-
-			// System.out.println(usuario);
-
-			if (usuario != null) {
-				HttpSession session = request.getSession();
-				session.setAttribute("usuario", usuario);
-				session.setAttribute("permiso", usuario.getPermiso());
-
-				// Establecer el estado de la respuesta como OK
-				response.setStatus(HttpServletResponse.SC_OK);
-
-				int permiso = usuario.getPermiso();
-				// System.out.println("Permiso: " + permiso); // Debugging
-				if (permiso == 1) {
-					// System.out.println("entro en 1"); // Debugging
-					response.sendRedirect("eventos.html");
-				} else if (permiso == 2) {
-					// System.out.println("entro en 2"); // Debugging
-					response.sendRedirect("moderador.html");
-				} else if (permiso == 99) {
-					// System.out.println("entro en 99"); // Debugging
-					response.sendRedirect("admin.html");
-				} else {
-					response.sendRedirect("index.html");
-				}
-			} else {
-				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-				response.sendRedirect("index.html");
-				System.out.println("Credenciales incorrectas.");
-			}
-		} catch (Exception e) {
-			ControlErrores.mostrarErrorGenerico("Error al iniciar sesión. Intente de nuevo.", response);
-		}
-	}
-
 	public static String getMD5(String input) {
 		try {
+			// Obtener una instancia de MessageDigest con el algoritmo MD5
 			MessageDigest md = MessageDigest.getInstance("MD5");
+
+			// Calcular el hash de la cadena de entrada
 			byte[] messageDigest = md.digest(input.getBytes());
+
+			// Convertir el hash en una representación hexadecimal
 			BigInteger number = new BigInteger(1, messageDigest);
 			String hashtext = number.toString(16);
 
+			// Asegurarse de que la representación hexadecimal tenga 32 caracteres
 			while (hashtext.length() < 32) {
 				hashtext = "0" + hashtext;
 			}
+
 			return hashtext;
 		} catch (NoSuchAlgorithmException e) {
+			// Lanzar una RuntimeException si ocurre un error al calcular el hash
 			throw new RuntimeException(e);
-		}
-	}
-
-	/**
-	 * Cierra la sesión del usuario.
-	 *
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws IOException Si se produce un error de entrada/salida.
-	 */
-	private void cerrarSesion(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		HttpSession session = request.getSession();
-		session.invalidate();
-		response.setStatus(HttpServletResponse.SC_OK);
-		response.getWriter().println("Sesión cerrada exitosamente!");
-	}
-
-	/**
-	 * Método para comprobar si el usuario ha iniciado sesión. Si el usuario está
-	 * logueado, se devuelve su nombre de usuario y permiso. Si no está logueado, se
-	 * devuelve un estado de "NO_LOGUEADO".
-	 * 
-	 * @param request  HttpServletRequest Objeto de solicitud HTTP
-	 * @param response HttpServletResponse Objeto de respuesta HTTP
-	 * @throws IOException Excepción de E/S
-	 */
-
-	private void comprobarLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-	}
-
-	/**
-	 * Obtiene la lista de usuarios y los envía como respuesta.
-	 *
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws IOException  Si se produce un error de entrada/salida.
-	 * @throws SQLException Si se produce un error al acceder a la base de datos.
-	 */
-	private void verUsuarios(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, SQLException {
-		// Obtener lista de usuarios
-		try {
-			List<Usuario> usuarios = DaoUsuario.getInstance().obtenerUsuarios();
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().write(usuarios.toString());
-		} catch (SQLException e) {
-			ControlErrores.mostrarErrorGenerico("Error al obtener la lista de usuarios. Intente de nuevo.", response);
-		}
-	}
-
-	/**
-	 * Obtiene la información de un usuario y la envía como respuesta.
-	 *
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws IOException  Si se produce un error de entrada/salida.
-	 * @throws SQLException Si se produce un error al acceder a la base de datos.
-	 */
-	private void verUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
-		// Obtener parámetro del ID del usuario
-		int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
-
-		// Obtener información del usuario
-		try {
-			Usuario usuario = DaoUsuario.getInstance().obtenerINFOUsuarioPorID(idUsuario);
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().write(usuario.toString());
-		} catch (Exception e) {
-			ControlErrores.mostrarErrorGenerico("Error al obtener la información del usuario. Intente de nuevo.",
-					response);
 		}
 	}
 
@@ -525,43 +551,75 @@ public class GestorUsuario extends HttpServlet {
 	}
 
 	/**
-	 * Obtiene el permiso del usuario actual y lo envía como respuesta. Si el
-	 * usuario no está logueado, devuelve un estado de "No autorizado".
-	 * 
-	 * @param request  La solicitud HTTP
-	 * @param response La respuesta HTTP
-	 * @throws IOException Si hay algún error de entrada/salida al escribir en el
-	 *                     flujo de salida
+	 * Inicia sesión de un usuario verificando las credenciales proporcionadas.
+	 *
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
+	 * @throws ServletException Si se produce un error en el servlet.
+	 * @throws IOException      Si se produce un error de entrada/salida.
 	 */
-	private void obtenerPermiso(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	private void iniciarSesion(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// Obtener parámetros del formulario
+		String usuarioSTR = request.getParameter("usuario");
+
+		// Iniciar sesión
 		try {
-			HttpSession session = request.getSession();
-			Usuario usuario = (Usuario) session.getAttribute("usuario");
-			if (usuario == null) {
+			// Verificamos el inicio de sesión con la contraseña cifrada
+			// System.out.println(usuarioSTR);
+			// System.out.println(request.getParameter("contrasena"));
+
+			Usuario usuario = DaoUsuario.getInstance().iniciarSesion(usuarioSTR,
+					getMD5(request.getParameter("contrasena")));
+
+			// System.out.println(usuario);
+
+			if (usuario != null) {
+				HttpSession session = request.getSession();
+				session.setAttribute("usuario", usuario);
+				session.setAttribute("permiso", usuario.getPermiso());
+
+				// Establecer el estado de la respuesta como OK
+				response.setStatus(HttpServletResponse.SC_OK);
+
+				int permiso = usuario.getPermiso();
+				// System.out.println("Permiso: " + permiso); // Debugging
+				if (permiso == 1) {
+					// System.out.println("entro en 1"); // Debugging
+					response.sendRedirect("eventos.html");
+				} else if (permiso == 2) {
+					// System.out.println("entro en 2"); // Debugging
+					response.sendRedirect("moderador.html");
+				} else if (permiso == 99) {
+					// System.out.println("entro en 99"); // Debugging
+					response.sendRedirect("admin.html");
+				} else {
+					response.sendRedirect("index.html");
+				}
+			} else {
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-				return;
-			}
-
-			int idUsuario = usuario.getIdUsuario(); // Obtenemos el nombre del usuario
-
-			try {
-				int permiso = DaoUsuario.getInstance().buscarPermisoUsuario(idUsuario);
-
-				// Establecer el tipo de contenido y encabezados de la respuesta
-				response.setContentType("text/plain");
-				response.setCharacterEncoding("UTF-8");
-
-				// Enviar el permiso como respuesta
-				response.getWriter().write(permiso);
-
-			} catch (Exception e) {
-				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				response.getWriter().write("Error al obtener el permiso.");
+				response.sendRedirect("index.html");
+				System.out.println("Credenciales incorrectas.");
 			}
 		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().write("Error interno del servidor.");
+			ControlErrores.mostrarErrorGenerico("Error al iniciar sesión. Intente de nuevo.", response);
 		}
+	}
+
+	/**
+	 * Cierra la sesión del usuario.
+	 *
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
+	 * @throws IOException Si se produce un error de entrada/salida.
+	 */
+	private void cerrarSesion(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession();
+		session.invalidate();
+		response.setStatus(HttpServletResponse.SC_OK);
+		response.getWriter().println("Sesión cerrada exitosamente!");
 	}
 
 }

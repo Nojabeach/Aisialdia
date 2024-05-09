@@ -9,10 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import modelo.Actividad;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.List;
-
-import com.google.gson.Gson;
 
 import dao.DaoActividad;
 
@@ -32,28 +30,66 @@ public class GestorActividad extends HttpServlet {
 	}
 
 	/**
-	 * Maneja las solicitudes GET enviadas al servlet.
-	 *
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws ServletException Si se produce un error en el servlet.
-	 * @throws IOException      Si se produce un error de entrada/salida.
+	 * Maneja las solicitudes GET para este servlet, realizando diferentes acciones
+	 * según el parámetro "action" proporcionado.
+	 * 
+	 * <p>
+	 * Las acciones disponibles son:
+	 * <ul>
+	 * <li><b>visualizarActividades:</b> Muestra las actividades disponibles y sus
+	 * detalles.</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param request  La solicitud HTTP que contiene el parámetro "action" para
+	 *                 determinar la acción a realizar.
+	 * @param response La respuesta HTTP donde se enviará el resultado.
+	 * @throws ServletException Si ocurre un error en el servlet.
+	 * @throws IOException      Si ocurre un error de entrada/salida.
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		PrintWriter out = response.getWriter();
+		String accion = request.getParameter("action");
+
+		try {
+			if (accion.equals("visualizarActividades")) {
+				visualizarActividades(request, response, out);
+			} else {
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				ControlErrores.mostrarErrorGenerico("{\"error\": \"Acción no válida\"}", response);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
+		}
 	}
 
 	/**
-	 * Maneja las solicitudes POST enviadas al servlet.
-	 *
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws ServletException Si se produce un error en el servlet.
-	 * @throws IOException      Si se produce un error de entrada/salida.
+	 * Maneja las solicitudes POST para este servlet, realizando diferentes acciones
+	 * según el parámetro "action" proporcionado.
+	 * 
+	 * <p>
+	 * Las acciones disponibles son:
+	 * <ul>
+	 * <li><b>crearActividad:</b> Crea una nueva actividad con la información
+	 * proporcionada en la solicitud.</li>
+	 * <li><b>editarActividad:</b> Edita una actividad existente con la información
+	 * proporcionada en la solicitud.</li>
+	 * <li><b>eliminarActividad:</b> Elimina una actividad existente según el ID
+	 * proporcionado en la solicitud.</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param request  La solicitud HTTP que contiene el parámetro "action" para
+	 *                 determinar la acción a realizar.
+	 * @param response La respuesta HTTP donde se enviará el resultado o el mensaje
+	 *                 de error.
+	 * @throws ServletException Si se produce un error grave durante la ejecución
+	 *                          del servlet.
+	 * @throws IOException      Si se produce un error de entrada/salida al escribir
+	 *                          en el PrintWriter.
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -71,18 +107,19 @@ public class GestorActividad extends HttpServlet {
 			case "eliminarActividad":
 				eliminarActividad(request, response);
 				break;
-			case "visualizarActividades":
-				visualizarActividades(request, response);
-				break;
 			default:
+				// Si la acción no es válida, se establece un código de estado HTTP 400 (Bad
+				// Request)
+				// y se envía un mensaje de error genérico
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				ControlErrores.mostrarErrorGenerico("{\"error\": \"Acción no válida\"}", response);
 			}
 		} catch (Exception e) {
+			// En caso de error, se muestra un mensaje de error genérico y se establece un
+			// código de estado HTTP 500 (Internal Server Error)
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
-
 		}
 	}
 
@@ -170,21 +207,12 @@ public class GestorActividad extends HttpServlet {
 	 * @throws SQLException Si ocurre un error al recuperar las actividades de la
 	 *                      base de datos.
 	 */
-	private void visualizarActividades(HttpServletRequest request, HttpServletResponse response)
+	private void visualizarActividades(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
 			throws IOException, SQLException {
+
 		try {
-			// Obtener lista de actividades existentes
-			List<Actividad> actividades = DaoActividad.getInstance().obtenerTodasLasActividades();
-
-			// Convertir la lista de actividades a JSON
-			String actividadesJSON = new Gson().toJson(actividades);
-
-			// Establecer el tipo de contenido y encabezados de la respuesta
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-
-			// Enviar la lista de actividades como respuesta
-			response.getWriter().write(actividadesJSON);
+			DaoActividad actividad = new DaoActividad();
+			out.print(actividad.listarJsonTodasActividades());
 		} catch (SQLException e) {
 			ControlErrores.mostrarErrorGenerico("Error al obtener las actividades. Intente de nuevo.", response);
 		}

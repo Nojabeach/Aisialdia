@@ -5,13 +5,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import modelo.InteresPorDefecto;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.List;
-
-import com.google.gson.Gson;
 
 import dao.DaoInteresPorDefecto;
 
@@ -35,10 +32,12 @@ public class GestorIntereses extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
+		PrintWriter out = response.getWriter();
 		String accion = request.getParameter("accion");
 
 		if (accion != null && accion.equals("listar")) {
-			listarInteresesPorDefecto(request, response);
+			listarInteresesPorDefecto(request, response, out);
 		} else {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND, "Acción no válida");
 		}
@@ -55,32 +54,35 @@ public class GestorIntereses extends HttpServlet {
 	}
 
 	/**
-	 * Lista todos los intereses por defecto existentes y los envía como respuesta
-	 * en formato JSON.
-	 *
-	 * @param request  la solicitud HTTP
-	 * @param response la respuesta HTTP
-	 * @throws ServletException si ocurre un error de servlet
-	 * @throws IOException      si ocurre un error de E/S al procesar la solicitud
+	 * Lista los intereses por defecto en formato JSON y los envía al PrintWriter de
+	 * la respuesta HTTP.
+	 * 
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
+	 * @param out      El escritor de salida para escribir el resultado JSON en la
+	 *                 respuesta.
+	 * @throws ServletException Si se produce un error grave durante la ejecución
+	 *                          del servlet.
+	 * @throws IOException      Si se produce un error de entrada/salida al escribir
+	 *                          en el PrintWriter.
 	 */
-	private void listarInteresesPorDefecto(HttpServletRequest request, HttpServletResponse response)
+	private void listarInteresesPorDefecto(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
 			throws ServletException, IOException {
+
 		try {
-			// Obtener lista de nombres de intereses por defecto existentes
-			List<String> nombresIntereses = DaoInteresPorDefecto.getInstance().listarNombresInteresesPorDefecto();
+			// Crea un objeto DaoInteresPorDefecto para manejar la obtención de intereses
+			// por defecto
+			DaoInteresPorDefecto intereses = new DaoInteresPorDefecto();
 
-			// Convertir la lista de nombres de intereses a JSON
-			String interesesJSON = new Gson().toJson(nombresIntereses);
+			// Lista los intereses por defecto en formato JSON y los envía al PrintWriter
+			out.print(intereses.listarJsonIntereses());
 
-			// Establecer el tipo de contenido y encabezados de la respuesta
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-
-			// Enviar la lista de nombres de intereses como respuesta
-			response.getWriter().write(interesesJSON);
 		} catch (SQLException e) {
-			ControlErrores.mostrarErrorGenerico("Error al obtener los intereses por defecto. Intente de nuevo.",
-					response);
+			// En caso de error, muestra un mensaje de error genérico y lo envía en formato
+			// JSON a la respuesta
+			e.printStackTrace();
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
 		}
 	}
 

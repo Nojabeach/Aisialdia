@@ -1,16 +1,16 @@
 package controlador;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-
+import jakarta.servlet.annotation.WebServlet;
 import dao.DaoActividad;
 import dao.DaoEvento;
+import dao.DaoEventoConActividad;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,26 +36,56 @@ public class GestorEvento extends HttpServlet {
 	}
 
 	/**
-	 * Maneja las solicitudes GET enviadas al servlet.
-	 *
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws ServletException Si se produce un error en el servlet.
-	 * @throws IOException      Si se produce un error de entrada/salida.
+	 * Gestiona las solicitudes GET para este servlet, realizando diferentes
+	 * acciones según el parámetro "action" proporcionado.
+	 * 
+	 * <p>
+	 * Las acciones disponibles son:
+	 * <ul>
+	 * <li><b>obtenerEventosPendientesAprobacion:</b> Obtiene los eventos pendientes
+	 * de aprobación y los devuelve en formato JSON.</li>
+	 * <li><b>obtenerEventosPendientesPublicacion:</b> Obtiene los eventos
+	 * pendientes de publicación y los devuelve en formato JSON.</li>
+	 * <li><b>obtenerTodosLosEventosActivos:</b> Obtiene todos los eventos activos y
+	 * los devuelve en formato JSON.</li>
+	 * <li><b>obtenerEventosConActividad:</b> Obtiene los eventos con actividad
+	 * asociada y los devuelve en formato JSON.</li>
+	 * <li><b>buscarEventos:</b> Busca los eventos segun el criterio marcado y los
+	 * devuelve en formato JSON.</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param request  La solicitud HTTP que contiene el parámetro "action" para
+	 *                 determinar la acción a realizar.
+	 * @param response La respuesta HTTP donde se enviará el resultado en formato
+	 *                 JSON.
+	 * @throws ServletException Si ocurre un error grave durante la ejecución del
+	 *                          servlet.
+	 * @throws IOException      Si ocurre un error de entrada/salida al escribir en
+	 *                          el PrintWriter.
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
+		PrintWriter out = response.getWriter();
+
 		String action = request.getParameter("action");
 		try {
 			switch (action) {
-
 			case "obtenerEventosPendientesAprobacion":
-				obtenerEventosPendientesAprobacion(request, response);
+				obtenerEventosPendientesAprobacion(request, response, out);
+				break;
+			case "obtenerEventosPendientesPublicacion":
+				obtenerEventosPendientesPublicacion(request, response, out);
 				break;
 			case "obtenerTodosLosEventosActivos":
-				obtenerTodosLosEventosActivos(request, response);
+				obtenerTodosLosEventosActivos(request, response, out);
 				break;
+			case "obtenerEventosConActividad":
+				obtenerEventosConActividad(request, response, out);
+				break;
+			case "buscarEventos":
+				buscarEventos(request, response, out);
 			default:
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				ControlErrores.mostrarErrorGenerico("{\"error\": \"Acción no válida\"}", response);
@@ -68,7 +98,26 @@ public class GestorEvento extends HttpServlet {
 	}
 
 	/**
-	 * Maneja las solicitudes POST enviadas al servlet.
+	 * Maneja las solicitudes POST enviadas al servlet, realizando diferentes
+	 * acciones según el parámetro "action" proporcionado.
+	 * 
+	 * <p>
+	 * Las acciones disponibles son:
+	 * <ul>
+	 * <li><b>crearEvento:</b> Crea un nuevo evento con la información proporcionada
+	 * en la solicitud.</li>
+	 * <li><b>editarEvento:</b> Edita un evento existente con la información
+	 * proporcionada en la solicitud.</li>
+	 * <li><b>eliminarEvento:</b> Elimina un evento existente según el ID
+	 * proporcionado en la solicitud.</li>
+	 * <li><b>publicarEvento:</b> Publica un evento pendiente de publicación.</li>
+	 * <li><b>rechazarEvento:</b> Rechaza un evento pendiente de aprobación.</li>
+	 * <li><b>aprobarPublicacionEvento:</b> Aprueba la publicación de un
+	 * evento.</li>
+	 * <li><b>finalizarPublicacionEvento:</b> Finaliza la publicación de un
+	 * evento.</li>
+	 * </ul>
+	 * </p>
 	 *
 	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
 	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
@@ -114,17 +163,22 @@ public class GestorEvento extends HttpServlet {
 	}
 
 	/**
-	 * Crea un nuevo evento en la base de datos.
-	 *
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws IOException      Si se produce un error de entrada/salida.
-	 * @throws ServletException Si se produce un error en el servlet.
-	 * @throws SQLException     Si se produce un error en la base de datos.
+	 * Crea un nuevo evento con la información proporcionada en la solicitud HTTP.
+	 * 
+	 * @param request  La solicitud HTTP que contiene los parámetros necesarios para
+	 *                 crear el evento.
+	 * @param response La respuesta HTTP donde se enviarán los mensajes de éxito o
+	 *                 error.
+	 * @throws IOException      Si ocurre un error de entrada/salida al escribir en
+	 *                          el PrintWriter.
+	 * @throws ServletException Si ocurre un error grave durante la ejecución del
+	 *                          servlet.
+	 * @throws SQLException     Si ocurre un error al interactuar con la base de
+	 *                          datos.
 	 */
 	private void crearEvento(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException, SQLException {
+
 		String nombre = request.getParameter("nombre");
 		String detalles = request.getParameter("detalles");
 		String fechaEventoStr = request.getParameter("fechaEvento");
@@ -145,13 +199,21 @@ public class GestorEvento extends HttpServlet {
 			}
 		}
 
+		// Obtener la marca de tiempo actual
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+		// Crear el objeto Evento
 		Evento evento = new Evento(nombre, detalles, fechaEvento, idUsuarioCreador, ubicacion);
 		try {
+			// Intenta crear el evento en la base de datos
 			DaoEvento.getInstance().crearEvento(evento, actividades, timestamp);
+			// Si tiene éxito, establece el código de estado HTTP 201 (Created) y envía un
+			// mensaje de éxito
 			response.setStatus(HttpServletResponse.SC_CREATED);
 			response.getWriter().println("Evento creado exitosamente!");
 		} catch (SQLException e) {
+			// En caso de error, muestra un mensaje de error genérico y establece el código
+			// de estado HTTP 500 (Internal Server Error)
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().println("Error al crear el evento. Intente de nuevo.");
@@ -299,32 +361,71 @@ public class GestorEvento extends HttpServlet {
 	}
 
 	/**
-	 * Obtiene la lista de eventos pendientes de aprobación.
+	 * Obtiene los eventos pendientes de aprobación y devuelve el resultado en
+	 * formato JSON.
 	 * 
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws SQLException Si se produce un error en la base de datos.
-	 * @throws IOException  Si se produce un error de entrada/salida.
+	 * @param request  La solicitud HTTP. No se espera ningún parámetro específico
+	 *                 en esta solicitud.
+	 * @param response La respuesta HTTP donde se enviará el resultado en formato
+	 *                 JSON.
+	 * @param out      El escritor de salida para escribir el resultado JSON en la
+	 *                 respuesta.
+	 * @throws SQLException Si ocurre un error al interactuar con la base de datos.
+	 * @throws IOException  Si ocurre un error de entrada/salida al escribir en el
+	 *                      PrintWriter.
 	 */
-	private void obtenerEventosPendientesAprobacion(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, IOException {
+	private void obtenerEventosPendientesAprobacion(HttpServletRequest request, HttpServletResponse response,
+			PrintWriter out) throws SQLException, IOException {
 		try {
-			List<Evento> eventos = DaoEvento.getInstance().obtenerEventosPendientesAprobacion();
-			if (eventos != null && !eventos.isEmpty()) {
-				response.getWriter().println("Eventos pendientes de aprobación: ");
-				for (Evento evento : eventos) {
-					response.getWriter().println(evento.toString());
-				}
-			} else {
-				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-				response.getWriter().println("No se encontraron eventos pendientes de aprobación.");
-			}
+			// Crea un objeto DaoEvento para manejar la obtención de eventos pendientes de
+			// aprobación
+			DaoEvento eventos = new DaoEvento();
+
+			// Lista los eventos pendientes de aprobación en formato JSON y los envía al
+			// PrintWriter
+			out.print(eventos.listarJsonPendientesAprobacion());
+
 		} catch (SQLException e) {
+			// En caso de error, muestra un mensaje de error genérico y lo envía en formato
+			// JSON a la respuesta
 			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().println("Error al obtener los eventos pendientes de aprobación. Intente de nuevo.");
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
 		}
+	}
+
+	/**
+	 * Obtiene los eventos pendientes de publicación y devuelve el resultado en
+	 * formato JSON.
+	 * 
+	 * @param request  La solicitud HTTP. No se espera ningún parámetro específico
+	 *                 en esta solicitud.
+	 * @param response La respuesta HTTP donde se enviará el resultado en formato
+	 *                 JSON.
+	 * @param out      El escritor de salida para escribir el resultado JSON en la
+	 *                 respuesta.
+	 * @throws SQLException Si ocurre un error al interactuar con la base de datos.
+	 * @throws IOException  Si ocurre un error de entrada/salida al escribir en el
+	 *                      PrintWriter.
+	 */
+	private void obtenerEventosPendientesPublicacion(HttpServletRequest request, HttpServletResponse response,
+			PrintWriter out) throws SQLException, IOException {
+
+		try {
+			// Crea un objeto DaoEvento para manejar la obtención de eventos pendientes de
+			// publicación
+			DaoEvento eventos = new DaoEvento();
+
+			// Lista los eventos pendientes de publicación en formato JSON y los envía al
+			// PrintWriter
+			out.print(eventos.listarJsonPendientesPublicacion());
+
+		} catch (SQLException e) {
+			// En caso de error, muestra un mensaje de error genérico y lo envía en formato
+			// JSON a la respuesta
+			e.printStackTrace();
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
+		}
+
 	}
 
 	/**
@@ -333,42 +434,93 @@ public class GestorEvento extends HttpServlet {
 	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
 	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
 	 *                 respuesta HTTP.
-	 * @throws SQLException Si se produce un error en la base de datos.
-	 * @throws IOException  Si se produce un error de entrada/salida.
+	 * @throws SQLException Si ocurre un error al interactuar con la base de datos.
+	 * @throws IOException  Si ocurre un error de entrada/salida al escribir en el
+	 *                      PrintWriter.
 	 */
-	private void obtenerTodosLosEventosActivos(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, IOException {
+	private void obtenerTodosLosEventosActivos(HttpServletRequest request, HttpServletResponse response,
+			PrintWriter out) throws SQLException, IOException {
 
 		String actividad = request.getParameter("actividad");
 		String descripcion = request.getParameter("descripcion");
 		String ubicacion = request.getParameter("ubicacion");
-		String fechaString = request.getParameter("fecha");
-		java.util.Date fechaUtil = null;
-		java.sql.Date fechaSql = null;
-		if (fechaString != null && !fechaString.isEmpty()) {
-			try {
-				fechaUtil = new SimpleDateFormat("yyyy-MM-dd").parse(fechaString);
-				fechaSql = new java.sql.Date(fechaUtil.getTime());
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}
+		Date fechaEvento = Date.valueOf(request.getParameter("fecha"));
+
 		try {
-			List<Evento> eventos = DaoEvento.getInstance().obtenerTodosLosEventosActivos(actividad, descripcion,
-					ubicacion, fechaSql);
-			if (eventos != null && !eventos.isEmpty()) {
-				response.getWriter().println("Todos los eventos activos: ");
-				for (Evento evento : eventos) {
-					response.getWriter().println(evento.toString());
-				}
-			} else {
-				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-				response.getWriter().println("No se encontraron eventos activos.");
-			}
+			DaoEvento Eventos = new DaoEvento();
+
+			out.print(Eventos.listarJsonObtenerTodosLosEventosActivos(actividad, descripcion, ubicacion, fechaEvento));
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().println("Error al obtener los eventos activos. Intente de nuevo.");
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
+		}
+
+	}
+
+	/**
+	 * Obtiene los eventos con actividad asociada y devuelve el resultado en formato
+	 * JSON.
+	 * 
+	 * @param request  La solicitud HTTP que contiene el parámetro "idEvento" para
+	 *                 identificar el evento.
+	 * @param response La respuesta HTTP donde se enviará el resultado en formato
+	 *                 JSON.
+	 * @param out      El escritor de salida para escribir el resultado JSON en la
+	 *                 respuesta.
+	 * @throws SQLException Si ocurre un error al interactuar con la base de datos.
+	 * @throws IOException  Si ocurre un error de entrada/salida al escribir en el
+	 *                      PrintWriter.
+	 */
+	public void obtenerEventosConActividad(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
+			throws SQLException, IOException {
+
+		// Obtiene el ID del evento de la solicitud
+		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
+
+		try {
+			// Crea un objeto DaoEventoConActividad para manejar la obtención de eventos con
+			// actividad
+			DaoEventoConActividad eventos = new DaoEventoConActividad();
+
+			// Lista los eventos con actividad en formato JSON y los envía al PrintWriter
+			out.print(eventos.listarJsonEventosConActividad(idEvento));
+
+		} catch (SQLException e) {
+			// En caso de error, muestra un mensaje de error genérico y lo envía en formato
+			// JSON a la respuesta
+			e.printStackTrace();
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
+		}
+
+	}
+
+	/**
+	 * Busca eventos que coincidan con el criterio de búsqueda proporcionado y los
+	 * devuelve en formato JSON.
+	 * 
+	 * @param request  La solicitud HTTP que contiene el parámetro
+	 *                 "criterioBusqueda" para especificar el criterio de búsqueda.
+	 * @param response La respuesta HTTP donde se enviará el resultado en formato
+	 *                 JSON.
+	 * @param out      El escritor de salida para escribir el resultado JSON en la
+	 *                 respuesta.
+	 * @throws SQLException Si ocurre un error al interactuar con la base de datos.
+	 * @throws IOException  Si ocurre un error de entrada/salida al escribir en el
+	 *                      PrintWriter.
+	 */
+	public void buscarEventos(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
+			throws SQLException, IOException {
+		String criterio = request.getParameter("criterioBusqueda");
+
+		try {
+			DaoEvento eventos = new DaoEvento();
+			out.print(eventos.buscarEventos(criterio));
+		} catch (SQLException e) {
+			// En caso de error, muestra un mensaje de error genérico y lo envía en formato
+			// JSON a la respuesta
+			e.printStackTrace();
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
 		}
 	}
 

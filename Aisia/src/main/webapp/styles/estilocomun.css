@@ -363,6 +363,10 @@ form button:hover {
   background-position: 0 100%;
   background-repeat: repeat-x;
 }
+
+main {
+  margin-bottom: 100px; /* adjust the value to match the height of your footer */
+}
 /* Pie de página */
 footer {
   background-color: var(--color-primario);

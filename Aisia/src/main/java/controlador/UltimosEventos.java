@@ -5,14 +5,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import modelo.EventoConActividad;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.List;
-
-import com.google.gson.Gson;
-
 import dao.DaoEventoConActividad;
 
 /**
@@ -40,33 +36,25 @@ public class UltimosEventos extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
+		PrintWriter out = response.getWriter();
+
+		int cantidadEventos = 10;
+
+		// Cantidad puesta por mi para así visualizar la barra de scroll y poder
+		// editarla correctamente
+
+		DaoEventoConActividad Eventos;
 		try {
-			// Obtener la cantidad de eventos a mostrar
-			int cantidadEventos = 10; // Cantidad puesta por mi para así visualizar la barra de scroll y poder
-										// editarla correctamente
-			// System.out.println("Cantidad de eventos: " + cantidadEventos);
-
-			// Obtener los últimos eventos con su información asociada
-			List<EventoConActividad> eventos = DaoEventoConActividad.getInstance()
-					.obtenerUltimosEventos(cantidadEventos);
-
-			// Convertir la lista de eventos a JSON
-			String eventosJSON = new Gson().toJson(eventos);
-			// System.out.println("Eventos en formato JSON: " + eventosJSON);
-
-			// Establecer el tipo de contenido y encabezados de la respuesta
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-
-			// Enviar la lista de eventos como respuesta
-
-			response.getWriter().write(eventosJSON);
+			Eventos = new DaoEventoConActividad();
+			out.print(Eventos.listarJsonUltimosEventos(cantidadEventos));
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
 		}
+
 	}
 
 	/**

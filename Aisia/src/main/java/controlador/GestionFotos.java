@@ -20,7 +20,7 @@ import jakarta.servlet.http.Part;
 public class GestionFotos {
 
 	/** Ruta de los archivos en el servidor. */
-	private static final String PATH_FILES = "img\\Iconos";
+	private static final String PATH_FILES = "\\img\\Iconos";
 
 	/**
 	 * Sube una foto al servidor.

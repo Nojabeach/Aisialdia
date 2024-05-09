@@ -339,7 +339,7 @@ public class DaoEvento {
 	 *         coincidentes.
 	 * @throws Exception Si ocurre un error al buscar los eventos.
 	 */
-	public List<Evento> buscarEventos(String criterio) throws Exception {
+	public List<Evento> buscarEventos(String criterio) throws SQLException {
 		// Preparar la consulta SQL para buscar eventos con el criterio especificado
 		String sql = "SELECT * FROM eventos WHERE nombre LIKE? OR descripcion LIKE?";
 		List<Evento> eventos = new ArrayList<>();
@@ -353,7 +353,7 @@ public class DaoEvento {
 				}
 			}
 		} catch (SQLException e) {
-			throw new Exception("Error al buscar eventos", e);
+			throw new SQLException("Error al buscar eventos", e);
 		}
 		return eventos;
 	}

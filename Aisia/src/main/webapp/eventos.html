@@ -13,14 +13,15 @@
     <!-- Enlace de fonts, iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Enlace de scripts -->
-    <script src="js/eventosSesion.js"></script>
-    <script src="js/eventos.js"></script>
+    <script src="js/checkLogin.js"></script>
+ 
 </head>
 
 <body>
 
     <div id="contenedor">
         <header id="cabecera">
+            <img src="img/Logos/LogoRecortado_noText.png" alt="Logo de AisiAldia" id="logo">
             <div id="divTitulo">
                 <h1>AisiAldia</h1>
                 <p>Ocio para todos</p>
@@ -28,12 +29,10 @@
             <div id="loginFormContainer">
 
                 <!-- Contenedor para el nombre del usuario y botón de cerrar sesión -->
-                <div id="userInfoContainer" style="display: none;">
-                    <p id="nombreUsuario"></p>
-                    <p id="PermisoUsuario"></p>
-                    <button id="botonCerrarSesion">Cerrar sesión</button>
-                </div>
-                <p id="errorMessage"></p>
+                <i id="userIcon" class="fa-solid fa-user" ></i>
+                <p id="nombreUsuario"></p>
+                <button id="botonCerrarSesion">Cerrar sesión</button>
+            
             </div>
         </header>
 
@@ -87,18 +86,6 @@
             </section>
 
 
-
-            <section class="comments-container">
-                <h2>Comentarios</h2>
-                <ul class="comments-list">
-                    <!-- Comentarios de los eventos -->
-                </ul>
-                <form class="comment-form">
-                    <label for="comment">Añadir comentario:</label>
-                    <textarea id="comment" name="comment"></textarea>
-                    <button type="submit">Enviar</button>
-                </form>
-            </section>
 
             <aside id="aside">
                 <h2>Crear Nuevo Evento</h2>

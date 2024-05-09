@@ -124,7 +124,7 @@ public class DaoUsuario {
 	 *         encuentra.
 	 * @throws Exception Si ocurre un error al obtener el usuario.
 	 */
-	public Usuario obtenerINFOUsuarioPorID(int idUsuario) throws Exception {
+	public Usuario obtenerINFOUsuarioPorID(int idUsuario) throws SQLException {
 		// Preparar la consulta SQL para obtener el usuario por ID
 		String sql = "SELECT * FROM usuarios WHERE idUsuario = ?";
 		try (PreparedStatement stmt = con.prepareStatement(sql)) {
@@ -410,6 +410,48 @@ public class DaoUsuario {
 		String json = "";
 		Gson gson = new Gson();
 		json = gson.toJson(this.obtenerUsuarios(tipo));
+		return json;
+	}
+
+	/**
+	 * Devuelve la información de un usuario en formato JSON.
+	 * 
+	 * @param idUsuario El ID del usuario del cual se desea obtener la información.
+	 * @return La información del usuario en formato JSON.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public String listariNFOUsuarioJson(int idUsuario) throws SQLException {
+		String json = "";
+		Gson gson = new Gson();
+		json = gson.toJson(this.obtenerINFOUsuarioPorID(idUsuario));
+		return json;
+	}
+
+	/**
+	 * Obtiene la contraseña de un usuario en formato JSON.
+	 * 
+	 * @param idUsuario El ID del usuario del cual se desea obtener la contraseña.
+	 * @return La contraseña del usuario en formato JSON.
+	 * @throws SQLException Si ocurre un error al interactuar con la base de datos.
+	 */
+	public String ObtenerContrasenaJson(int idUsuario) throws SQLException {
+		String json = "";
+		Gson gson = new Gson();
+		json = gson.toJson(this.obtenerContrasena(idUsuario));
+		return json;
+	}
+
+	/**
+	 * Busca el permiso de un usuario en formato JSON.
+	 * 
+	 * @param idUsuario El ID del usuario del cual se desea buscar el permiso.
+	 * @return El permiso del usuario en formato JSON.
+	 * @throws SQLException Si ocurre un error al interactuar con la base de datos.
+	 */
+	public String BuscarPermisoJson(int idUsuario) throws SQLException {
+		String json = "";
+		Gson gson = new Gson();
+		json = gson.toJson(this.buscarPermisoUsuario(idUsuario));
 		return json;
 	}
 

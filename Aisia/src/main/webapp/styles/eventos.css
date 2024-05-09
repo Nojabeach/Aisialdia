@@ -1,133 +1,104 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    padding-bottom: 100px; /* ajustado para la altura del footer */
+}
+
 /* Estilos específicos para este HTML */
 
 /* Contenedor principal */
-.container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Columnas automáticas */
-  grid-gap: 20px; /* Espacio entre columnas */
-}
-
-/* Buscador y listado de eventos */
-.search-and-events {
-  grid-column: 1 / -1; /* Ocupa todas las columnas */
-}
-
-.search-form {
-  margin-bottom: 20px;
-}
-
-.events-container {
-  grid-column: 1 / span 3; /* Ocupa 3 columnas */
-}
-
-/* Apartado de favoritos y aside de crearEvento */
-.aside-container {
-  grid-column: 4 / -1; /* A partir de la columna 4 hasta el final */
-}
-
-.favorites-container {
-  background-color: var(--fondo-terciario);
-  padding: 20px;
-  border: 1px solid var(--borde-principal);
-  border-radius: 5px;
-  box-shadow: 0 2px 4px var(--sombra-principal);
-}
-
-.favorites-container h2 {
-  font-size: 24px;
-  margin-bottom: 15px;
-  color: var(--titulo-principal);
-}
-
-.favorites-list {
-  list-style: none;
-  padding: 0;
-}
-
-.favorites-list li {
-  margin-bottom: 10px;
-}
-
-#aside {
-  background-color: var(--fondo-terciario);
-  padding: 20px;
-  border: 1px solid var(--borde-principal);
-  border-radius: 5px;
-  box-shadow: 0 2px 4px var(--sombra-principal);
-}
-
-#aside h2 {
-  font-size: 24px;
-  margin-bottom: 15px;
-  color: var(--titulo-principal);
-}
-
-/* Formulario de nuevo evento */
-#new-event-form label {
-  display: block;
-  margin-bottom: 10px;
-  font-weight: bold;
-  color: var(--titulo-principal);
-}
-
-#new-event-form input[type="text"],
-#new-event-form input[type="date"],
-#new-event-form textarea {
-  width: calc(100% - 40px);
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid var(--borde-principal);
-  border-radius: 5px;
-  background-color: var(--fondo-terciario);
-  color: var(--texto-principal);
-}
-
-#new-event-form button[type="submit"] {
-  padding: 10px 20px;
-  background-color: var(--boton-primario-fondo);
-  color: var(--boton-primario-texto);
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#new-event-form button[type="submit"]:hover {
-  background-color: var(--boton-primario-hover);
-}
-
-/* Separación entre el main y el footer */
-main {
-  margin-bottom: 30px;
-}
-
-/* Media queries para dispositivos móviles y tablets */
-@media (max-width: 768px) {
-  /* Contenedor principal */
-  .container {
-    grid-template-columns: 1fr; /* Cambia a una sola columna */
+.contenedor {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Columnas automáticas */
+    grid-gap: 20px; /* Espacio entre columnas */
+  }
+  #cabecera {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  #cabecera img {
+    max-height: 100px;
+    margin: 10px;
   }
 
+  
+  
+  #aside {
+    background-color: var(--fondo-terciario);
+    padding: 20px;
+    border: 1px solid var(--borde-principal);
+    border-radius: 5px;
+    box-shadow: 0 2px 4px var(--sombra-principal);
+  }
+  
+  #aside h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: var(--titulo-principal);
+  }
+  
   /* Formulario de nuevo evento */
+  #new-event-form label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: var(--titulo-principal);
+  }
+  
   #new-event-form input[type="text"],
   #new-event-form input[type="date"],
   #new-event-form textarea {
-    width: 100%; /* Ancho completo */
+    width: calc(100% - 40px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid var(--borde-principal);
+    border-radius: 5px;
+    background-color: var(--fondo-terciario);
+    color: var(--texto-principal);
   }
-
-  /* Ajuste para colocar aside debajo del main */
-  .aside-container {
-    grid-column: 1 / -1; /* Ocupa todas las columnas */
+  
+  #new-event-form button[type="submit"] {
+    padding: 10px 20px;
+    background-color: var(--boton-primario-fondo);
+    color: var(--boton-primario-texto);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
   }
-}
-
-/* Ajuste para colocar la sección de favoritos y el aside en pantallas grandes */
-@media (min-width: 769px) {
-  .container {
-    grid-template-columns: repeat(3, 1fr) minmax(300px, 1fr); /* 3 columnas y 1 aside */
+  
+  #new-event-form button[type="submit"]:hover {
+    background-color: var(--boton-primario-hover);
   }
-
-  .aside-container {
-    grid-column: 4 / -1; /* A partir de la columna 4 hasta el final */
+  
+  /* Separación entre el main y el footer */
+  main {
+    margin-bottom: 30px;
   }
-}
+  
+  /* Media queries para dispositivos móviles y tablets */
+  @media (max-width: 768px) {
+    /* Contenedor principal */
+    .container {
+      grid-template-columns: 1fr; /* Cambia a una sola columna */
+    }
+  
+    /* Formulario de nuevo evento */
+    #new-event-form input[type="text"],
+    #new-event-form input[type="date"],
+    #new-event-form textarea {
+      width: 100%; /* Ancho completo */
+    }
+  
+    /* Ajuste para colocar aside debajo del main */
+    .aside-container {
+      grid-column: 1 / -1; /* Ocupa todas las columnas */
+    }
+  }
+  
+  
+  
