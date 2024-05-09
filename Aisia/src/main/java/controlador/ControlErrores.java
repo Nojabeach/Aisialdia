@@ -7,12 +7,13 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 import jakarta.servlet.http.HttpServletResponse;
+import modelo.Proyecto;
 
 public class ControlErrores {
 
 	public static void mostrarErrorGenerico(String mensajeError, HttpServletResponse response) throws IOException {
 
-		String plantillaHTML = cargarPlantillaHTML("\\templates\\errorgenerico.html");
+		String plantillaHTML = cargarPlantillaHTML(Proyecto.rutaProyecto + "//templates//errorgenerico.html");
 		String contenidoHTML = plantillaHTML.replace("{mensajeError}", mensajeError);
 		contenidoHTML = contenidoHTML.replace("{rutaProyecto}", "");
 

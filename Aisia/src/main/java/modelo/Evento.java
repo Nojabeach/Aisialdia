@@ -588,17 +588,6 @@ public class Evento {
 	}
 
 	/**
-	 * Busca eventos en la base de datos que coincidan con el criterio especificado.
-	 *
-	 * @param criterio El criterio de búsqueda.
-	 * @return Una lista de eventos que coinciden con el criterio de búsqueda.
-	 * @throws Exception Si ocurre un error al buscar eventos.
-	 */
-	public List<Evento> buscarEventos(String criterio) throws Exception {
-		return DaoEvento.getInstance().buscarEventos(criterio);
-	}
-
-	/**
 	 * Finaliza la publicación de un evento en la base de datos.
 	 *
 	 * @param idEvento    El ID del evento que se va a finalizar.
@@ -652,19 +641,6 @@ public class Evento {
 			Date fecha) throws SQLException {
 		return DaoEvento.getInstance().listarJsonObtenerTodosLosEventosActivos(actividad, descripcion, ubicacion,
 				fecha);
-	}
-
-	/**
-	 * Genera un objeto JSON que representa los eventos que coinciden con un
-	 * criterio de búsqueda.
-	 *
-	 * @param criterio Criterio de búsqueda (nombre, fecha, etc.).
-	 * @return Una cadena JSON que contiene la información de los eventos
-	 *         coincidentes con el criterio de búsqueda.
-	 * @throws Exception Si ocurre un error al buscar los eventos.
-	 */
-	public String listarJsonBuscarEventos(String criterio) throws Exception {
-		return DaoEvento.getInstance().listarJsonBuscarEventos(criterio);
 	}
 
 	/**

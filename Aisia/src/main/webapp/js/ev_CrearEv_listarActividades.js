@@ -1,5 +1,6 @@
 // Llamar a la función al cargar la página
 window.onload = function () {
+  console.log("Cargando Actividades");
     obtenerActividades();
   };
   
@@ -23,6 +24,8 @@ window.onload = function () {
         let img = document.createElement("img");
         img.src = `img/Iconos/${actividad.tipoActividad.toLowerCase()}.png`;
         img.alt = `Icono ${actividad.tipoActividad}`;
+        img.style.width = "24px"; // Modifica el ancho según sea necesario
+        img.style.height = "24px"; // Modifica el alto según sea necesario
         icono.appendChild(img);
         
         // Texto de la opción
@@ -39,5 +42,7 @@ window.onload = function () {
         select.appendChild(option);
     });
 }
+
+
 
 

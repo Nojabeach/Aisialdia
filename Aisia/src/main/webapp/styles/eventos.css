@@ -25,7 +25,10 @@ body{
     margin: 10px;
   }
 
-  
+  #search-inputs {
+    margin-left: 30px; 
+}
+
   
   #aside {
     background-color: var(--fondo-terciario);
@@ -42,6 +45,12 @@ body{
   }
   
   /* Formulario de nuevo evento */
+
+  
+  .form-group {
+    margin-left: 30px; 
+}
+
   #new-event-form label {
     display: block;
     margin-bottom: 10px;
@@ -93,11 +102,7 @@ body{
     #new-event-form textarea {
       width: 100%; /* Ancho completo */
     }
-  
-    /* Ajuste para colocar aside debajo del main */
-    .aside-container {
-      grid-column: 1 / -1; /* Ocupa todas las columnas */
-    }
+ 
   }
   
   

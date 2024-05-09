@@ -85,7 +85,7 @@ public class GestorEvento extends HttpServlet {
 				obtenerEventosConActividad(request, response, out);
 				break;
 			case "buscarEventos":
-				buscarEventos(request, response, out);
+				obtenerTodosLosEventosActivos(request, response, out);
 			default:
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				ControlErrores.mostrarErrorGenerico("{\"error\": \"Acción no válida\"}", response);
@@ -442,14 +442,14 @@ public class GestorEvento extends HttpServlet {
 			PrintWriter out) throws SQLException, IOException {
 
 		String actividad = request.getParameter("actividad");
-		String descripcion = request.getParameter("descripcion");
+		String nombre = request.getParameter("nombre");
 		String ubicacion = request.getParameter("ubicacion");
-		Date fechaEvento = Date.valueOf(request.getParameter("fecha"));
+		Date fechaEvento = Date.valueOf(request.getParameter("fechaEvento"));
 
 		try {
 			DaoEvento Eventos = new DaoEvento();
 
-			out.print(Eventos.listarJsonObtenerTodosLosEventosActivos(actividad, descripcion, ubicacion, fechaEvento));
+			out.print(Eventos.listarJsonObtenerTodosLosEventosActivos(actividad, nombre, ubicacion, fechaEvento));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -493,35 +493,6 @@ public class GestorEvento extends HttpServlet {
 			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
 		}
 
-	}
-
-	/**
-	 * Busca eventos que coincidan con el criterio de búsqueda proporcionado y los
-	 * devuelve en formato JSON.
-	 * 
-	 * @param request  La solicitud HTTP que contiene el parámetro
-	 *                 "criterioBusqueda" para especificar el criterio de búsqueda.
-	 * @param response La respuesta HTTP donde se enviará el resultado en formato
-	 *                 JSON.
-	 * @param out      El escritor de salida para escribir el resultado JSON en la
-	 *                 respuesta.
-	 * @throws SQLException Si ocurre un error al interactuar con la base de datos.
-	 * @throws IOException  Si ocurre un error de entrada/salida al escribir en el
-	 *                      PrintWriter.
-	 */
-	public void buscarEventos(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
-			throws SQLException, IOException {
-		String criterio = request.getParameter("criterioBusqueda");
-
-		try {
-			DaoEvento eventos = new DaoEvento();
-			out.print(eventos.buscarEventos(criterio));
-		} catch (SQLException e) {
-			// En caso de error, muestra un mensaje de error genérico y lo envía en formato
-			// JSON a la respuesta
-			e.printStackTrace();
-			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
-		}
 	}
 
 }

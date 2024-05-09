@@ -282,25 +282,28 @@ public class DaoEvento {
 	public List<Evento> obtenerTodosLosEventosActivos(String actividad, String descripcion, String ubicacion,
 			Date fecha) throws SQLException {
 		List<Evento> eventos = new ArrayList<>();
-		String sql = "SELECT * FROM eventos where fechafinalizacion is null and fechapublicacion is not null";
+		String sql = "SELECT * FROM eventos e " + " JOIN clasificacionEventos ce ON e.idEvento = ce.idEvento"
+				+ " JOIN actividades a on ce.idActividad= a.idActividad "
+				+ " WHERE  fechafinalizacion is null and fechapublicacion is not null ";
 
 		// Agregar cláusulas WHERE según sea necesario
 		if (actividad != null && !actividad.isEmpty()) {
-			sql += " AND idActividad =?";
+			sql += " AND Actividad like? ";
 		}
 		if (descripcion != null && !descripcion.isEmpty()) {
-			sql += " AND descripcion LIKE?";
+			sql += " AND nombre LIKE? ";
 		}
 		if (ubicacion != null && !ubicacion.isEmpty()) {
-			sql += " AND ubicacion LIKE?";
+			sql += " AND ubicacion LIKE? ";
 		}
 		if (fecha != null) {
-			sql += " AND fechaEvento =?";
+			sql += " AND fechaEvento =? ";
 		}
 
 		sql += " ORDER BY id";
 
 		PreparedStatement ps = con.prepareStatement(sql);
+		System.out.println(sql);
 
 		// Agregar parámetros a la consulta según sea necesario
 		int paramIndex = 1;
@@ -331,33 +334,6 @@ public class DaoEvento {
 		return eventos;
 	}
 
-	/**
-	 * Busca eventos por un criterio de búsqueda.
-	 * 
-	 * @param criterio Criterio de búsqueda (nombre, fecha, etc.).
-	 * @return Lista de objetos Evento con la información de los eventos
-	 *         coincidentes.
-	 * @throws Exception Si ocurre un error al buscar los eventos.
-	 */
-	public List<Evento> buscarEventos(String criterio) throws SQLException {
-		// Preparar la consulta SQL para buscar eventos con el criterio especificado
-		String sql = "SELECT * FROM eventos WHERE nombre LIKE? OR descripcion LIKE?";
-		List<Evento> eventos = new ArrayList<>();
-		try (PreparedStatement stmt = con.prepareStatement(sql)) {
-			stmt.setString(1, "%" + criterio + "%");
-			stmt.setString(2, "%" + criterio + "%");
-			try (ResultSet rs = stmt.executeQuery()) {
-				while (rs.next()) {
-					eventos.add(new Evento(rs.getInt("idEvento"), rs.getString("nombre"), rs.getString("detalles"),
-							rs.getDate("fechaEvento")));
-				}
-			}
-		} catch (SQLException e) {
-			throw new SQLException("Error al buscar eventos", e);
-		}
-		return eventos;
-	}
-
 	// ---------------------------------------------------------------------------------
 	// VOLCADOS JSON
 	// ---------------------------------------------------------------------------------
@@ -374,11 +350,11 @@ public class DaoEvento {
 	 *         los filtros especificados.
 	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
 	 */
-	public String listarJsonObtenerTodosLosEventosActivos(String actividad, String descripcion, String ubicacion,
-			Date fecha) throws SQLException {
+	public String listarJsonObtenerTodosLosEventosActivos(String actividad, String nombre, String ubicacion, Date fecha)
+			throws SQLException {
 		String json = "";
 		Gson gson = new Gson();
-		json = gson.toJson(this.obtenerTodosLosEventosActivos(actividad, descripcion, ubicacion, fecha));
+		json = gson.toJson(this.obtenerTodosLosEventosActivos(actividad, nombre, ubicacion, fecha));
 		return json;
 	}
 
@@ -405,22 +381,6 @@ public class DaoEvento {
 		String json = "";
 		Gson gson = new Gson();
 		json = gson.toJson(this.obtenerEventosPendientesPublicacion());
-		return json;
-	}
-
-	/**
-	 * Genera un objeto JSON que representa los eventos que coinciden con el
-	 * criterio de búsqueda.
-	 *
-	 * @param criterio Criterio de búsqueda.
-	 * @return Una cadena JSON que representa los eventos coincidentes con el
-	 *         criterio de búsqueda.
-	 * @throws Exception Si ocurre un error al buscar los eventos.
-	 */
-	public String listarJsonBuscarEventos(String criterio) throws Exception {
-		String json = "";
-		Gson gson = new Gson();
-		json = gson.toJson(this.buscarEventos(criterio));
 		return json;
 	}
 

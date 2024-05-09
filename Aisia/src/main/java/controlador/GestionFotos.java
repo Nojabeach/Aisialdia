@@ -4,11 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+import modelo.Proyecto;
 
 /**
  * Clase que gestiona la subida de fotos al servidor.
@@ -20,7 +20,7 @@ import jakarta.servlet.http.Part;
 public class GestionFotos {
 
 	/** Ruta de los archivos en el servidor. */
-	private static final String PATH_FILES = "\\img\\Iconos";
+	private static final String PATH_FILES = Proyecto.rutaProyecto + "\\img\\Iconos";
 
 	/**
 	 * Sube una foto al servidor.

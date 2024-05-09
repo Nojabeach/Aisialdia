@@ -107,11 +107,11 @@ public class DaoFavorito {
 	 */
 	public List<Evento> obtenerEventosFavoritosUsuario(int idUsuario) throws SQLException {
 
-		String sql = "SELECT e.* FROM Evento e " // Consulta SQL para obtener eventos favoritos
-				+ "JOIN Favorito f ON e.idEvento = f.idEvento " + "JOIN Usuario u ON f.idUsuario = u.idUsuario "
-				+ "WHERE u.idUsuario = ?"; // WHERE para filtrar por idUsuario
+		String sql = "SELECT e.idEvento,e.nombre,e.fechaEvento,e.detalles,e.ubicacion FROM Eventos e "
+				+ "JOIN gestionfavoritos f ON e.idEvento = f.idEvento JOIN usuarios u ON f.idUsuario = u.idUsuario  WHERE u.idUsuario  = ? ";
 
 		PreparedStatement ps = con.prepareStatement(sql);
+		// System.out.println(sql);
 
 		ResultSet rs = null; // Conjunto de resultados de la consulta
 		List<Evento> eventosFavoritos = new ArrayList<>(); // Lista para almacenar eventos favoritos

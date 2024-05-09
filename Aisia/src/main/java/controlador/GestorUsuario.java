@@ -198,7 +198,8 @@ public class GestorUsuario extends HttpServlet {
 	private void obtenerINFOUsuario(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
 			throws IOException {
 		try {
-			int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+			HttpSession session = request.getSession();
+			int idUsuario = (int) session.getAttribute("idUsuario");
 
 			DaoUsuario usuario = new DaoUsuario();
 			out.print(usuario.listariNFOUsuarioJson(idUsuario));
@@ -222,7 +223,8 @@ public class GestorUsuario extends HttpServlet {
 	private void obtenerContrasena(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
 			throws IOException {
 		try {
-			int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+			HttpSession session = request.getSession();
+			int idUsuario = (int) session.getAttribute("idUsuario");
 
 			DaoUsuario usuario = new DaoUsuario();
 			out.print(usuario.ObtenerContrasenaJson(idUsuario));
@@ -246,7 +248,8 @@ public class GestorUsuario extends HttpServlet {
 	private void buscarPermisoUsuario(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
 			throws IOException {
 		try {
-			int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+			HttpSession session = request.getSession();
+			int idUsuario = (int) session.getAttribute("idUsuario");
 
 			DaoUsuario usuario = new DaoUsuario();
 			out.print(usuario.BuscarPermisoJson(idUsuario));
@@ -579,6 +582,8 @@ public class GestorUsuario extends HttpServlet {
 				HttpSession session = request.getSession();
 				session.setAttribute("usuario", usuario);
 				session.setAttribute("permiso", usuario.getPermiso());
+
+				session.setAttribute("idUsuario", usuario.getIdUsuario());
 
 				// Establecer el estado de la respuesta como OK
 				response.setStatus(HttpServletResponse.SC_OK);

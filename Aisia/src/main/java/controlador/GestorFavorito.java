@@ -5,16 +5,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import modelo.Evento;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.List;
 
-import com.google.gson.Gson;
-
-import dao.DaoEvento;
 import dao.DaoFavorito;
 
 /**
@@ -173,8 +169,8 @@ public class GestorFavorito extends HttpServlet {
 	 * Obtiene los eventos marcados como favoritos por un usuario específico y los
 	 * devuelve en formato JSON.
 	 * 
-	 * @param request  La solicitud HTTP que contiene el parámetro "idUsuario" para
-	 *                 identificar al usuario.
+	 * @param request  La solicitud HTTP que contiene la session para identificar al
+	 *                 usuario.
 	 * @param response La respuesta HTTP donde se enviará el resultado en formato
 	 *                 JSON.
 	 * @param out      El escritor de salida para escribir el resultado JSON en la
@@ -186,7 +182,10 @@ public class GestorFavorito extends HttpServlet {
 	private void obtenerEventosFavoritos(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
 			throws IOException, SQLException {
 
-		int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+		HttpSession session = request.getSession();
+		int idUsuario = (int) session.getAttribute("idUsuario");
+		System.out.println(idUsuario);
+
 		try {
 
 			DaoFavorito favorito = new DaoFavorito();
