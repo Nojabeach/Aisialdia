@@ -386,42 +386,38 @@ form button:hover {
 }
 
 .tabla tbody tr:nth-child(even) {
-  background-color: var(--color-acento);
-}
-
-.tabla tbody tr:nth-child(odd) {
-  background-color: var(--color-terciario);
+  background-color: var(--amarillo-clarito); /* Cambiado a amarillo claro */
 }
 
 .tabla tbody tr:hover {
-  background-color: var(--amarillo-clarito);
+  background-color: var(--amarillo-naranja-claro); /* Cambiado a amarillo naranja claro */
 }
 
 /* Estilos para los botones */
 .boton-primario,
 .boton-secundario {
-    padding: 8px 12px;
-    border: none;
-    cursor: pointer;
-    border-radius: px;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  border-radius: px;
 }
 
 .boton-primario {
-    background-color: var(--boton-primario-fondo); /* Color de fondo del botón primario */
-    color: var(--boton-primario-texto); /* Color del texto del botón primario */
+  background-color: var(--boton-primario-fondo); /* Color de fondo del botón primario */
+  color: var(--boton-primario-texto); /* Color del texto del botón primario */
 }
 
 .boton-primario:hover {
-    background-color: var(--boton-primario-hover); /* Color de fondo del botón primario al pasar el mouse */
+  background-color: var(--boton-primario-hover); /* Color de fondo del botón primario al pasar el mouse */
 }
 
 .boton-secundario {
-    background-color: var(--boton-secundario-fondo); /* Color de fondo del botón secundario */
-    color: var(--boton-secundario-texto); /* Color del texto del botón secundario */
+  background-color: var(--boton-secundario-fondo); /* Color de fondo del botón secundario */
+  color: var(--boton-secundario-texto); /* Color del texto del botón secundario */
 }
 
 .boton-secundario:hover {
-    background-color: var(--boton-secundario-hover); /* Color de fondo del botón secundario al pasar el mouse */
+  background-color: var(--boton-secundario-hover); /* Color de fondo del botón secundario al pasar el mouse */
 }
 main {
   margin-bottom: 100px; /* adjust the value to match the height of your footer */

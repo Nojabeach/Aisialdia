@@ -40,11 +40,11 @@ function obtenerTodosLosEventosActivos() {
 function busquedaEventos() {
   const criterio = document.getElementById("search-option").value;
   const textoBusqueda = document.getElementById("search").value;
-  
+
 alert("Buscando eventos por criterio: " + criterio);
 alert("Buscando eventos por texto: " + textoBusqueda);
   fetch(
-      `GestorEvento?action=obtenerTodosLosEventosActivos&criterio=${criterio}&${criterio}=${textoBusqueda}`
+      `GestorEvento?action=obtenerTodosLosEventosActivos&criterio=${criterio}&textoBusqueda=${textoBusqueda}`
   )
   .then((response) => response.json())
   .then((data) => {

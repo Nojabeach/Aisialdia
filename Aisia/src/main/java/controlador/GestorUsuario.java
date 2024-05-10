@@ -11,7 +11,7 @@ import java.util.List;
 import jakarta.servlet.annotation.WebServlet;
 import java.io.PrintWriter;
 
-import dao.DaoActividad;
+
 import dao.DaoUsuario;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -311,41 +311,42 @@ public class GestorUsuario extends HttpServlet {
 			throws SQLException, IOException {
 
 		// Obtener parámetros del formulario
-		System.out.println("Registrando usuario...");
+		//System.out.println("Registrando usuario...");
 
 		String nombre = request.getParameter("nombre");
-		System.out.println("Nombre: " + nombre);
+		
+		//System.out.println("Nombre: " + nombre);
 
 		String email = request.getParameter("email");
-		System.out.println("Email: " + email);
+		//System.out.println("Email: " + email);
 
 		Date fechaNacimiento = Date.valueOf(request.getParameter("fechaNacimiento"));
-		System.out.println("Fecha de nacimiento: " + fechaNacimiento);
+		//System.out.println("Fecha de nacimiento: " + fechaNacimiento);
 
 		boolean recibeNotificaciones = Boolean.parseBoolean(request.getParameter("recibeNotificaciones"));
-		System.out.println("Recibe notificaciones: " + recibeNotificaciones);
+		//System.out.println("Recibe notificaciones: " + recibeNotificaciones);
 
 		String intereses = request.getParameter("intereses");
-		System.out.println("Intereses: " + intereses);
+		//System.out.println("Intereses: " + intereses);
 
 		String rolesStr = request.getParameter("roles");
 		Rol roles = (rolesStr != null && !rolesStr.isEmpty()) ? Rol.valueOf(rolesStr) : Rol.USUARIO;
-		System.out.println("Roles: " + roles);
+		//System.out.println("Roles: " + roles);
 
 		int permiso = (request.getParameter("permiso") != null) ? Integer.parseInt(request.getParameter("permiso")) : 1;
 
-		System.out.println("Permiso: " + permiso);
+		//System.out.println("Permiso: " + permiso);
 
-		System.out.println("Consentimiento de datos: " + request.getParameter("consentimiento_datos"));
-		System.out.println("Aceptación de términos y condiciones: " + request.getParameter("aceptacionTerminosWeb"));
+		//System.out.println("Consentimiento de datos: " + request.getParameter("consentimiento_datos"));
+		//System.out.println("Aceptación de términos y condiciones: " + request.getParameter("aceptacionTerminosWeb"));
 
 		boolean consentimientoDatos = "on".equalsIgnoreCase(request.getParameter("consentimiento_datos"));
 		Date fechaConsentimientoDatos = consentimientoDatos ? new Date(System.currentTimeMillis()) : null;
-		System.out.println("Consentimiento de datos: " + fechaConsentimientoDatos);
+		//System.out.println("Consentimiento de datos: " + fechaConsentimientoDatos);
 
 		boolean aceptacionTerminosWeb = "on".equalsIgnoreCase(request.getParameter("aceptacionTerminosWeb"));
 		Date fechaAceptacionTerminosWeb = aceptacionTerminosWeb ? new Date(System.currentTimeMillis()) : null;
-		System.out.println("Aceptación de términos y condiciones web: " + fechaAceptacionTerminosWeb);
+		//System.out.println("Aceptación de términos y condiciones web: " + fechaAceptacionTerminosWeb);
 
 		// Verificar si se proporcionaron todos los datos necesarios
 		if (nombre == null || email == null || nombre.isEmpty() || email.isEmpty()) {
@@ -606,7 +607,7 @@ public class GestorUsuario extends HttpServlet {
 			} else {
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 				response.sendRedirect("index.html");
-				System.out.println("Credenciales incorrectas.");
+				//System.out.println("Credenciales incorrectas.");
 			}
 		} catch (Exception e) {
 			ControlErrores.mostrarErrorGenerico("Error al iniciar sesión. Intente de nuevo.", response);

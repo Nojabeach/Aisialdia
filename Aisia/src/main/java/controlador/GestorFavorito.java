@@ -184,7 +184,7 @@ public class GestorFavorito extends HttpServlet {
 
 		HttpSession session = request.getSession();
 		int idUsuario = (int) session.getAttribute("idUsuario");
-		System.out.println(idUsuario);
+		//System.out.println(idUsuario);
 
 		try {
 
