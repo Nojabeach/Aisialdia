@@ -1,0 +1,122 @@
+/* Estilos para la barra de navegación de eventos */
+#eventos-navbar {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    background-color: var(--amarillo-naranja-claro);
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#eventos-navbar a {
+    text-decoration: none;
+    color: #333;
+    padding: 8px 15px;
+    margin: 0 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#eventos-navbar a:hover {
+    background-color: var(--amarillo-naranja);
+}
+
+/* Estilos para las secciones de eventos */
+.evento-tab {
+    display: none;
+    margin-bottom: 20px;
+}
+
+.evento-tab h3 {
+    margin-top: 0;
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.evento-tab table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.evento-tab table th,
+.evento-tab table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-acento);
+}
+
+.evento-tab table th {
+    background-color:var(--color-acento);
+}
+
+.evento-tab table tbody tr:hover {
+    background-color: var(--color-acento);
+}
+
+  
+.form-group {
+    margin-left: 30px; 
+}
+
+#new-event-form label{
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: var(--titulo-principal);
+}
+
+#new-event-form input[type="text"],
+#new-event-form input[type="date"],
+#new-event-form textarea{
+  width: calc(100% - 40px);
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid var(--borde-principal);
+  border-radius: 5px;
+  background-color: var(--fondo-terciario);
+  color: var(--texto-principal);
+}
+
+#new-event-form button[type="submit"] {
+  padding: 10px 20px;
+  background-color: var(--boton-primario-fondo);
+  color: var(--boton-primario-texto);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#new-event-form button[type="submit"]:hover{
+  background-color: var(--boton-primario-hover);
+}
+
+/* Estilos para el main */
+#seccionCuerpo {
+    padding: 20px;
+    background-color:var( --fondo-secundario);
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+#seccionCuerpo h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+#seccionCuerpo button {
+    background-color: var(--boton-primario-fondo);
+    color: var(--boton-primario-texto   );
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#seccionCuerpo button:hover {
+    background-color:var( --boton-primario-hover);
+}
+

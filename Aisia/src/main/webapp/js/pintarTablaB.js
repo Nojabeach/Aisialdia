@@ -32,7 +32,14 @@ function pintarTablaSoloBorrar(data, container) {
         columnasConDatos.forEach(columna => {
             if (item[columna] !== 0 && item[columna] !== null && item[columna] !== undefined) {
                 let celda = document.createElement('td');
-                celda.textContent = item[columna];
+                if (columna.toLowerCase().endsWith('.png')) {
+                    let image = document.createElement('img');
+                    image.src = item[columna];
+                    image.alt = columna;
+                    celda.appendChild(image);
+                } else {
+                    celda.textContent = item[columna];
+                }
                 fila.appendChild(celda);
             }
         });

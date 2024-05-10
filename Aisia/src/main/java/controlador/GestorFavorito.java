@@ -156,6 +156,7 @@ public class GestorFavorito extends HttpServlet {
 			throws IOException, SQLException {
 		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
 		try {
+			System.out.println("Entro a borrar favorito: " + request.getParameter("idEvento"));
 			DaoFavorito.getInstance().eliminarFavoritoEvento(idEvento, request);
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().println("Evento eliminado de favoritos exitosamente!");

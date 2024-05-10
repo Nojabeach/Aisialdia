@@ -9,10 +9,14 @@
     <link rel="shortcut icon" href="img/Logos/logo_transparent - noText.png" type="image/x-icon" />
     <!-- Enlace de estilos -->
     <link rel="stylesheet" href="styles/estilocomun.css">
+    <link rel="stylesheet" href="styles/admin.css">
     <!-- Enlace de fonts, iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Enlace de scripts -->
-    <script src="js/admin.js" defer></script>
+    <script src="js/checkLogin.js" ></script>
+    <script src="js/admin_controlTabs.js" ></script>
+    <script src="js/admin_cargarObjetos.js" ></script>
+    <script src="js/ev_CrearEv_listarActividades.js" ></script>
 </head>
 
 <body>
@@ -25,26 +29,108 @@
             <div id="divUsuario">
                 <p>Administrador</p>
                 <button id="btnCerrarSesion">Cerrar sesión</button>
+            </div>
         </header>
         <nav id="navbar">
             <ul>
                 <li><a href="index.html">Inicio</a></li>
-                <li><a href="admin.html">Actividades</a></li>
-                <li><a href="admin.html">Eventos</a></li>
-                <li><a href="admin.html">Usuarios</a></li>
+                <li><a href="#actividades">Actividades</a></li>
+                <li><a href="#eventos">Eventos</a></li>
+                <li><a href="#usuarios">Usuarios</a></li>
             </ul>
         </nav>
         <main id="seccionCuerpo">
             <section id="actividades">
                 <h2>Actividades</h2>
                 <button onclick="crearActividad()">Crear actividad</button>
-                <div id="actividadesSection"></div>
+                <div id="actividades-tabla"></div>
+                 <!-- La tabla de TODAS LAS ACTIVIDADES EXISTENTES se generará dinámicamente aquí -->
             </section>
             <section id="eventos">
                 <h2>Eventos</h2>
-                <button onclick="crearEvento()">Crear evento</button>
-                <div id="eventosSection"></div>
+                <p>Haga click sobre la opción deseada:</p>
+                <nav id="eventos-navbar">
+                    <a href="#eventos-crear">Crear Evento</a>
+                    <a href="#eventos-activos">Eventos Activos</a>
+                    <a href="#eventos-pendientes">Eventos Pendientes de Aprobar</a>
+                    <a href="#pendientes-publicar">Pendientes de Publicar</a>
+                    <a href="#eventos-rechazados">Eventos Rechazados</a>
+                </nav>
+                <div id="eventos-crear" class="evento-tab">
+                    <form id="new-event-form" action="GestorEvento?action=crearEvento" method="POST">
+                        <fieldset>
+                            <legend>Datos del Evento</legend>
+    
+                            <div class="form-group">
+                                <label for="name">Nombre:</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+    
+                            <div class="form-group">
+                                <label for="details">Detalles:</label>
+                                <textarea id="details" name="details" required></textarea>
+                            </div>
+    
+                            <div class="form-group">
+                                <label for="date">Fecha:</label>
+                                <input type="date" id="date" name="date" required>
+                            </div>
+    
+                            <div class="form-group">
+                                <label for="location">Ubicación:</label>
+                                <input type="text" id="location" name="location" required>
+                            </div>
+    
+                            <div class="form-group">
+                                <label for="activity">Actividad:</label>
+                                <div id="activity-container">
+                                    <img id="activity-image" src="img/Varios/default_ACT.png" alt="Icono de actividad" style="width: 48px; height: 48px;display: none; " >
+                                    <select id="activity" name="activity" required>
+                                        <!-- Las opciones se cargarán dinámicamente con JS -->
+                                    </select>
+                                   
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" id="create-event-button">Crear Evento</button>
+                            </div>
+    
+                        </fieldset>
+                    </form>
+                </div>   
+                <div id="eventos-activos" class="evento-tab">
+                    <h3>Eventos Activos</h3>
+                    <div id="Publicados-tabla">
+                        <!-- La tabla de EVENTOS PUBLICADOS Y ACTIVOS se generará dinámicamente aquí -->
+                    </div>
+                </div>
+                <div id="eventos-pendientes" class="evento-tab">
+                    <h3>Eventos Pendientes de Aprobar</h3>
+                    <div id="PendienteAprobar-tabla">
+                        <!-- Aquí va la tabla de eventos pendientes de aprobar -->
+                    </div>
+                </div>
+                <div id="pendientes-publicar" class="evento-tab">
+                    <h3>Pendientes de Publicar</h3>
+                    <div id="PendientePublicar-tabla">
+                        <!-- Aquí va la tabla de eventos pendientes de publicar -->
+                    </div>
+                </div>
+                <div id="eventos-rechazados" class="evento-tab">
+                    <h3>Eventos Rechazados</h3>
+                    <form id="buscarEventosForm">
+                        <label for="fechaInicio">Fecha inicio:</label>
+                        <input type="date" id="fechaInicio" name="fechaInicio">
+                        <label for="fechaFin">Fecha fin:</label>
+                        <input type="date" id="fechaFin" name="fechaFin">
+                        <button type="submit">Buscar</button>
+                    </form>
+                    <div id="Rechazados-tabla">
+                        <!-- Aquí va la tabla de eventos rechazados -->
+                    </div>
+                </div>
             </section>
+
             <section id="usuarios">
                 <h2>Usuarios</h2>
                 <button onclick="crearUsuario()">Crear usuario</button>

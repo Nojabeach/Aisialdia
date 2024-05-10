@@ -164,18 +164,15 @@ public class GestorEvento extends HttpServlet {
 	}
 
 	/**
-	 * Crea un nuevo evento con la información proporcionada en la solicitud HTTP.
-	 * 
-	 * @param request  La solicitud HTTP que contiene los parámetros necesarios para
-	 *                 crear el evento.
-	 * @param response La respuesta HTTP donde se enviarán los mensajes de éxito o
-	 *                 error.
-	 * @throws IOException      Si ocurre un error de entrada/salida al escribir en
-	 *                          el PrintWriter.
-	 * @throws ServletException Si ocurre un error grave durante la ejecución del
-	 *                          servlet.
-	 * @throws SQLException     Si ocurre un error al interactuar con la base de
-	 *                          datos.
+	 * Crea un nuevo evento con los datos proporcionados en la solicitud HTTP. Si la
+	 * fecha del evento es nula o vacía, se asigna la fecha de hoy.
+	 *
+	 * @param request  la solicitud HTTP que contiene los parámetros del evento
+	 * @param response la respuesta HTTP que se enviará al cliente
+	 * @throws IOException      si hay un error de E/S al escribir la respuesta
+	 * @throws ServletException si hay un error al procesar la solicitud del servlet
+	 * @throws SQLException     si hay un error de SQL al interactuar con la base de
+	 *                          datos
 	 */
 	private void crearEvento(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException, SQLException {
@@ -183,7 +180,26 @@ public class GestorEvento extends HttpServlet {
 		String nombre = request.getParameter("nombre");
 		String detalles = request.getParameter("detalles");
 		String fechaEventoStr = request.getParameter("fechaEvento");
-		Date fechaEvento = Date.valueOf(fechaEventoStr); // Convertir la cadena a Date
+		Date fechaEvento = null;
+
+		// Convertir la cadena a Date si es válida o asignar la fecha de hoy si es vacía
+		// o nula
+		if (fechaEventoStr != null && !fechaEventoStr.isEmpty()) {
+			try {
+				fechaEvento = Date.valueOf(fechaEventoStr);
+			} catch (IllegalArgumentException e) {
+				// Manejar la excepción de fecha inválida
+				e.printStackTrace();
+				// Establecer la respuesta de error apropiada
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println("Error: La fecha del evento es inválida.");
+				return;
+			}
+		} else {
+			// Asignar la fecha de hoy si no se proporciona una fecha
+			fechaEvento = new Date(System.currentTimeMillis());
+		}
+
 		int idUsuarioCreador = Integer.parseInt(request.getParameter("idUsuarioCreador"));
 		String ubicacion = request.getParameter("ubicacion");
 

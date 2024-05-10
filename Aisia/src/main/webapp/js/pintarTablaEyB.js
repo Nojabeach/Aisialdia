@@ -4,7 +4,6 @@ function pintarTablaEyB(data, idTabla) {
   // Agregar clases de estilo a la tabla
   tabla.classList.add("tabla");
 
-  
   // Limpiar la tabla antes de agregar nuevos datos
   while (tabla.firstChild) {
     tabla.removeChild(tabla.firstChild);
@@ -60,7 +59,14 @@ function pintarTablaEyB(data, idTabla) {
         columnasConDatos[clave]
       ) {
         let celda = document.createElement("td");
-        celda.textContent = valor;
+        if (clave.toLowerCase().endsWith('.png')) {
+          let image = document.createElement('img');
+          image.src = valor;
+          image.alt = clave;
+          celda.appendChild(image);
+        } else {
+          celda.textContent = valor;
+        }
         fila.appendChild(celda);
       }
     });
@@ -129,7 +135,6 @@ function pintarTablaEyB(data, idTabla) {
   });
 
   tabla.appendChild(tbody);
-
 }
 
 function EyBeditarUsuario(usuario) {
