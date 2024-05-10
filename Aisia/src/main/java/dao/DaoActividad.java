@@ -106,7 +106,7 @@ public class DaoActividad {
 	public List<Actividad> obtenerTodasLasActividades() throws SQLException {
 		List<Actividad> actividades = new ArrayList<>();
 		String sql = "SELECT * FROM actividades order by TipoActividad";
-
+		//System.out.println(sql);
 		try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				Actividad actividad = new Actividad();
@@ -130,7 +130,7 @@ public class DaoActividad {
 	public Actividad obtenerActividadPorId(int idActividad) throws SQLException {
 		Actividad actividad = null;
 		String sql = "SELECT * FROM actividades WHERE idactividad = ?";
-
+		System.out.println(sql);
 		try (PreparedStatement ps = con.prepareStatement(sql)) {
 			ps.setInt(1, idActividad);
 

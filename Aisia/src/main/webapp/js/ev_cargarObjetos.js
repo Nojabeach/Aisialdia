@@ -10,15 +10,13 @@ document.addEventListener("DOMContentLoaded", function () {
   let searchButton = document.getElementById("search-button");
   searchButton.addEventListener("click", function (event) {
     event.preventDefault(); // Evita que se envíe el formulario
-    let searchOption = document.getElementById("search-option").value;
-    busquedaEventos(searchOption);
+    busquedaEventos();
   });
 });
 
 function obtenerFavoritos() {
   fetch("GestorFavorito?action=obtenerEventosFavoritos")
     .then((response) => response.json())
-
     .then((data) => {
       console.log(data);
       const contenedorAPintar = document.getElementById("favoritos-tabla");
@@ -39,16 +37,21 @@ function obtenerTodosLosEventosActivos() {
     });
 }
 
-function busquedaEventos(criterio) {
+function busquedaEventos() {
+  const criterio = document.getElementById("search-option").value;
+  const textoBusqueda = document.getElementById("search").value;
+  
+alert("Buscando eventos por criterio: " + criterio);
+alert("Buscando eventos por texto: " + textoBusqueda);
   fetch(
-    "GestorEvento?action=obtenerTodosLosEventosActivos&criterio=" + criterio
+      `GestorEvento?action=obtenerTodosLosEventosActivos&criterio=${criterio}&${criterio}=${textoBusqueda}`
   )
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
+  .then((response) => response.json())
+  .then((data) => {
+      console.log("Buscando eventos por criterio: " + criterio);
       const contenedorAPintar = document.getElementById("Buscar-tabla");
       contenedorAPintar.innerHTML = ""; // Limpiar el contenedor antes de agregar nuevos elementos
       pintarTabla(data, contenedorAPintar); // Pintar la tabla
       console.log("Pintando eventos buscados");
-    });
+  });
 }

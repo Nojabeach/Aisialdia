@@ -389,8 +389,12 @@ form button:hover {
   background-color: var(--color-acento);
 }
 
-.tabla tbody tr:hover {
+.tabla tbody tr:nth-child(odd) {
   background-color: var(--color-terciario);
+}
+
+.tabla tbody tr:hover {
+  background-color: var(--amarillo-clarito);
 }
 
 /* Estilos para los botones */

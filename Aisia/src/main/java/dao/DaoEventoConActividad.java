@@ -98,83 +98,83 @@ public class DaoEventoConActividad {
 	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
 	 */
 	public List<EventoConActividad> obtenerUltimosEventos(int numEventos, String actividad, String nombre,
-			String ubicacion, Date fecha) throws SQLException {
-		List<EventoConActividad> eventosConActividad = new ArrayList<>();
+	        String ubicacion, Date fecha) throws SQLException {
+	    List<EventoConActividad> eventosConActividad = new ArrayList<>();
 
-		// Preparar la consulta SQL para obtener los últimos eventos que no estén ya
-		// finalizados
-		String sql = "SELECT e.idEvento, e.nombre, e.detalles, e.fechaPublicacion, e.idModeradorPublicacion, e.fechaFinalizacion, e.idModeradorFinalizacion, e.motivoFinalizacion, e.ubicacion, e.fechaEvento,a.tipoActividad, a.fotoActividad "
-				+ "FROM eventos e " + "INNER JOIN clasificacionEventos ce ON e.idEvento = ce.idEvento "
-				+ "INNER JOIN actividades a ON ce.idActividad = a.idActividad "
-				+ "WHERE e.fechaFinalizacion is null and e.fechapublicacion is not null ";
+	    // Preparar la consulta SQL para obtener los últimos eventos que no estén ya
+	    // finalizados
+	    String sql = "SELECT e.idEvento, e.nombre, e.detalles, e.fechaPublicacion, e.idModeradorPublicacion, e.fechaFinalizacion, e.idModeradorFinalizacion, e.motivoFinalizacion, e.ubicacion, e.fechaEvento,a.tipoActividad, a.fotoActividad "
+	            + "FROM eventos e " + "INNER JOIN clasificacionEventos ce ON e.idEvento = ce.idEvento "
+	            + "INNER JOIN actividades a ON ce.idActividad = a.idActividad "
+	            + "WHERE e.fechaFinalizacion is null and e.fechapublicacion is not null ";
 
-		// Agregar cláusulas WHERE según sea necesario
-		if (actividad != null && !actividad.isEmpty()) {
-			sql += " AND a.tipoActividad LIKE ?";
-		}
-		if (nombre != null && !nombre.isEmpty()) {
-			sql += " AND e.nombre LIKE ?";
-		}
-		if (ubicacion != null && !ubicacion.isEmpty()) {
-			sql += " AND e.ubicacion LIKE ?";
-		}
-		if (fecha != null) {
-			sql += " AND e.fechaEvento = ?";
-		}
+	    // Agregar cláusulas WHERE según sea necesario
+	    if (actividad != null && !actividad.isEmpty()) {
+	        sql += " AND a.tipoActividad LIKE ?";
+	    }
+	    if (nombre != null && !nombre.isEmpty()) {
+	        sql += " AND e.nombre LIKE ?";
+	    }
+	    if (ubicacion != null && !ubicacion.isEmpty()) {
+	        sql += " AND e.ubicacion LIKE ?";
+	    }
+	    if (fecha != null) {
+	        sql += " AND e.fechaEvento = ?";
+	    }
 
-		sql += " ORDER BY e.fechaPublicacion DESC";
+	    sql += " ORDER BY e.fechaPublicacion DESC";
 
-		// Si numEventos es mayor que 0, limitar la consulta
-		if (numEventos > 0) {
-			sql += " LIMIT ?";
-		}
+	    // Si numEventos es mayor que 0 o igual a -1, limitar la consulta
+	    if (numEventos != -1) {
+	        sql += " LIMIT ?";
+	    }
+	    System.out.println(sql);
+	    PreparedStatement ps = con.prepareStatement(sql);
 
-		PreparedStatement ps = con.prepareStatement(sql);
-		// System.out.println(sql);
+	    int paramIndex = 1;
 
-		int paramIndex = 1;
+	    // Agregar parámetros a la consulta según sea necesario
+	    if (actividad != null && !actividad.isEmpty()) {
+	        ps.setString(paramIndex++, "%" + actividad + "%");
+	    }
+	    if (nombre != null && !nombre.isEmpty()) {
+	        ps.setString(paramIndex++, "%" + nombre + "%");
+	    }
+	    if (ubicacion != null && !ubicacion.isEmpty()) {
+	        ps.setString(paramIndex++, "%" + ubicacion + "%");
+	    }
+	    if (fecha != null) {
+	        ps.setDate(paramIndex++, fecha);
+	    }
+	    // Si numEventos es mayor que 0 o igual a -1, establecer el límite
+	    if (numEventos != -1) {
+	        ps.setInt(paramIndex++, numEventos);
+	    }
 
-		// Agregar parámetros a la consulta según sea necesario
-		if (actividad != null && !actividad.isEmpty()) {
-			ps.setString(paramIndex++, "%" + actividad + "%");
-		}
-		if (nombre != null && !nombre.isEmpty()) {
-			ps.setString(paramIndex++, "%" + nombre + "%");
-		}
-		if (ubicacion != null && !ubicacion.isEmpty()) {
-			ps.setString(paramIndex++, "%" + ubicacion + "%");
-		}
-		if (fecha != null) {
-			ps.setDate(paramIndex++, fecha);
-		}
-		// Si numEventos es mayor que 0, establecer el límite
-		if (numEventos > 0) {
-			ps.setInt(paramIndex++, numEventos);
-		}
+	    // Ejecutar la consulta y procesar los resultados
+	    ResultSet rs = ps.executeQuery();
+	    while (rs.next()) {
+	        int idEvento = rs.getInt("idEvento");
+	        String nombreEvento = rs.getString("nombre");
+	        String detalles = rs.getString("detalles");
+	        String ubicacionEvento = rs.getString("ubicacion");
+	        String tipoActividad = rs.getString("tipoActividad");
+	        String fotoActividad = rs.getString("fotoActividad");
+	        Date fechaEvento = rs.getDate("fechaEvento");
 
-		// Ejecutar la consulta y procesar los resultados
-		ResultSet rs = ps.executeQuery();
-		while (rs.next()) {
-			int idEvento = rs.getInt("idEvento");
-			String nombreEvento = rs.getString("nombre");
-			String detalles = rs.getString("detalles");
-			String ubicacionEvento = rs.getString("ubicacion");
-			String tipoActividad = rs.getString("tipoActividad");
-			String fotoActividad = rs.getString("fotoActividad");
-			Date fechaEvento = rs.getDate("fechaEvento");
+	        EventoConActividad eventoConActividad = new EventoConActividad(idEvento, nombreEvento, detalles,
+	                ubicacionEvento, tipoActividad, fotoActividad, fechaEvento);
 
-			EventoConActividad eventoConActividad = new EventoConActividad(idEvento, nombreEvento, detalles,
-					ubicacionEvento, tipoActividad, fotoActividad, fechaEvento);
+	        eventosConActividad.add(eventoConActividad);
+	    }
 
-			eventosConActividad.add(eventoConActividad);
-		}
+	    // Cerrar recursos
+	    rs.close();
+	    ps.close();
 
-		// Cerrar recursos
-		rs.close();
-		ps.close();
-
-		return eventosConActividad;
+	    return eventosConActividad;
 	}
+
 
 	// ---------------------------------------------------------------------------------
 	// VOLCADOS JSON

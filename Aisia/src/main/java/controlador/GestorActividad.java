@@ -58,6 +58,7 @@ public class GestorActividad extends HttpServlet {
 		try {
 			switch (accion) {
 			case "visualizarActividades":
+				//System.out.println("entro en visualizar");
 				visualizarActividades(request, response, out);
 				break;
 			case "obtenerActividadporID":
@@ -222,6 +223,7 @@ public class GestorActividad extends HttpServlet {
 		try {
 			DaoActividad actividad = new DaoActividad();
 			out.print(actividad.listarJsonTodasActividades());
+			//System.out.println(actividad.listarJsonTodasActividades());
 		} catch (SQLException e) {
 			ControlErrores.mostrarErrorGenerico("Error al obtener las actividades. Intente de nuevo.", response);
 		}

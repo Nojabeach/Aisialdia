@@ -34,8 +34,10 @@ function pintarTablaSoloBorrar_Favorito(data, container) {
                 let celda = document.createElement('td');
                 if (columna.toLowerCase().endsWith('.png')) {
                     let image = document.createElement('img');
-                    image.src = item[columna];
+                    image.src = `img/Iconos/${item[columna]}.png`;
                     image.alt = columna;
+                    image.width = 32; // Establecer ancho a 32
+                    image.height = 32; // Establecer alto a 32
                     celda.appendChild(image);
                 } else {
                     celda.textContent = item[columna];
@@ -79,10 +81,15 @@ function asignarEventoFavoritoBorrar() {
     });
 }
 
-// Función para eliminar un evento
 function eliminarEventoFavorito(idEvento) {
     console.log('Eliminando evento', idEvento);
-    fetch('GestorFavorito?action=eliminarFavorito&idEvento=' + idEvento)
+    fetch('GestorFavorito', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `action=eliminarFavorito&idEvento=${idEvento}`
+    })
         .then(response => {
             if (response.ok) {
                 console.log('Evento eliminado correctamente, actualizo la lista');

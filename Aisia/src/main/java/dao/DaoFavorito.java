@@ -73,7 +73,7 @@ public class DaoFavorito {
 		String sql = "DELETE FROM gestionfavoritos WHERE idEvento = ? AND idUsuario = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
 		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
-
+		System.out.println(idUsuarioActual);
 		ps = con.prepareStatement(sql);
 		ps.setInt(1, idEvento);
 		ps.setInt(2, idUsuarioActual);

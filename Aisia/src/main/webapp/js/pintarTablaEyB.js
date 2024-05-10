@@ -61,8 +61,10 @@ function pintarTablaEyB(data, idTabla) {
         let celda = document.createElement("td");
         if (clave.toLowerCase().endsWith('.png')) {
           let image = document.createElement('img');
-          image.src = valor;
+          image.src = `img/Iconos/${valor}.png`;
           image.alt = clave;
+          image.width = 32; // Establecer ancho a 32
+          image.height = 32; // Establecer alto a 32
           celda.appendChild(image);
         } else {
           celda.textContent = valor;

@@ -202,7 +202,7 @@ public class GestorEvento extends HttpServlet {
 			fechaEvento = new Date(System.currentTimeMillis());
 		}
 
-		int idUsuarioCreador = Integer.parseInt(request.getParameter("idUsuarioCreador"));
+		int idUsuarioCreador = Integer.parseInt(request.getParameter("idUsuario"));
 		String ubicacion = request.getParameter("ubicacion");
 
 		// Obtener la lista de actividades seleccionadas
@@ -458,26 +458,58 @@ public class GestorEvento extends HttpServlet {
 	 *                      PrintWriter.
 	 */
 	private void obtenerTodosLosEventosActivos(HttpServletRequest request, HttpServletResponse response,
-			PrintWriter out, int numEventos) throws SQLException, IOException {
+	        PrintWriter out, int numEventos) throws SQLException, IOException {
 
-		String actividad = request.getParameter("actividad");
-		String nombre = request.getParameter("nombre");
-		String ubicacion = request.getParameter("ubicacion");
-		String fechaEventoStr = request.getParameter("fechaEvento");
+	    String tipoActividad = "";
+	    String nombre = "";
+	    String ubicacion = "";
+	    String fechaEventoStr = "";
+	    String criterio = request.getParameter("criterio");
+	    String textoBusqueda = request.getParameter("textoBusqueda");
+	    System.out.println(criterio + " : " + textoBusqueda);
 
-		try {
-			Date fechaEvento = (fechaEventoStr != null && !fechaEventoStr.isEmpty()) ? Date.valueOf(fechaEventoStr)
-					: null;
-			DaoEventoConActividad Eventos = new DaoEventoConActividad();
-			out.print(Eventos.listarJsonUltimosEventos(numEventos, actividad, nombre, ubicacion, fechaEvento));
-		} catch (IllegalArgumentException e) {
-			// La fecha proporcionada no está en el formato correcto
-			ControlErrores.mostrarErrorGenerico("{\"error\": \"La fecha proporcionada no es válida\"}", response);
-		} catch (SQLException e) {
-			// Error de SQL, manejar según sea necesario
-			e.printStackTrace();
-			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
-		}
+	    try {
+	        DaoEventoConActividad eventosDao = new DaoEventoConActividad();
+
+	        // Convertir la fecha solo si se proporcionó un valor
+	        Date fechaEvento = null;
+	        if (textoBusqueda != null && !textoBusqueda.isEmpty()) {
+	            switch (criterio) {
+	                case "tipoActividad":
+	                    tipoActividad = textoBusqueda;
+	                    break;
+	                case "nombre":
+	                    nombre = textoBusqueda;
+	                    break;
+	                case "ubicacion":
+	                    ubicacion = textoBusqueda;
+	                    break;
+	                case "fechaEvento":
+	                    fechaEventoStr = textoBusqueda;
+	                    break;
+	                default:
+	                    break;
+	            }
+	        }
+
+	        if (fechaEventoStr != null && !fechaEventoStr.isEmpty()) {
+	            fechaEvento = Date.valueOf(fechaEventoStr);
+	        }
+
+	       /* String datos = "numEventos: " + numEventos + ", tipoActividad: " + tipoActividad + ", nombre: " + nombre
+	                + ", ubicacion: " + ubicacion + ", fechaEvento: " + fechaEvento;
+
+	        System.out.println(datos); */
+
+	        out.print(eventosDao.listarJsonUltimosEventos(numEventos, tipoActividad, nombre, ubicacion, fechaEvento));
+	    } catch (IllegalArgumentException e) {
+	        // La fecha proporcionada no está en el formato correcto
+	        ControlErrores.mostrarErrorGenerico("{\"error\": \"La fecha proporcionada no es válida\"}", response);
+	    } catch (SQLException e) {
+	        // Error de SQL, manejar según sea necesario
+	        e.printStackTrace();
+	        ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
+	    }
 	}
 
 	/**

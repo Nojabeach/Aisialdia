@@ -34,7 +34,9 @@ function pintarTabla(data, container) {
                         let celda = document.createElement('td');
                         if (columna.toLowerCase().endsWith('.png')) {
                             let image = document.createElement('img');
-                            image.src = item[columna];
+                            image.src = `img/Iconos/${item[columna]}.png`;
+                            image.width = 32; // Establecer ancho a 32
+                            image.height = 32; // Establecer alto a 32
                             image.alt = columna;
                             celda.appendChild(image);
                         } else {
