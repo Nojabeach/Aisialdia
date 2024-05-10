@@ -193,4 +193,24 @@ public class DaoActividad {
 		return json;
 
 	}
+
+	/**
+	 * Devuelve un objeto JSON que contiene los detalles de una actividad específica
+	 * identificada por su ID.
+	 *
+	 * @param idActividad El ID de la actividad que se desea obtener.
+	 * @return Un objeto JSON que contiene los detalles de la actividad.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+
+	public String listarJsonActividadPorID(int idActividad) throws SQLException {
+
+		String json = "";
+		Gson gson = new Gson();
+
+		json = gson.toJson(this.obtenerActividadPorId(idActividad));
+
+		return json;
+
+	}
 }

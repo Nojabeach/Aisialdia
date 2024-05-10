@@ -38,6 +38,8 @@ public class GestorActividad extends HttpServlet {
 	 * <ul>
 	 * <li><b>visualizarActividades:</b> Muestra las actividades disponibles y sus
 	 * detalles.</li>
+	 * <li><b>obtenerActividadporID:</b> Obtiene los detalles de una actividad
+	 * específica identificada por su ID.</li>
 	 * </ul>
 	 * </p>
 	 * 
@@ -47,17 +49,24 @@ public class GestorActividad extends HttpServlet {
 	 * @throws ServletException Si ocurre un error en el servlet.
 	 * @throws IOException      Si ocurre un error de entrada/salida.
 	 */
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 		String accion = request.getParameter("action");
 
 		try {
-			if (accion.equals("visualizarActividades")) {
+			switch (accion) {
+			case "visualizarActividades":
 				visualizarActividades(request, response, out);
-			} else {
+				break;
+			case "obtenerActividadporID":
+				obtenerActividadporID(request, response, out);
+				break;
+			default:
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				ControlErrores.mostrarErrorGenerico("{\"error\": \"Acción no válida\"}", response);
+				break;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -215,6 +224,17 @@ public class GestorActividad extends HttpServlet {
 			out.print(actividad.listarJsonTodasActividades());
 		} catch (SQLException e) {
 			ControlErrores.mostrarErrorGenerico("Error al obtener las actividades. Intente de nuevo.", response);
+		}
+	}
+
+	private void obtenerActividadporID(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
+			throws IOException, SQLException {
+		int idActividad = Integer.parseInt(request.getParameter("idActividad"));
+		try {
+			DaoActividad actividad = new DaoActividad();
+			out.print(actividad.listarJsonActividadPorID(idActividad));
+		} catch (SQLException e) {
+			ControlErrores.mostrarErrorGenerico("Error al obtener la actividade por ID. Intente de nuevo.", response);
 		}
 	}
 

@@ -22,7 +22,7 @@ function obtenerFavoritos() {
     .then((data) => {
       console.log(data);
       const contenedorAPintar = document.getElementById("favoritos-tabla");
-      pintarTablaSoloBorrar(data, contenedorAPintar);
+      pintarTablaSoloBorrar_Favorito(data, contenedorAPintar);
       console.log("Pintando favoritos");
     });
 }

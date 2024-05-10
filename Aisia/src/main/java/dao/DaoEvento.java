@@ -240,6 +240,47 @@ public class DaoEvento {
 
 		return eventos;
 	}
+	/**
+	 * Obtiene una lista de eventos rechazados dentro del rango de fechas especificado.
+	 * Si no se proporcionan fechas, se devuelven los últimos 10 eventos rechazados.
+	 *
+	 * @param fechaInicio Fecha de inicio del rango de búsqueda.
+	 * @param fechaFin    Fecha de fin del rango de búsqueda.
+	 * @return Una lista de eventos rechazados dentro del rango de fechas especificado o los últimos 10 eventos rechazados si no se proporcionan fechas.
+	 * @throws SQLException Si ocurre algún error al interactuar con la base de datos.
+	 */
+	public List<Evento> obtenerEventosRechazados(Date fechaInicio, Date fechaFin) throws SQLException {
+	    List<Evento> eventos = new ArrayList<>();
+	    String sql = "";
+
+	    if (fechaInicio != null && fechaFin != null) {
+	        sql = "SELECT * FROM eventos WHERE fechaFinalizacion BETWEEN ? AND ? AND motivoFinalizacion = 'Rechazado'";
+	    } else {
+	        sql = "SELECT * FROM eventos WHERE motivoFinalizacion = 'Rechazado' ORDER BY fechaUltimaModificacion DESC LIMIT 10";
+	    }
+
+	    try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+	        if (fechaInicio != null && fechaFin != null) {
+	            pstmt.setDate(1, fechaInicio);
+	            pstmt.setDate(2, fechaFin);
+	        }
+
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            while (rs.next()) {
+	                Evento evento = new Evento();
+	                evento.setIdEvento(rs.getInt("idEvento"));
+	                evento.setNombre(rs.getString("nombre"));
+	                evento.setDetalles(rs.getString("detalles"));
+	                evento.setFechaUltimaModificacion(rs.getDate("fechaUltimaModificacion"));
+	                evento.setUbicacion(rs.getString("ubicacion"));
+
+	                eventos.add(evento);
+	            }
+	        }
+	    }
+
+	    return eventos;
+	}
 
 	/**
 	 * Obtiene la lista de eventos que están pendientes de publicacion.
@@ -297,4 +338,20 @@ public class DaoEvento {
 		return json;
 	}
 
+	/**
+	 * Genera un JSON con los eventos rechazados dentro del rango de fechas especificado.
+	 * Si no se proporcionan fechas, se devuelven los últimos 10 eventos rechazados.
+	 *
+	 * @param fechaInicio Fecha de inicio del rango de búsqueda.
+	 * @param fechaFin    Fecha de fin del rango de búsqueda.
+	 * @return Una cadena JSON que contiene los eventos rechazados dentro del rango de fechas especificado o los últimos 10 eventos rechazados si no se proporcionan fechas.
+	 * @throws SQLException Si ocurre algún error al interactuar con la base de datos.
+	 */
+
+	public String listarJsonRechazados(Date FechaD , Date FechaH) throws SQLException {
+		String json = "";
+		Gson gson = new Gson();
+		json = gson.toJson(this.obtenerEventosRechazados(FechaD,FechaH));
+		return json;
+	}
 }

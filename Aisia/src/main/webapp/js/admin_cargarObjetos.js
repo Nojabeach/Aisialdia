@@ -1,19 +1,21 @@
 document.addEventListener("DOMContentLoaded", function () {
   console.log("Cargando Actividades");
-  obtenerActividades();
+  AD_obtenerActividades();
 
   console.log("Cargando Eventos Activos");
-  obtenerTodosLosEventosActivos();
+  AD_obtenerTodosLosEventosActivos();
   console.log("Cargando Eventos Pendientes Aprobar");
-  obtenerPendientesAprobar();
+  AD_obtenerPendientesAprobar();
   console.log("Cargando Eventos Pendientes Publicar");
-  obtenerPendientesPublicar();
+  AD_obtenerPendientesPublicar();
+  console.log("Cargando Eventos Rechazados");
+  AD_obtenerEventosRechazados();
 
   console.log("Cargando Usuarios");
-  obtenerListadoUsuarios();
+  AD_obtenerListadoUsuarios();
 });
 
-function obtenerActividades() {
+function AD_obtenerActividades() {
   fetch("GestorActividad?action=visualizarActividades")
     .then((response) => response.json())
     .then((data) => {
@@ -24,7 +26,19 @@ function obtenerActividades() {
     });
 }
 
-function obtenerPendientesAprobar() {
+function AD_obtenerTodosLosEventosActivos() {
+  fetch("GestorEvento?action=obtenerTodosLosEventosActivos")
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      const contenedorAPintar = document.getElementById("Publicados-tabla");
+      contenedorAPintar.innerHTML = ""; // Limpiar el contenedor antes de agregar nuevos elementos
+      pintarTabla(data, contenedorAPintar); // Pintar la tabla
+      console.log("Pintando eventos activos");
+    });
+}
+
+function AD_obtenerPendientesAprobar() {
   fetch("GestorEvento?action=obtenerEventosPendientesAprobacion")
     .then((response) => response.json())
     .then((data) => {
@@ -36,7 +50,7 @@ function obtenerPendientesAprobar() {
       console.log("Pintando eventos pendientes de aprobar");
     });
 }
-function obtenerPendientesPublicar() {
+function AD_obtenerPendientesPublicar() {
   fetch("GestorEvento?action=obtenerEventosPendientesPublicacion")
     .then((response) => response.json())
     .then((data) => {
@@ -48,7 +62,18 @@ function obtenerPendientesPublicar() {
       console.log("Pintando eventos pendientes de publicar");
     });
 }
-function obtenerListadoUsuarios() {
+function AD_obtenerEventosRechazados() {
+  fetch("GestorEvento?action=obtenerEventosRechazados")
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      const contenedorAPintar = document.getElementById("Rechazados-tabla");
+      pintarTablaEyB(data, contenedorAPintar);
+      console.log("Pintando eventos rechazados");
+    });
+}
+
+function AD_obtenerListadoUsuarios() {
   fetch("GestorUsuario?action=obtenerUsuarios")
     .then((response) => response.json())
     .then((data) => {

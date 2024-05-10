@@ -1,4 +1,4 @@
-function pintarTablaSoloBorrar(data, container) {
+function pintarTablaSoloBorrar_Favorito(data, container) {
     let tabla = document.createElement('table');
     // Agregar clases de estilo a la tabla
     tabla.classList.add('tabla');
@@ -65,22 +65,22 @@ function pintarTablaSoloBorrar(data, container) {
     container.appendChild(tabla);
 
     // Asignar evento de borrado a los botones
-    asignarEventoBorrar();
+    asignarEventoFavoritoBorrar();
 }
 
 // Asignar evento de borrado a los botones
-function asignarEventoBorrar() {
+function asignarEventoFavoritoBorrar() {
     document.querySelectorAll('.boton-primario').forEach(boton => {
         boton.addEventListener('click', function() {
             let idEvento = this.dataset.eventoId;
             console.log('Asignar evento a borrar', idEvento);
-            eliminarEvento(idEvento);
+            eliminarEventoFavorito(idEvento);
         });
     });
 }
 
 // Función para eliminar un evento
-function eliminarEvento(idEvento) {
+function eliminarEventoFavorito(idEvento) {
     console.log('Eliminando evento', idEvento);
     fetch('GestorFavorito?action=eliminarFavorito&idEvento=' + idEvento)
         .then(response => {

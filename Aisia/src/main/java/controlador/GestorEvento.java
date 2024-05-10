@@ -50,8 +50,10 @@ public class GestorEvento extends HttpServlet {
 	 * los devuelve en formato JSON.</li>
 	 * <li><b>obtenerEventosConActividad:</b> Obtiene los eventos con actividad
 	 * asociada y los devuelve en formato JSON.</li>
-	 * <li><b>buscarEventos:</b> Busca los eventos segun el criterio marcado y los
+	 * <li><b>buscarEventos:</b> Busca los eventos según el criterio marcado y los
 	 * devuelve en formato JSON.</li>
+	 * <li><b>obtenerEventosRechazados:</b> Obtiene los eventos rechazados y los
+	 * devuelve en formato JSON, filtrados por fechas si se especifican.</li>
 	 * </ul>
 	 * </p>
 	 * 
@@ -84,9 +86,9 @@ public class GestorEvento extends HttpServlet {
 			case "obtenerEventosConActividad":
 				obtenerEventosConActividad(request, response, out);
 				break;
-			case "buscarEventos":
-				System.out.println("buscarEventos");
-				obtenerTodosLosEventosActivos(request, response, out, -1);
+			case "obtenerEventosRechazados":
+				obtenerEventosRechazados(request, response, out);
+				break;
 			default:
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				ControlErrores.mostrarErrorGenerico("{\"error\": \"Acción no válida\"}", response);
@@ -513,6 +515,57 @@ public class GestorEvento extends HttpServlet {
 			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
 		}
 
+	}
+
+	/**
+	 * Obtiene los eventos rechazados en formato JSON, filtrados por fechas si se
+	 * especifican.
+	 *
+	 * @param request  La solicitud HTTP que contiene los parámetros de fechaInicio
+	 *                 y fechaFin para filtrar los eventos.
+	 * @param response La respuesta HTTP donde se enviará el resultado en formato
+	 *                 JSON.
+	 * @param out      El PrintWriter para escribir la respuesta.
+	 * @throws SQLException Si ocurre un error al interactuar con la base de datos.
+	 * @throws IOException  Si ocurre un error de entrada/salida al escribir la
+	 *                      respuesta.
+	 */
+
+	public void obtenerEventosRechazados(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
+			throws SQLException, IOException {
+
+		// Obtener fechas de la solicitud, si están presentes
+		String fechaInicioParam = request.getParameter("fechaInicio");
+		String fechaFinParam = request.getParameter("fechaFin");
+
+		// Convertir fechas a objetos Date
+		Date fechaInicio = null;
+		Date fechaFin = null;
+
+		if (fechaInicioParam != null && fechaFinParam != null) {
+			try {
+				fechaInicio = Date.valueOf(fechaInicioParam);
+				fechaFin = Date.valueOf(fechaFinParam);
+			} catch (IllegalArgumentException e) {
+				// Manejar error de formato de fecha
+				ControlErrores.mostrarErrorGenerico("{\"error\": \"Formato de fecha incorrecto\"}", response);
+				return;
+			}
+		}
+
+		try {
+			// Crear un objeto DaoEvento para manejar la obtención de eventos
+			DaoEvento daoEvento = new DaoEvento();
+
+			// Obtener eventos rechazados en formato JSON y enviarlos al PrintWriter
+			out.print(daoEvento.listarJsonRechazados(fechaInicio, fechaFin));
+
+		} catch (SQLException e) {
+			// En caso de error, mostrar un mensaje de error genérico y enviarlo en formato
+			// JSON a la respuesta
+			e.printStackTrace();
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
+		}
 	}
 
 }

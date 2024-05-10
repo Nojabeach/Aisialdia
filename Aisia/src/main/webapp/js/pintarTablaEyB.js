@@ -140,35 +140,82 @@ function pintarTablaEyB(data, idTabla) {
 function EyBeditarUsuario(usuario) {
   // Lógica para editar un usuario
   console.log("Editar usuario", usuario);
-  alert("Botón sin configurar");
+ 
+  let servlet = 'GestorUsuario';
+  let action = 'editarUsuario';
+  let op = getParameterByName("idUsuario");
+  let formularioId = 'editarUsuario.html';
+  llamada(servlet, action, op, formularioId);
 }
 
 function EyBeliminarUsuario(idUsuario) {
   // Lógica para eliminar un usuario
   console.log("Eliminar usuario", idUsuario);
-  alert("Botón sin configurar");
+  fetch('GestorUsuario?action=eliminarUsuario&idUsuario=' + idUsuario)
+  .then(response => {
+      if (response.ok) {
+          console.log('Usuario eliminado correctamente, actualizo la lista');
+          // Actualizar la lista después de eliminar
+          AD_obtenerListadoUsuarios();
+      } else {
+          console.error('Error al eliminar el usuario');
+      }
+  });
 }
 
 function EyBeditarEvento(evento) {
   // Lógica para editar un evento
   console.log("Editar evento", evento);
-  alert("Botón sin configurar");
+ 
+  let servlet = 'GestorEvento';
+  let action = 'editarEvento';
+  let op = getParameterByName("idEvento");
+  let formularioId = 'editarEvento.html';
+  llamada(servlet, action, op, formularioId);
 }
 
 function EyBeliminarEvento(idEvento) {
   // Lógica para eliminar un evento
   console.log("Eliminar evento", idEvento);
-  alert("Botón sin configurar");
+  fetch('GestorEvento?action=eliminarEvento&idEvento=' + idEvento)
+  .then(response => {
+      if (response.ok) {
+          console.log('Evento eliminado correctamente, actualizo la lista');
+          // Actualizar la lista después de eliminar
+
+          AD_obtenerTodosLosEventosActivos();
+          AD_obtenerPendientesAprobar();
+          AD_obtenerPendientesPublicar();
+
+      } else {
+          console.error('Error al eliminar el evento');
+      }
+  });
 }
 
 function EyBeditarActividad(actividad) {
   // Lógica para editar una actividad
   console.log("Editar actividad", actividad);
-  alert("Botón sin configurar");
+
+  let servlet = 'GestorActividad';
+  let action = 'editarActividad';
+  let op = getParameterByName("actividad");
+  let formularioId = 'editarActividad.html'; 
+  llamada(servlet, action, op, formularioId);
 }
+
 
 function EyBeliminarActividad(idActividad) {
   // Lógica para eliminar una actividad
   console.log("Eliminar actividad", idActividad);
-  alert("Botón sin configurar");
+  fetch('GestorActividad?action=eliminarActividad&idActividad=' + idActividad)
+  .then(response => {
+      if (response.ok) {
+          console.log('Actividad eliminada correctamente, actualizo la lista');
+          // Actualizar la lista después de eliminar
+          AD_obtenerActividades();
+      } else {
+          console.error('Error al eliminar el evento');
+      }
+  });
 }
