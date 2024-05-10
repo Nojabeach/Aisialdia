@@ -51,7 +51,7 @@ public class DaoFavorito {
 	 * @throws SQLException Si ocurre un error al agregar el favorito.
 	 */
 	public void agregarFavoritoEvento(int idEvento, HttpServletRequest request) throws SQLException {
-		String sql = "INSERT INTO favoritos (idEvento, idUsuario) VALUES (?, ?)";
+		String sql = "INSERT INTO gestionfavoritos (idEvento, idUsuario) VALUES (?, ?)";
 		PreparedStatement ps = con.prepareStatement(sql);
 		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
 
@@ -70,7 +70,7 @@ public class DaoFavorito {
 	 * @throws SQLException Si ocurre un error al eliminar el favorito.
 	 */
 	public void eliminarFavoritoEvento(int idEvento, HttpServletRequest request) throws SQLException {
-		String sql = "DELETE FROM favoritos WHERE idEvento = ? AND idUsuario = ?";
+		String sql = "DELETE FROM gestionfavoritos WHERE idEvento = ? AND idUsuario = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
 		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
 

@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.sql.SQLException;
 import dao.DaoEventoConActividad;
 
@@ -44,17 +45,24 @@ public class UltimosEventos extends HttpServlet {
 		// Cantidad puesta por mi para así visualizar la barra de scroll y poder
 		// editarla correctamente
 
-		DaoEventoConActividad Eventos;
-		try {
-			Eventos = new DaoEventoConActividad();
-			out.print(Eventos.listarJsonUltimosEventos(cantidadEventos));
+		String actividad = request.getParameter("actividad");
+		String nombre = request.getParameter("nombre");
+		String ubicacion = request.getParameter("ubicacion");
+		String fechaEventoStr = request.getParameter("fechaEvento");
 
+		try {
+			Date fechaEvento = (fechaEventoStr != null && !fechaEventoStr.isEmpty()) ? Date.valueOf(fechaEventoStr)
+					: null;
+			DaoEventoConActividad Eventos = new DaoEventoConActividad();
+			out.print(Eventos.listarJsonUltimosEventos(cantidadEventos, actividad, nombre, ubicacion, fechaEvento));
+		} catch (IllegalArgumentException e) {
+			// La fecha proporcionada no está en el formato correcto
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"La fecha proporcionada no es válida\"}", response);
 		} catch (SQLException e) {
+			// Error de SQL, manejar según sea necesario
 			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
 		}
-
 	}
 
 	/**

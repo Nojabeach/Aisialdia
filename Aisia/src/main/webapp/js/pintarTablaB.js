@@ -1,13 +1,20 @@
 function pintarTablaSoloBorrar(data, container) {
     let tabla = document.createElement('table');
+    // Agregar clases de estilo a la tabla
+    tabla.classList.add('tabla');
 
+    
     // Limpiar la tabla antes de agregar nuevos datos
     container.innerHTML = '';
 
-    // Crear encabezados de tabla
+    // Crear encabezados de tabla solo para las columnas con datos
+    let columnasConDatos = Object.keys(data[0]).filter(columna => {
+        return data.some(item => item[columna] !== 0 && item[columna] !== null && item[columna] !== undefined);
+    });
+
     let thead = document.createElement('thead');
     let filaEncabezado = document.createElement('tr');
-    Object.keys(data[0]).forEach(columna => {
+    columnasConDatos.forEach(columna => {
         let th = document.createElement('th');
         th.textContent = columna;
         filaEncabezado.appendChild(th);
@@ -21,10 +28,11 @@ function pintarTablaSoloBorrar(data, container) {
     let tbody = document.createElement('tbody');
     data.forEach(item => {
         let fila = document.createElement('tr');
-        Object.entries(item).forEach(([clave, valor]) => {
-            if (valor !== null && valor !== undefined) {
+
+        columnasConDatos.forEach(columna => {
+            if (item[columna] !== 0 && item[columna] !== null && item[columna] !== undefined) {
                 let celda = document.createElement('td');
-                celda.textContent = valor;
+                celda.textContent = item[columna];
                 fila.appendChild(celda);
             }
         });
@@ -33,22 +41,11 @@ function pintarTablaSoloBorrar(data, container) {
         let celdaBorrar = document.createElement('td');
         let botonBorrar = document.createElement('button');
         botonBorrar.textContent = 'Borrar';
-        
-        // Manejar diferentes casos de contenedor
-        switch (container.id) {
-            case 'favoritos-tabla':
-                botonBorrar.onclick = function() {
-                    // Lógica para borrar el elemento solo si el contenedor es el de favoritos
-                    eliminarFavorito(item.idEvento); // Llamar a la función eliminarFavorito pasando el idEvento
-                };
-                break;
-            // Agregar más casos según sea necesario
-            default:
-                botonBorrar.addEventListener('click', function() {
-                    alert("Botón sin configurar");
-                });
-        }
-        
+        botonBorrar.dataset.eventoId = item.idEvento; // Agregar atributo de datos con el idEvento
+
+        // Agregar clase de estilo para el botón de borrar
+        botonBorrar.classList.add('boton-primario');
+
         celdaBorrar.appendChild(botonBorrar);
         fila.appendChild(celdaBorrar);
 
@@ -60,18 +57,32 @@ function pintarTablaSoloBorrar(data, container) {
     // Agregar tabla al contenedor
     container.appendChild(tabla);
 
-    // Agregar clases de estilo a la tabla
-    tabla.classList.add('tabla');
+    // Asignar evento de borrado a los botones
+    asignarEventoBorrar();
 }
 
-function eliminarFavorito(idEvento) {
-    fetch('GestorFavorito?action=eliminarFavorito&idEvento=' + idEvento)
-    .then(response => {
-        if(response.ok) {
-            // Actualizar la lista de favoritos después de eliminar
-            obtenerFavoritos();
-        } else {
-            console.error('Error al eliminar el favorito');
-        }
+// Asignar evento de borrado a los botones
+function asignarEventoBorrar() {
+    document.querySelectorAll('.boton-primario').forEach(boton => {
+        boton.addEventListener('click', function() {
+            let idEvento = this.dataset.eventoId;
+            console.log('Asignar evento a borrar', idEvento);
+            eliminarEvento(idEvento);
+        });
     });
-} 
+}
+
+// Función para eliminar un evento
+function eliminarEvento(idEvento) {
+    console.log('Eliminando evento', idEvento);
+    fetch('GestorFavorito?action=eliminarFavorito&idEvento=' + idEvento)
+        .then(response => {
+            if (response.ok) {
+                console.log('Evento eliminado correctamente, actualizo la lista');
+                // Actualizar la lista después de eliminar
+                obtenerFavoritos();
+            } else {
+                console.error('Error al eliminar el evento');
+            }
+        });
+}

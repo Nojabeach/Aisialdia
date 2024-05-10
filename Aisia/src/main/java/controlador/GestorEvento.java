@@ -79,13 +79,14 @@ public class GestorEvento extends HttpServlet {
 				obtenerEventosPendientesPublicacion(request, response, out);
 				break;
 			case "obtenerTodosLosEventosActivos":
-				obtenerTodosLosEventosActivos(request, response, out);
+				obtenerTodosLosEventosActivos(request, response, out, -1);
 				break;
 			case "obtenerEventosConActividad":
 				obtenerEventosConActividad(request, response, out);
 				break;
 			case "buscarEventos":
-				obtenerTodosLosEventosActivos(request, response, out);
+				System.out.println("buscarEventos");
+				obtenerTodosLosEventosActivos(request, response, out, -1);
 			default:
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				ControlErrores.mostrarErrorGenerico("{\"error\": \"Acción no válida\"}", response);
@@ -439,23 +440,26 @@ public class GestorEvento extends HttpServlet {
 	 *                      PrintWriter.
 	 */
 	private void obtenerTodosLosEventosActivos(HttpServletRequest request, HttpServletResponse response,
-			PrintWriter out) throws SQLException, IOException {
+			PrintWriter out, int numEventos) throws SQLException, IOException {
 
 		String actividad = request.getParameter("actividad");
 		String nombre = request.getParameter("nombre");
 		String ubicacion = request.getParameter("ubicacion");
-		Date fechaEvento = Date.valueOf(request.getParameter("fechaEvento"));
+		String fechaEventoStr = request.getParameter("fechaEvento");
 
 		try {
-			DaoEvento Eventos = new DaoEvento();
-
-			out.print(Eventos.listarJsonObtenerTodosLosEventosActivos(actividad, nombre, ubicacion, fechaEvento));
+			Date fechaEvento = (fechaEventoStr != null && !fechaEventoStr.isEmpty()) ? Date.valueOf(fechaEventoStr)
+					: null;
+			DaoEventoConActividad Eventos = new DaoEventoConActividad();
+			out.print(Eventos.listarJsonUltimosEventos(numEventos, actividad, nombre, ubicacion, fechaEvento));
+		} catch (IllegalArgumentException e) {
+			// La fecha proporcionada no está en el formato correcto
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"La fecha proporcionada no es válida\"}", response);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			// Error de SQL, manejar según sea necesario
 			e.printStackTrace();
 			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
 		}
-
 	}
 
 	/**

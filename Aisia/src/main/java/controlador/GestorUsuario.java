@@ -287,7 +287,8 @@ public class GestorUsuario extends HttpServlet {
 			 * (String) se utiliza para convertir el objeto recuperado de la sesión al tipo
 			 * String, de modo que pueda ser utilizado como tal.
 			 */
-			System.out.println("{\"nombreUsuario\": \"" + nombreUsuario + "\", \"permiso\": \"" + permiso + "\"}");
+			// System.out.println("{\"nombreUsuario\": \"" + nombreUsuario + "\",
+			// \"permiso\": \"" + permiso + "\"}");
 			// Devolver información del usuario y su permiso en formato JSON
 			response.getWriter().write("{\"nombreUsuario\": \"" + nombreUsuario + "\", \"permiso\": " + permiso + "}");
 		} else {

@@ -4,7 +4,7 @@ window.onload = function () {
   };
   
   function obtenerUltimosEventos() {
-    console.log("Obteniendo últimos eventos...");
+
     fetch("UltimosEventos")
       .then((response) => {
         console.log("Respuesta del servidor:", response);
@@ -15,7 +15,7 @@ window.onload = function () {
         }
       })
       .then((data) => {
-        console.log("Datos obtenidos:", data);
+    
         const eventosList = document.getElementById("ultimosEventosList");
         eventosList.innerHTML = "";
         data.forEach((evento) => {

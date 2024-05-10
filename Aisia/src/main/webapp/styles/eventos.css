@@ -15,15 +15,8 @@ body{
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Columnas automáticas */
     grid-gap: 20px; /* Espacio entre columnas */
   }
-  #cabecera {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  #cabecera img {
-    max-height: 100px;
-    margin: 10px;
-  }
+
+
 
   #search-inputs {
     margin-left: 30px; 
@@ -51,7 +44,8 @@ body{
     margin-left: 30px; 
 }
 
-  #new-event-form label {
+  #new-event-form label,
+  #edit-event-form label{
     display: block;
     margin-bottom: 10px;
     font-weight: bold;
@@ -59,8 +53,11 @@ body{
   }
   
   #new-event-form input[type="text"],
+  #edit-event-form input[type="text"],
   #new-event-form input[type="date"],
-  #new-event-form textarea {
+  #edit-event-form input[type="date"],
+  #new-event-form textarea,
+  #edit-event-form textarea{
     width: calc(100% - 40px);
     padding: 10px;
     margin-bottom: 15px;
@@ -70,7 +67,8 @@ body{
     color: var(--texto-principal);
   }
   
-  #new-event-form button[type="submit"] {
+  #new-event-form button[type="submit"] ,
+  #edit-event-form button[type="submit"]{
     padding: 10px 20px;
     background-color: var(--boton-primario-fondo);
     color: var(--boton-primario-texto);
@@ -80,7 +78,8 @@ body{
     transition: background-color 0.3s ease;
   }
   
-  #new-event-form button[type="submit"]:hover {
+  #new-event-form button[type="submit"]:hover,
+  #edit-event-form button[type="submit"]:hover{
     background-color: var(--boton-primario-hover);
   }
   
@@ -98,8 +97,11 @@ body{
   
     /* Formulario de nuevo evento */
     #new-event-form input[type="text"],
+    #edit-event-form input[type="text"],
     #new-event-form input[type="date"],
-    #new-event-form textarea {
+    #edit-event-form input[type="date"],
+    #new-event-form textarea ,
+    #edit-event-form textarea{
       width: 100%; /* Ancho completo */
     }
  

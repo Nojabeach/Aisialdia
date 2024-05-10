@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis Eventos | AisiAldia</title>
+    <title>Editar Evento | AisiAldia</title>
     <!-- Icono de la pestaña -->
     <link rel="shortcut icon" href="img/Logos/logo_transparent - noText.png" type="image/x-icon" />
     <!-- Enlace de estilos -->
@@ -17,6 +17,7 @@
 
     <script src="js/pintarTabla.js"></script>
     <script src="js/pintarTablaB.js"></script>
+    <script src="js/pintarTablaEyB.js"></script>
 
     <script src="js/ev_cargarObjetos.js"></script>
 
@@ -44,60 +45,19 @@
         </header>
 
         <nav id="navbar">
-            <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="acercade.html">Acerca de</a></li>
+            <ul>           
                 <li><a href="events.html">Eventos</a></li>
+                <li><a href="acercade.html">Acerca de</a></li>
                 <li><a href="perfilusuario.html">Mi Perfil</a></li>
             </ul>
         </nav>
 
         <main id="seccionCuerpo">
 
-            <section>
-                <h2>Mis Eventos Favoritos</h2>
-                <div id="favoritos-tabla">
-                    <!-- La tabla FAVORITOS se generará dinámicamente aquí -->
-                </div>
-            </section>
 
-            <section>
-                <h2>Buscar Eventos</h2>
-                <form>
-                    <label for="search-option">Buscar por:</label>
-                    <select id="search-option">
-                        <option value="actividad">Actividad</option>
-                        <option value="nombre">Evento</option>
-                        <option value="ubicacion">Ubicación</option>
-                        <option value="fechaEvento">Fecha del evento</option>
-                    </select>
-
-                    <fieldset>
-                        <legend>Opciones de búsqueda</legend>
-                        <div id="search-inputs">
-                            <label for="search">Buscar:</label>
-                            <input type="text" id="search" name="search">
-                            <button type="submit" id="search-button">Buscar</button>
-                        </div>
-                    </fieldset>
-
-                    <div id="Buscar-tabla">
-                        <!-- La tabla de EVENTOS BUSCADOS se generará dinámicamente aquí -->
-                    </div>
-                </form>
-            </section>
-            <section>
-                <h2>Eventos Publicados y Activos</h2>
-                <div id="Publicados-tabla">
-                    <!-- La tabla de EVENTOS PUBLICADOS Y ACTIVOS se generará dinámicamente aquí -->
-                </div>
-            </section>
-
-
-
-            <aside id="aside">
-                <h2>Crear Nuevo Evento</h2>
-                <form id="new-event-form" action="GestorEvento?action=crearEvento" method="POST">
+            <section id="editarEvento">
+                <h2>Editar Evento</h2>
+                <form id="edit-event-form" action="GestorEvento?action=editarEvento" method="POST">
                     <fieldset>
                         <legend>Datos del Evento</legend>
 
@@ -123,21 +83,17 @@
 
                         <div class="form-group">
                             <label for="activity">Actividad:</label>
-                            <div id="activity-container">
-                                <img id="activity-image" src="img/Varios/default_ACT.png" alt="Icono de actividad" style="width: 48px; height: 48px;display: none; " >
-                                <select id="activity" name="activity" required>
-                                    <!-- Las opciones se cargarán dinámicamente con JS -->
-                                </select>
-                               
-                            </div>
+                            <select id="activity" name="activity" required>
+                                <!-- Se cargan las actividades -->
+                            </select>
                         </div>
                         <div class="form-group">
-                            <button type="submit" id="create-event-button">Crear Evento</button>
+                            <button type="submit" id="edit-event-button">Guardar Cambios</button>
                         </div>
 
                     </fieldset>
                 </form>
-            </aside>
+            </section>
 
         </main>
 

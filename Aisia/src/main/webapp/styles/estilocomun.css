@@ -38,6 +38,11 @@ a {
   align-items: center;
 }
 
+#cabecera img {
+  max-height: 150px;
+  margin: 10px;
+}
+
 #divTitulo h1 {
   font-size: 36px;
   margin-bottom: 10px;
@@ -363,7 +368,57 @@ form button:hover {
   background-position: 0 100%;
   background-repeat: repeat-x;
 }
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
 
+.tabla thead {
+  background-color: var(--color-secundario);
+  color: var(--color-primario);
+}
+
+.tabla th,
+.tabla td {
+  padding: 10px;
+  border: 1px solid var(--color-primario);
+}
+
+.tabla tbody tr:nth-child(even) {
+  background-color: var(--color-acento);
+}
+
+.tabla tbody tr:hover {
+  background-color: var(--color-terciario);
+}
+
+/* Estilos para los botones */
+.boton-primario,
+.boton-secundario {
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: px;
+}
+
+.boton-primario {
+    background-color: var(--boton-primario-fondo); /* Color de fondo del botón primario */
+    color: var(--boton-primario-texto); /* Color del texto del botón primario */
+}
+
+.boton-primario:hover {
+    background-color: var(--boton-primario-hover); /* Color de fondo del botón primario al pasar el mouse */
+}
+
+.boton-secundario {
+    background-color: var(--boton-secundario-fondo); /* Color de fondo del botón secundario */
+    color: var(--boton-secundario-texto); /* Color del texto del botón secundario */
+}
+
+.boton-secundario:hover {
+    background-color: var(--boton-secundario-hover); /* Color de fondo del botón secundario al pasar el mouse */
+}
 main {
   margin-bottom: 100px; /* adjust the value to match the height of your footer */
 }
@@ -476,57 +531,7 @@ footer ul li a:hover {
     width: 100%;
   }
 /* Estilos para la tabla */
-.tabla {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
 
-.tabla thead {
-  background-color: var(--color-secundario);
-  color: var(--color-primario);
-}
-
-.tabla th,
-.tabla td {
-  padding: 10px;
-  border: 1px solid var(--color-primario);
-}
-
-.tabla tbody tr:nth-child(even) {
-  background-color: var(--color-acento);
-}
-
-.tabla tbody tr:hover {
-  background-color: var(--color-terciario);
-}
-
-/* Estilos para los botones */
-.boton-primario,
-.boton-secundario {
-    padding: 8px 12px;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.boton-primario {
-    background-color: var(--boton-primario-fondo); /* Color de fondo del botón primario */
-    color: var(--boton-primario-texto); /* Color del texto del botón primario */
-}
-
-.boton-primario:hover {
-    background-color: var(--boton-primario-hover); /* Color de fondo del botón primario al pasar el mouse */
-}
-
-.boton-secundario {
-    background-color: var(--boton-secundario-fondo); /* Color de fondo del botón secundario */
-    color: var(--boton-secundario-texto); /* Color del texto del botón secundario */
-}
-
-.boton-secundario:hover {
-    background-color: var(--boton-secundario-hover); /* Color de fondo del botón secundario al pasar el mouse */
-}
 
   /* Reducir el tamaño del texto del pie de página */
   footer p {

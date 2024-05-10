@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
+import modelo.Evento;
 import modelo.EventoConActividad;
 
 public class DaoEventoConActividad {
@@ -85,13 +86,19 @@ public class DaoEventoConActividad {
 	 * Obtiene una lista de los últimos eventos publicados no finalizados, ordenados
 	 * por fecha de publicación descendente.
 	 * 
-	 * @param numEventos Número máximo de eventos a recuperar.
+	 * @param numEventos Número máximo de eventos a recuperar. Si es null o
+	 *                   negativo, se recuperarán todos los eventos.
+	 * @param actividad  Nombre de la actividad para filtrar.
+	 * @param nombre     Nombre del evento para filtrar.
+	 * @param ubicacion  Ubicación del evento para filtrar.
+	 * @param fecha      Fecha del evento para filtrar.
 	 * @return Una lista de {@link EventoConActividad} que contiene los eventos
 	 *         recientes y sus actividades asociadas, o una lista vacía si no se
 	 *         encuentran eventos.
 	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
 	 */
-	public List<EventoConActividad> obtenerUltimosEventos(int numEventos) throws SQLException {
+	public List<EventoConActividad> obtenerUltimosEventos(int numEventos, String actividad, String nombre,
+			String ubicacion, Date fecha) throws SQLException {
 		List<EventoConActividad> eventosConActividad = new ArrayList<>();
 
 		// Preparar la consulta SQL para obtener los últimos eventos que no estén ya
@@ -99,25 +106,65 @@ public class DaoEventoConActividad {
 		String sql = "SELECT e.idEvento, e.nombre, e.detalles, e.fechaPublicacion, e.idModeradorPublicacion, e.fechaFinalizacion, e.idModeradorFinalizacion, e.motivoFinalizacion, e.ubicacion, e.fechaEvento,a.tipoActividad, a.fotoActividad "
 				+ "FROM eventos e " + "INNER JOIN clasificacionEventos ce ON e.idEvento = ce.idEvento "
 				+ "INNER JOIN actividades a ON ce.idActividad = a.idActividad "
-				+ "WHERE e.fechaFinalizacion is null and e.fechapublicacion is not null "
-				+ "ORDER BY e.fechaPublicacion DESC LIMIT ?";
+				+ "WHERE e.fechaFinalizacion is null and e.fechapublicacion is not null ";
+
+		// Agregar cláusulas WHERE según sea necesario
+		if (actividad != null && !actividad.isEmpty()) {
+			sql += " AND a.tipoActividad LIKE ?";
+		}
+		if (nombre != null && !nombre.isEmpty()) {
+			sql += " AND e.nombre LIKE ?";
+		}
+		if (ubicacion != null && !ubicacion.isEmpty()) {
+			sql += " AND e.ubicacion LIKE ?";
+		}
+		if (fecha != null) {
+			sql += " AND e.fechaEvento = ?";
+		}
+
+		sql += " ORDER BY e.fechaPublicacion DESC";
+
+		// Si numEventos es mayor que 0, limitar la consulta
+		if (numEventos > 0) {
+			sql += " LIMIT ?";
+		}
+
 		PreparedStatement ps = con.prepareStatement(sql);
 		// System.out.println(sql);
-		ps.setInt(1, numEventos);
+
+		int paramIndex = 1;
+
+		// Agregar parámetros a la consulta según sea necesario
+		if (actividad != null && !actividad.isEmpty()) {
+			ps.setString(paramIndex++, "%" + actividad + "%");
+		}
+		if (nombre != null && !nombre.isEmpty()) {
+			ps.setString(paramIndex++, "%" + nombre + "%");
+		}
+		if (ubicacion != null && !ubicacion.isEmpty()) {
+			ps.setString(paramIndex++, "%" + ubicacion + "%");
+		}
+		if (fecha != null) {
+			ps.setDate(paramIndex++, fecha);
+		}
+		// Si numEventos es mayor que 0, establecer el límite
+		if (numEventos > 0) {
+			ps.setInt(paramIndex++, numEventos);
+		}
 
 		// Ejecutar la consulta y procesar los resultados
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
 			int idEvento = rs.getInt("idEvento");
-			String nombre = rs.getString("nombre");
+			String nombreEvento = rs.getString("nombre");
 			String detalles = rs.getString("detalles");
-			String ubicacion = rs.getString("ubicacion");
+			String ubicacionEvento = rs.getString("ubicacion");
 			String tipoActividad = rs.getString("tipoActividad");
 			String fotoActividad = rs.getString("fotoActividad");
 			Date fechaEvento = rs.getDate("fechaEvento");
 
-			EventoConActividad eventoConActividad = new EventoConActividad(idEvento, nombre, detalles, ubicacion,
-					tipoActividad, fotoActividad, fechaEvento);
+			EventoConActividad eventoConActividad = new EventoConActividad(idEvento, nombreEvento, detalles,
+					ubicacionEvento, tipoActividad, fotoActividad, fechaEvento);
 
 			eventosConActividad.add(eventoConActividad);
 		}
@@ -142,10 +189,11 @@ public class DaoEventoConActividad {
 	 *         finalizados, ordenados por fecha de publicación descendente.
 	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
 	 */
-	public String listarJsonUltimosEventos(int numEventos) throws SQLException {
+	public String listarJsonUltimosEventos(int numEventos, String actividad, String nombre, String ubicacion,
+			Date fecha) throws SQLException {
 		String json = "";
 		Gson gson = new Gson();
-		json = gson.toJson(this.obtenerUltimosEventos(numEventos));
+		json = gson.toJson(this.obtenerUltimosEventos(numEventos, actividad, nombre, ubicacion, fecha));
 		return json;
 	}
 

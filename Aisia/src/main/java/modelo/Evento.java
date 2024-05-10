@@ -557,23 +557,6 @@ public class Evento {
 	}
 
 	/**
-	 * Obtiene todos los eventos publicados activos de la base de datos (sin
-	 * finalizar) que coinciden con los filtros especificados.
-	 *
-	 * @param actividad   Filtro por actividad (opcional).
-	 * @param descripcion Filtro por descripción (opcional).
-	 * @param ubicacion   Filtro por ubicación (opcional).
-	 * @param fecha       Filtro por fecha (opcional).
-	 * @return Una lista de objetos Evento que representan todos los eventos en la
-	 *         base de datos que coinciden con los filtros especificados.
-	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
-	 */
-	public List<Evento> obtenerTodosLosEventosActivos(String actividad, String descripcion, String ubicacion,
-			Date fecha) throws SQLException {
-		return DaoEvento.getInstance().obtenerTodosLosEventosActivos(actividad, descripcion, ubicacion, fecha);
-	}
-
-	/**
 	 * Aprueba un evento pendiente de aprobación.
 	 * 
 	 * @param idEvento        ID del evento a aprobar.
@@ -623,24 +606,6 @@ public class Evento {
 	 */
 	public void publicarEvento(int idEvento, HttpServletRequest request) throws SQLException {
 		DaoEvento.getInstance().publicarEvento(idEvento, request);
-	}
-
-	/**
-	 * Genera un objeto JSON que representa todos los eventos activos de la base de
-	 * datos que coinciden con los filtros especificados.
-	 *
-	 * @param actividad   Filtro por actividad (opcional).
-	 * @param descripcion Filtro por descripción (opcional).
-	 * @param ubicacion   Filtro por ubicación (opcional).
-	 * @param fecha       Filtro por fecha (opcional).
-	 * @return Una cadena JSON que contiene la información de los eventos activos
-	 *         que coinciden con los filtros especificados.
-	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
-	 */
-	public String listarJsonObtenerTodosLosEventosActivos(String actividad, String descripcion, String ubicacion,
-			Date fecha) throws SQLException {
-		return DaoEvento.getInstance().listarJsonObtenerTodosLosEventosActivos(actividad, descripcion, ubicacion,
-				fecha);
 	}
 
 	/**

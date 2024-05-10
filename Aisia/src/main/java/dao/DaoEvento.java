@@ -267,96 +267,9 @@ public class DaoEvento {
 		return eventos;
 	}
 
-	/**
-	 * Obtiene todos los eventos publicados activos de la base de datos (sin
-	 * finalizar) que coinciden con los filtros especificados.
-	 *
-	 * @param actividad   Filtro por actividad (opcional)
-	 * @param descripcion Filtro por descripción (opcional)
-	 * @param ubicacion   Filtro por ubicación (opcional)
-	 * @param fecha       Filtro por fecha (opcional)
-	 * @return Una lista de objetos Evento que representan todos los eventos en la
-	 *         base de datos que coinciden con los filtros especificados.
-	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
-	 */
-	public List<Evento> obtenerTodosLosEventosActivos(String actividad, String descripcion, String ubicacion,
-			Date fecha) throws SQLException {
-		List<Evento> eventos = new ArrayList<>();
-		String sql = "SELECT * FROM eventos e " + " JOIN clasificacionEventos ce ON e.idEvento = ce.idEvento"
-				+ " JOIN actividades a on ce.idActividad= a.idActividad "
-				+ " WHERE  fechafinalizacion is null and fechapublicacion is not null ";
-
-		// Agregar cláusulas WHERE según sea necesario
-		if (actividad != null && !actividad.isEmpty()) {
-			sql += " AND Actividad like? ";
-		}
-		if (descripcion != null && !descripcion.isEmpty()) {
-			sql += " AND nombre LIKE? ";
-		}
-		if (ubicacion != null && !ubicacion.isEmpty()) {
-			sql += " AND ubicacion LIKE? ";
-		}
-		if (fecha != null) {
-			sql += " AND fechaEvento =? ";
-		}
-
-		sql += " ORDER BY id";
-
-		PreparedStatement ps = con.prepareStatement(sql);
-		System.out.println(sql);
-
-		// Agregar parámetros a la consulta según sea necesario
-		int paramIndex = 1;
-		if (actividad != null && !actividad.isEmpty()) {
-			ps.setInt(paramIndex++, Integer.parseInt(actividad));
-		}
-		if (descripcion != null && !descripcion.isEmpty()) {
-			ps.setString(paramIndex++, "%" + descripcion + "%");
-		}
-		if (ubicacion != null && !ubicacion.isEmpty()) {
-			ps.setString(paramIndex++, "%" + ubicacion + "%");
-		}
-		if (fecha != null) {
-			ps.setDate(paramIndex++, fecha);
-		}
-
-		ResultSet rs = ps.executeQuery();
-		while (rs.next()) {
-			Evento evento = new Evento();
-			evento.setIdEvento(rs.getInt("id"));
-			evento.setNombre(rs.getString("nombre"));
-			evento.setDetalles(rs.getString("detalles"));
-			evento.setIdUsuarioCreador(rs.getInt("idUsuarioCreador"));
-			evento.setFechaUltimaModificacion(rs.getDate("fechaUltimaModificacion"));
-			evento.setUbicacion(rs.getString("ubicacion"));
-			eventos.add(evento);
-		}
-		return eventos;
-	}
-
 	// ---------------------------------------------------------------------------------
 	// VOLCADOS JSON
 	// ---------------------------------------------------------------------------------
-
-	/**
-	 * Genera un objeto JSON que representa todos los eventos activos que coinciden
-	 * con los filtros especificados.
-	 *
-	 * @param actividad   Filtro por actividad.
-	 * @param descripcion Filtro por descripción.
-	 * @param ubicacion   Filtro por ubicación.
-	 * @param fecha       Filtro por fecha.
-	 * @return Una cadena JSON que representa los eventos activos que coinciden con
-	 *         los filtros especificados.
-	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
-	 */
-	public String listarJsonObtenerTodosLosEventosActivos(String actividad, String nombre, String ubicacion, Date fecha)
-			throws SQLException {
-		String json = "";
-		Gson gson = new Gson();
-		json = gson.toJson(this.obtenerTodosLosEventosActivos(actividad, nombre, ubicacion, fecha));
-		return json;
-	}
 
 	/**
 	 * Genera un objeto JSON que representa los eventos pendientes de aprobación.
