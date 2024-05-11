@@ -14,9 +14,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Enlace de scripts -->
     <script src="js/checkLogin.js"></script>
-    <script src="js/ev_CrearEv_listarActividades.js"></script>
+    
     <script src="js/ev_inputBuscar.js"></script>
-
+    <script src="js/ev_CrearEv_listarActividades.js"></script>
+    
     <script src="js/pintarTabla.js"></script>
     <script src="js/pintarTablaB.js"></script>
 
@@ -104,7 +105,7 @@
                 <form id="new-event-form" action="GestorEvento?action=crearEvento" method="POST">
                     <fieldset>
                         <legend>Datos del Evento</legend>
-                        <p> Tras la creación del evento , el </p>
+                       
                         <div class="form-group">
                             <label for="nombre">Nombre:</label>
                             <input type="text" id="nombre" name="nombre" required>
@@ -136,6 +137,9 @@
 
                             </div>
                         </div>
+                        <div class="form-group">
+                            <p>Después de crear el evento, nuestro equipo de AisiAldia revisará tu contribución y la publicará si es aceptada.</p>
+                        </div>                        
                         <div class="form-group">
                             <button type="submit" id="create-event-button">Crear Evento</button>
                         </div>

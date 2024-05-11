@@ -43,7 +43,16 @@ body{
   .form-group {
     margin-left: 30px; 
 }
-
+.form-group p {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--texto-principal);
+  padding: 15px;
+  background-color: rgba(0, 0, 0, 0.1); /* Color de fondo con transparencia */
+  border-radius: 5px;
+  margin-bottom: 15px;
+  margin-right: 30px;
+}
   #new-event-form label,
   #edit-event-form label{
     display: block;
