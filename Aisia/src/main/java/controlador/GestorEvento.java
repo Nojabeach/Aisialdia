@@ -214,19 +214,26 @@ public class GestorEvento extends HttpServlet {
 	        return;
 	    }
 
-	    // Obtener la lista de actividades seleccionadas
-	    String[] actividadIds = request.getParameterValues("idActividad");
+	 // Obtener la lista de actividades seleccionadas
+	    String[] actividadIds = request.getParameterValues("activity");
 	    List<Actividad> actividades = new ArrayList<>();
 	    if (actividadIds != null) {
 	        for (String actividadId : actividadIds) {
 	            int idActividad = Integer.parseInt(actividadId);
-	            System.out.println(idActividad);
-	            Actividad actividad = DaoActividad.getInstance().obtenerActividadPorId(idActividad);
-	            if (actividad != null) {
-	                actividades.add(actividad);
-	            }
+	            String tipoActividad = request.getParameter("activity-" + actividadId + "-tipo");
+	            // Puedes obtener la fotoActividad si la necesitas
+	            String fotoActividad = request.getParameter("activity-" + actividadId + "-foto");
+
+	            Actividad actividad = new Actividad();
+	            actividad.setIdActividad(idActividad);
+	            actividad.setTipoActividad(tipoActividad);
+	            // Puedes guardar la fotoActividad si la necesitas
+	            actividad.setFotoActividad(fotoActividad);
+
+	            actividades.add(actividad);
 	        }
 	    }
+
 
 	    // Crear el objeto Evento
 	    Evento evento = new Evento(nombre, detalles, fechaEvento, idUsuarioCreador, ubicacion, fechaCreacion);
@@ -237,24 +244,10 @@ public class GestorEvento extends HttpServlet {
 	        // Si tiene éxito, establece el código de estado HTTP 201 (Created) y envía un
 	        // mensaje de éxito
 	        response.setStatus(HttpServletResponse.SC_CREATED);
-	        // Prepara el mensaje de alerta
-	        String mensaje = "Evento creado exitosamente! El evento está pendiente de aprobación y publicación por el equipo de AisiAldia.";
-
-	        // Construye la respuesta JSON utilizando Gson
-	        String json = "";
-			Gson gson = new Gson();
-			json = gson.toJson(mensaje);
-			
-
-			// Envía la respuesta JSON
-		    response.setContentType("application/json");
-		    PrintWriter out = response.getWriter();
-		    out.print(json);
-
-		    // Redirige a otra página después de unos segundos
-		    out.print("<script>");
-		    out.print("setTimeout(function() { window.location.href = 'eventos.html'; }, 3000);"); // Redirige después de 3 segundos
-		    out.print("</script>");
+	        // Redirige a eventos.html con un parámetro en la URL
+	        response.sendRedirect("eventos.html?mensaje=Evento creado exitosamente! El evento está pendiente de aprobación y publicación por el equipo de AisiAldia.");
+	        
+	        
 	    } catch (SQLException e) {
 	        // En caso de error, muestra un mensaje de error genérico y establece el código
 	        // de estado HTTP 500 (Internal Server Error)
