@@ -41,8 +41,6 @@ function busquedaEventos() {
   const criterio = document.getElementById("search-option").value;
   const textoBusqueda = document.getElementById("search").value;
 
-alert("Buscando eventos por criterio: " + criterio);
-alert("Buscando eventos por texto: " + textoBusqueda);
   fetch(
       `GestorEvento?action=obtenerTodosLosEventosActivos&criterio=${criterio}&textoBusqueda=${textoBusqueda}`
   )

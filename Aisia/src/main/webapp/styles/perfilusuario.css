@@ -37,32 +37,11 @@
   width: 60%;
 }
 
-#perfil-form {
+#form {
   display: flex;
   flex-direction: column;
 }
 
-#perfil-form label {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-#perfil-form input {
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-#perfil-form button {
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-#perfil-form button:hover {
-  background-color: #45a049;
+.form-group {
+  margin-left: 30px; 
 }

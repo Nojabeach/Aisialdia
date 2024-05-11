@@ -9,6 +9,9 @@
   --color-terciario: #99bca9; /* Gris verdoso */
   --color-acento: #f2f7f4; /* Blanco verdoso */
   --amarillo-naranja: #f2b134; /* Amarillo naranja */
+  --amarillo-clarito: #f9fab4; /* Amarillo clarito */
+  --amarillo-naranja-claro: #ecdec2; /* Amarillo naranja */ 
+  --color-error: #e790a2; /* Rosa pastel */
 
   /* Colores de fondo */
   --fondo-principal: var(--color-secundario); /* Verde pastel */
@@ -22,6 +25,7 @@
   --texto-secundario: var(--color-secundario); /* Verde pastel */
   --texto-terciario: var(--color-terciario); /* Gris verdoso */
   --texto-blanco: var(--color-acento); /* Blanco verdoso */
+  --texto-naranja: var(--amarillo-naranja); /* Amarillo naranja */
 
   /* Colores de títulos */
   --titulo-principal: var(--color-primario); /* Verde pastel oscuro */
@@ -34,6 +38,7 @@
   --form-borde: var(--color-secundario); /* Verde pastel */
   --form-texto: var(--texto-principal); /* Verde pastel oscuro */
   --form-texto2: var(--color-acento); /* Blanco verdoso */
+  --form-fondo2: var(--color-acento); /* Blanco verdoso */
 
   /* Colores de botones */
   --boton-primario-fondo: var(--color-primario); /* Verde pastel oscuro */

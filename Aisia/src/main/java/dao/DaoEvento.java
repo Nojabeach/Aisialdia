@@ -57,13 +57,16 @@ public class DaoEvento {
 	 */
 	public int crearEvento(Evento evento, List<Actividad> actividades, Timestamp fechaUltimaModificacion)
 			throws SQLException {
-		String sqlEvento = "INSERT INTO eventos (nombre, detalles, idUsuariocreador, fechaUltimaModificacion, ubicacion) VALUES (?,?,?,?,?)";
+		String sqlEvento = "INSERT INTO eventos (nombre, detalles, idUsuariocreador, fechaUltimaModificacion, ubicacion,fechaEvento,fechaCreacion,MotivoFinalizacion) VALUES (?,?,?,?,?,?,?,?)";
 		PreparedStatement psEvento = con.prepareStatement(sqlEvento, Statement.RETURN_GENERATED_KEYS);
 		psEvento.setString(1, evento.getNombre());
 		psEvento.setString(2, evento.getDetalles());
 		psEvento.setInt(3, evento.getIdUsuarioCreador());
 		psEvento.setTimestamp(4, fechaUltimaModificacion);
 		psEvento.setString(5, evento.getUbicacion());
+		psEvento.setDate(6, evento.getFechaEvento());
+		psEvento.setDate(7, evento.getFechaCreacion());
+		psEvento.setString(8, null);
 		psEvento.executeUpdate();
 
 		ResultSet rs = psEvento.getGeneratedKeys();

@@ -38,6 +38,10 @@ public class Evento {
 	 */
 	private int idUsuarioCreador;
 	/**
+	 * Fecha de creacion del evento
+	 */
+	private Date fechaCreacion;
+	/**
 	 * Fecha de aprobacion de publicacion del evento.
 	 */
 	private Date fechaAprobacion;
@@ -127,6 +131,7 @@ public class Evento {
 	 * @param nombre                  Nombre del evento.
 	 * @param detalles                Detalles o descripción del evento.
 	 * @param idUsuarioCreador        Identificador del usuario que creó el evento.
+	 * @param fechaCreacion           Fecha de creacion del evento (formato Date).
 	 * @param fechaAprobacion         Fecha de aprobación del evento (formato Date).
 	 * @param idModeradorAprobacion   Identificador del moderador que aprobó el
 	 *                                evento.
@@ -142,15 +147,19 @@ public class Evento {
 	 * @param ubicacion               Ubicación del evento.
 	 * @param fechaEvento             Fecha del evento (formato Date)
 	 */
-	public Evento(int idEvento, String nombre, String detalles, int idUsuarioCreador, Date fechaAprobacion,
-			int idModeradorAprobacion, Date fechaPublicacion, int idModeradorPublicacion, Date fechaFinalizacion,
-			int idModeradorFinalizacion, MotivoFinalizacion motivoFinalizacion, String ubicacion, Date fechaEvento) {
 
+	public Evento(int idEvento, String nombre, String detalles, int idUsuarioCreador, Date fechaCreacion,
+			Date fechaAprobacion, Date fechaUltimaModificacion, int idModeradorAprobacion, Date fechaPublicacion,
+			int idModeradorPublicacion, Date fechaFinalizacion, int idModeradorFinalizacion,
+			MotivoFinalizacion motivoFinalizacion, String ubicacion, Date fechaEvento) {
+		super();
 		this.idEvento = idEvento;
 		this.nombre = nombre;
 		this.detalles = detalles;
 		this.idUsuarioCreador = idUsuarioCreador;
+		this.fechaCreacion = fechaCreacion;
 		this.fechaAprobacion = fechaAprobacion;
+		this.fechaUltimaModificacion = fechaUltimaModificacion;
 		this.idModeradorAprobacion = idModeradorAprobacion;
 		this.fechaPublicacion = fechaPublicacion;
 		this.idModeradorPublicacion = idModeradorPublicacion;
@@ -211,13 +220,37 @@ public class Evento {
 	 * @param detalles  Detalles o descripción del evento.
 	 * @param ubicacion Detalles de la ubicación del evento.
 	 */
-	public Evento(int idEvento, String nombre, String detalles, Date fechaEvento, String ubicacion) {
+
+	public Evento(int idEvento, String nombre, String detalles, Date fechaEvento, String ubicacion,
+			Date fechaCreacion) {
 		super();
 		this.idEvento = idEvento;
 		this.nombre = nombre;
 		this.detalles = detalles;
 		this.fechaEvento = fechaEvento;
 		this.ubicacion = ubicacion;
+		this.fechaCreacion = fechaCreacion;
+	}
+
+	/**
+	 * Crea un nuevo evento con la información proporcionada.
+	 *
+	 * @param nombre           el nombre del evento
+	 * @param detalles         los detalles del evento
+	 * @param fechaEvento      la fecha del evento
+	 * @param idUsuarioCreador el ID del usuario creador del evento
+	 * @param ubicacion        la ubicación del evento
+	 * @param fechaCreacion    la fecha de creación del evento
+	 */
+	public Evento(String nombre, String detalles, Date fechaEvento, int idUsuarioCreador, String ubicacion,
+			Date fechaCreacion) {
+		super();
+		this.nombre = nombre;
+		this.detalles = detalles;
+		this.fechaEvento = fechaEvento;
+		this.idUsuarioCreador = idUsuarioCreador;
+		this.ubicacion = ubicacion;
+		this.fechaCreacion = fechaCreacion;
 	}
 
 	// GETTERS Y SETTERS
@@ -292,6 +325,24 @@ public class Evento {
 	 */
 	public void setIdUsuarioCreador(int idUsuarioCreador) {
 		this.idUsuarioCreador = idUsuarioCreador;
+	}
+
+	/**
+	 * Devuelve la fecha en que se creó el objeto.
+	 *
+	 * @return la fecha de creación
+	 */
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+
+	/**
+	 * Establece la fecha de creación para el objeto.
+	 *
+	 * @param fechaCreacion la fecha de creación que se va a establecer
+	 */
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
 	}
 
 	/**
@@ -496,11 +547,12 @@ public class Evento {
 	@Override
 	public String toString() {
 		return "Evento [idEvento=" + idEvento + ", nombre=" + nombre + ", detalles=" + detalles + ", idUsuarioCreador="
-				+ idUsuarioCreador + ", fechaAprobacion=" + fechaAprobacion + ", fechaUltimaModificacion="
-				+ fechaUltimaModificacion + ", idModeradorAprobacion=" + idModeradorAprobacion + ", fechaPublicacion="
-				+ fechaPublicacion + ", idModeradorPublicacion=" + idModeradorPublicacion + ", fechaFinalizacion="
-				+ fechaFinalizacion + ", idModeradorFinalizacion=" + idModeradorFinalizacion + ", motivoFinalizacion="
-				+ motivoFinalizacion + ", ubicacion=" + ubicacion + ", fechaEvento=" + fechaEvento + "]";
+				+ idUsuarioCreador + ", fechaCreacion=" + fechaCreacion + ", fechaAprobacion=" + fechaAprobacion
+				+ ", fechaUltimaModificacion=" + fechaUltimaModificacion + ", idModeradorAprobacion="
+				+ idModeradorAprobacion + ", fechaPublicacion=" + fechaPublicacion + ", idModeradorPublicacion="
+				+ idModeradorPublicacion + ", fechaFinalizacion=" + fechaFinalizacion + ", idModeradorFinalizacion="
+				+ idModeradorFinalizacion + ", motivoFinalizacion=" + motivoFinalizacion + ", ubicacion=" + ubicacion
+				+ ", fechaEvento=" + fechaEvento + "]";
 	}
 
 	// MÉTODOS DE NEGOCIO

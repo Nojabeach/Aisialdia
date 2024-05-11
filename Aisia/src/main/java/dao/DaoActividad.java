@@ -129,7 +129,7 @@ public class DaoActividad {
 	 */
 	public Actividad obtenerActividadPorId(int idActividad) throws SQLException {
 		Actividad actividad = null;
-		String sql = "SELECT * FROM actividades WHERE idactividad = ?";
+		String sql = "SELECT * FROM actividades WHERE idActividad = ?";
 		System.out.println(sql);
 		try (PreparedStatement ps = con.prepareStatement(sql)) {
 			ps.setInt(1, idActividad);
@@ -137,7 +137,7 @@ public class DaoActividad {
 			try (ResultSet rs = ps.executeQuery()) {
 				if (rs.next()) {
 					actividad = new Actividad();
-					actividad.setIdActividad(rs.getInt("idactividad"));
+					actividad.setIdActividad(rs.getInt("idActividad"));
 					actividad.setTipoActividad(rs.getString("tipoActividad"));
 					actividad.setFotoActividad(rs.getString("fotoActividad"));
 				}

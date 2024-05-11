@@ -15,8 +15,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import modelo.Actividad;
 import modelo.Evento;
+import com.google.gson.Gson;
 
 /**
  * Servlet implementation class GestorEvento
@@ -177,67 +179,92 @@ public class GestorEvento extends HttpServlet {
 	 *                          datos
 	 */
 	private void crearEvento(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException, SQLException {
+	        throws IOException, ServletException, SQLException {
 
-		String nombre = request.getParameter("nombre");
-		String detalles = request.getParameter("detalles");
-		String fechaEventoStr = request.getParameter("fechaEvento");
-		Date fechaEvento = null;
+	    String nombre = request.getParameter("nombre");
+	    String detalles = request.getParameter("detalles");
+	    String fechaEventoStr = request.getParameter("fechaEvento");
+	    Date fechaEvento = null;
 
-		// Convertir la cadena a Date si es válida o asignar la fecha de hoy si es vacía
-		// o nula
-		if (fechaEventoStr != null && !fechaEventoStr.isEmpty()) {
-			try {
-				fechaEvento = Date.valueOf(fechaEventoStr);
-			} catch (IllegalArgumentException e) {
-				// Manejar la excepción de fecha inválida
-				e.printStackTrace();
-				// Establecer la respuesta de error apropiada
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().println("Error: La fecha del evento es inválida.");
-				return;
-			}
-		} else {
-			// Asignar la fecha de hoy si no se proporciona una fecha
-			fechaEvento = new Date(System.currentTimeMillis());
-		}
+	    // Convertir la cadena a Date si es válida o asignar la fecha de hoy si es vacía o nula
+	    if (fechaEventoStr != null && !fechaEventoStr.isEmpty()) {
+	        try {
+	            fechaEvento = Date.valueOf(fechaEventoStr);
+	        } catch (IllegalArgumentException e) {
+	            // Manejar la excepción de fecha inválida
+	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	            ControlErrores.mostrarErrorGenerico("Error: La fecha del evento es inválida.", response);
+	            return;
+	        }
+	    } else {
+	        // Asignar la fecha de hoy si no se proporciona una fecha
+	        fechaEvento = new Date(System.currentTimeMillis());
+	    }
+	    Date fechaCreacion = new Date(System.currentTimeMillis());
 
-		int idUsuarioCreador = Integer.parseInt(request.getParameter("idUsuario"));
-		String ubicacion = request.getParameter("ubicacion");
+	    HttpSession session = request.getSession();
+	    int idUsuarioCreador = (int) session.getAttribute("idUsuario");
 
-		// Obtener la lista de actividades seleccionadas
-		String[] actividadIds = request.getParameterValues("actividad");
-		List<Actividad> actividades = new ArrayList<>();
-		if (actividadIds != null) {
-			for (String actividadId : actividadIds) {
-				int idActividad = Integer.parseInt(actividadId);
-				Actividad actividad = DaoActividad.getInstance().obtenerActividadPorId(idActividad);
-				if (actividad != null) {
-					actividades.add(actividad);
-				}
-			}
-		}
+	    String ubicacion = request.getParameter("ubicacion");
 
-		// Obtener la marca de tiempo actual
-		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+	    // Validar los campos nombre, detalles y ubicación
+	    if (nombre == null || nombre.isEmpty() || detalles == null || detalles.isEmpty() || ubicacion == null || ubicacion.isEmpty()) {
+	        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	        ControlErrores.mostrarErrorGenerico("Error: Todos los campos son obligatorios.", response);
+	        return;
+	    }
 
-		// Crear el objeto Evento
-		Evento evento = new Evento(nombre, detalles, fechaEvento, idUsuarioCreador, ubicacion);
-		try {
-			// Intenta crear el evento en la base de datos
-			DaoEvento.getInstance().crearEvento(evento, actividades, timestamp);
-			// Si tiene éxito, establece el código de estado HTTP 201 (Created) y envía un
-			// mensaje de éxito
-			response.setStatus(HttpServletResponse.SC_CREATED);
-			response.getWriter().println("Evento creado exitosamente!");
-		} catch (SQLException e) {
-			// En caso de error, muestra un mensaje de error genérico y establece el código
-			// de estado HTTP 500 (Internal Server Error)
-			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().println("Error al crear el evento. Intente de nuevo.");
-		}
+	    // Obtener la lista de actividades seleccionadas
+	    String[] actividadIds = request.getParameterValues("idActividad");
+	    List<Actividad> actividades = new ArrayList<>();
+	    if (actividadIds != null) {
+	        for (String actividadId : actividadIds) {
+	            int idActividad = Integer.parseInt(actividadId);
+	            System.out.println(idActividad);
+	            Actividad actividad = DaoActividad.getInstance().obtenerActividadPorId(idActividad);
+	            if (actividad != null) {
+	                actividades.add(actividad);
+	            }
+	        }
+	    }
+
+	    // Crear el objeto Evento
+	    Evento evento = new Evento(nombre, detalles, fechaEvento, idUsuarioCreador, ubicacion, fechaCreacion);
+
+	    try {
+	        // Intenta crear el evento en la base de datos
+	        DaoEvento.getInstance().crearEvento(evento, actividades, new Timestamp(System.currentTimeMillis()));
+	        // Si tiene éxito, establece el código de estado HTTP 201 (Created) y envía un
+	        // mensaje de éxito
+	        response.setStatus(HttpServletResponse.SC_CREATED);
+	        // Prepara el mensaje de alerta
+	        String mensaje = "Evento creado exitosamente! El evento está pendiente de aprobación y publicación por el equipo de AisiAldia.";
+
+	        // Construye la respuesta JSON utilizando Gson
+	        String json = "";
+			Gson gson = new Gson();
+			json = gson.toJson(mensaje);
+			
+
+			// Envía la respuesta JSON
+		    response.setContentType("application/json");
+		    PrintWriter out = response.getWriter();
+		    out.print(json);
+
+		    // Redirige a otra página después de unos segundos
+		    out.print("<script>");
+		    out.print("setTimeout(function() { window.location.href = 'eventos.html'; }, 3000);"); // Redirige después de 3 segundos
+		    out.print("</script>");
+	    } catch (SQLException e) {
+	        // En caso de error, muestra un mensaje de error genérico y establece el código
+	        // de estado HTTP 500 (Internal Server Error)
+	        e.printStackTrace();
+	        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	        ControlErrores.mostrarErrorGenerico("Error al crear el evento. Intente de nuevo.", response);
+	    }
 	}
+
+
 
 	/**
 	 * Edita un evento existente en la base de datos.
@@ -258,11 +285,11 @@ public class GestorEvento extends HttpServlet {
 		Evento evento = new Evento(idEvento, nombre, detalles, fechaEvento);
 		try {
 			DaoEvento.getInstance().editarEvento(evento);
-			response.getWriter().println("Evento editado exitosamente!");
+			System.out.println("Evento editado exitosamente!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().println("Error al editar el evento. Intente de nuevo.");
+			ControlErrores.mostrarErrorGenerico("Error al editar el evento. Intente de nuevo.", response);
 		}
 	}
 
@@ -281,11 +308,11 @@ public class GestorEvento extends HttpServlet {
 		Evento evento = new Evento(idEvento);
 		try {
 			DaoEvento.getInstance().eliminarEvento(evento);
-			response.getWriter().println("Evento eliminado exitosamente!");
+			System.out.println("Evento eliminado exitosamente!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().println("Error al eliminar el evento. Intente de nuevo.");
+			ControlErrores.mostrarErrorGenerico("Error al eliminar el evento. Intente de nuevo.", response);
 		}
 	}
 
@@ -303,11 +330,11 @@ public class GestorEvento extends HttpServlet {
 		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
 		try {
 			DaoEvento.getInstance().publicarEvento(idEvento, request);
-			response.getWriter().println("Evento publicado exitosamente!");
+			System.out.println("Evento publicado exitosamente!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().println("Error al publicar el evento. Intente de nuevo.");
+			ControlErrores.mostrarErrorGenerico("Error al publicar el evento. Intente de nuevo.", response);
 		}
 	}
 
@@ -326,11 +353,11 @@ public class GestorEvento extends HttpServlet {
 
 		try {
 			DaoEvento.getInstance().rechazarEvento(idEvento, request);
-			response.getWriter().println("Evento rechazado exitosamente!");
+			// System.out.println("Evento rechazado exitosamente!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().println("Error al rechazar el evento. Intente de nuevo.");
+			ControlErrores.mostrarErrorGenerico("Error al rechazar el evento. Intente de nuevo.", response);
 		}
 	}
 
@@ -348,11 +375,12 @@ public class GestorEvento extends HttpServlet {
 		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
 		try {
 			DaoEvento.getInstance().aprobarPublicacionEvento(idEvento, request);
-			response.getWriter().println("Evento aprobado para su publicación!");
+			// System.out.println("Evento aprobado para su publicación!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().println("Error al aprobar la publicación del evento. Intente de nuevo.");
+			ControlErrores.mostrarErrorGenerico("Error al aprobar la publicación del evento. Intente de nuevo.",
+					response);
 		}
 	}
 
@@ -371,11 +399,11 @@ public class GestorEvento extends HttpServlet {
 		int idModerador = Integer.parseInt(request.getParameter("idModerador"));
 		try {
 			DaoEvento.getInstance().finalizarPublicacionEvento(idEvento, idModerador);
-			response.getWriter().println("Evento finalizado exitosamente!");
+			// System.out.println("Evento finalizado exitosamente!" );
 		} catch (SQLException e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			response.getWriter().println("Error al finalizar el evento. Intente de nuevo.");
+			ControlErrores.mostrarErrorGenerico("Error al finalizar el evento. Intente de nuevo.", response);
 		}
 	}
 
@@ -407,7 +435,7 @@ public class GestorEvento extends HttpServlet {
 		} catch (SQLException e) {
 			// En caso de error, muestra un mensaje de error genérico y lo envía en formato
 			// JSON a la respuesta
-			e.printStackTrace();
+
 			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
 		}
 	}
@@ -458,58 +486,62 @@ public class GestorEvento extends HttpServlet {
 	 *                      PrintWriter.
 	 */
 	private void obtenerTodosLosEventosActivos(HttpServletRequest request, HttpServletResponse response,
-	        PrintWriter out, int numEventos) throws SQLException, IOException {
+			PrintWriter out, int numEventos) throws SQLException, IOException {
 
-	    String tipoActividad = "";
-	    String nombre = "";
-	    String ubicacion = "";
-	    String fechaEventoStr = "";
-	    String criterio = request.getParameter("criterio");
-	    String textoBusqueda = request.getParameter("textoBusqueda");
-	    //System.out.println(criterio + " : " + textoBusqueda);
+		String tipoActividad = "";
+		String nombre = "";
+		String ubicacion = "";
+		String fechaEventoStr = "";
+		String criterio = request.getParameter("criterio");
+		String textoBusqueda = request.getParameter("textoBusqueda");
+		// System.out.println(criterio + " : " + textoBusqueda);
 
-	    try {
-	        DaoEventoConActividad eventosDao = new DaoEventoConActividad();
+		try {
+			DaoEventoConActividad eventosDao = new DaoEventoConActividad();
 
-	        // Convertir la fecha solo si se proporcionó un valor
-	        Date fechaEvento = null;
-	        if (textoBusqueda != null && !textoBusqueda.isEmpty()) {
-	            switch (criterio) {
-	                case "tipoActividad":
-	                    tipoActividad = textoBusqueda;
-	                    break;
-	                case "nombre":
-	                    nombre = textoBusqueda;
-	                    break;
-	                case "ubicacion":
-	                    ubicacion = textoBusqueda;
-	                    break;
-	                case "fechaEvento":
-	                    fechaEventoStr = textoBusqueda;
-	                    break;
-	                default:
-	                    break;
-	            }
-	        }
+			// Convertir la fecha solo si se proporcionó un valor
+			Date fechaEvento = null;
+			if (textoBusqueda != null && !textoBusqueda.isEmpty()) {
+				switch (criterio) {
+				case "tipoActividad":
+					tipoActividad = textoBusqueda;
+					break;
+				case "nombre":
+					nombre = textoBusqueda;
+					break;
+				case "ubicacion":
+					ubicacion = textoBusqueda;
+					break;
+				case "fechaEvento":
+					fechaEventoStr = textoBusqueda;
+					break;
+				default:
+					break;
+				}
+			}
 
-	        if (fechaEventoStr != null && !fechaEventoStr.isEmpty()) {
-	            fechaEvento = Date.valueOf(fechaEventoStr);
-	        }
+			if (fechaEventoStr != null && !fechaEventoStr.isEmpty()) {
+				fechaEvento = Date.valueOf(fechaEventoStr);
+				System.out.println(fechaEvento);
+			}
 
-	       /* String datos = "numEventos: " + numEventos + ", tipoActividad: " + tipoActividad + ", nombre: " + nombre
-	                + ", ubicacion: " + ubicacion + ", fechaEvento: " + fechaEvento;
+			/*
+			 * String datos = "numEventos: " + numEventos + ", tipoActividad: " +
+			 * tipoActividad + ", nombre: " + nombre + ", ubicacion: " + ubicacion +
+			 * ", fechaEvento: " + fechaEvento;
+			 * 
+			 * System.out.println(datos);
+			 */
 
-	        System.out.println(datos); */
-
-	        out.print(eventosDao.listarJsonUltimosEventos(numEventos, tipoActividad, nombre, ubicacion, fechaEvento));
-	    } catch (IllegalArgumentException e) {
-	        // La fecha proporcionada no está en el formato correcto
-	        ControlErrores.mostrarErrorGenerico("{\"error\": \"La fecha proporcionada no es válida\"}", response);
-	    } catch (SQLException e) {
-	        // Error de SQL, manejar según sea necesario
-	        e.printStackTrace();
-	        ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
-	    }
+			out.print(eventosDao.listarJsonUltimosEventos(numEventos, tipoActividad, nombre, ubicacion, fechaEvento));
+		} catch (IllegalArgumentException e) {
+			// La fecha proporcionada no está en el formato correcto
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"La fecha proporcionada no es válida\"}", response);
+		} catch (SQLException e) {
+			// Error de SQL, manejar según sea necesario
+			e.printStackTrace();
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
+		}
 	}
 
 	/**

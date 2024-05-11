@@ -386,11 +386,14 @@ form button:hover {
 }
 
 .tabla tbody tr:nth-child(even) {
-  background-color: var(--amarillo-clarito); /* Cambiado a amarillo claro */
+  background-color: var(--amarillo-clarito); 
 }
 
+.tabla tbody tr:nth-child(odd) {
+  background-color: var(--color-acento); 
+}
 .tabla tbody tr:hover {
-  background-color: var(--amarillo-naranja-claro); /* Cambiado a amarillo naranja claro */
+  background-color: var(--amarillo-naranja-claro);
 }
 
 /* Estilos para los botones */

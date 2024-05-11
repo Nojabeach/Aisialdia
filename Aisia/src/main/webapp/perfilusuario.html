@@ -1,16 +1,20 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de Usuario | AisiAldia</title>
-    <link rel="shortcut icon" href="img/Logos/logo_transparent - noText.png" type="image/x-icon" />
+    <!-- Icono de la pestaña -->
+    <link rel="shortcut icon" href="img/Logos/logo_transparent-noText.png" type="image/x-icon" />
+    <!-- Enlace de estilos -->
     <link rel="stylesheet" href="styles/estilocomun.css">
     <link rel="stylesheet" href="styles/perfilusuario.css">
+    <!-- Enlace de fonts,iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Enlace de scripts -->
     <script src="js/checkLogin.js"></script>
-    <script src="js/perfilusuario.js"></script>
+    <script src="js/perfil_cargarObjetos.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
@@ -29,7 +33,7 @@
             <button id="botonCerrarSesion">Cerrar sesión</button>
 
         </div>
-        
+
     </header>
     <nav id="navbar">
         <ul>
@@ -52,30 +56,57 @@
             </div>
             <div id="form-container">
                 <form id="perfil-form">
-                    <label for="email">Correo Electrónico:</label>
-                    <input type="email" id="email" name="email">
-                    <label for="contrasena">Contraseña:</label>
-                    <input type="password" id="contrasena" name="contrasena">
-                    <label for="fechaNacimiento">Fecha de Nacimiento:</label>
-                    <input type="date" id="fechaNacimiento" name="fechaNacimiento">
-                    <label>Recibe Notificaciones
-                        <input type="checkbox" id="recibeNotificaciones" name="recibeNotificaciones">
-                    </label>
-                    <label for="intereses">Intereses:</label>
-                    <ul id="intereses-list"></ul>
-                    <button id="editar-btn">Editar</button>
-                    <button id="guardar-btn" style="display:none">Guardar</button>
+                    <fieldset>
+                        <legend>DATOS DE USUARIO</legend>
+                        <div class="form-group">
+                            <label for="idUsuario">Nombre:</label>
+                            <input type="text" id="idUsuario" name="idUsuario">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Correo Electrónico:</label>
+
+                            <input type="email" id="email" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="contrasena">Contraseña:</label>
+                            <input type="password" id="contrasena" name="contrasena">
+                        </div>
+                        <div class="form-group">
+                            <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                            <input type="date" id="fechaNacimiento" name="fechaNacimiento">
+                        </div>
+                        <div class="form-group">
+                        <label>Recibe Notificaciones
+                            <input type="checkbox" id="recibeNotificaciones" name="recibeNotificaciones">
+                        </label></div>
+                        <div class="form-group">
+                            <label for="intereses" aria-label="Intereses">Intereses:</label>
+                            <select id="intereses" name="intereses" required>
+                                <option value="">Seleccione un interés</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                        <button id="editar-btn">Editar</button>
+                        </div>
+                        <div class="form-group">
+                        <button id="guardar-btn" style="display:none">Guardar</button>
+                        </div>
+                    </fieldset>
                 </form>
             </div>
         </div>
     </section>
 
-    <section id="favoritos-section">
-        <h2>Eventos Favoritos</h2>
-        <div id="favoritos-container"></div>
+    <section>
+        <h2>Mis Eventos Favoritos</h2>
+        <div id="favoritos-tabla">
+            <!-- La tabla FAVORITOS se generará dinámicamente aquí -->
+        </div>
     </section>
 
-    <footer>
+
+    <footer role="contentinfo">
+
         <ul>
             <li><a href="ayuda.html">Ayuda</a></li>
             <li><a href="politicadeprivacidad.html">Política de privacidad</a></li>
@@ -83,6 +114,13 @@
             <li><a href="accesibilidad.html">Accesibilidad</a></li>
             <li><a href="contacto.html">Contacto</a></li>
         </ul>
+        <div class="social-links">
+            <a href="https://discord.com/users/maitane_82" target="_blank"><i class="fab fa-discord"></i></a>
+            <a href="https://www.linkedin.com/in/maitane-ibanez-irazabal" target="_blank"><i
+                    class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/Nojabeach" target="_blank"><i class="fab fa-github"></i></a>
+        </div>
+        <p>&copy; 2024 AisiAldia. Todos los derechos reservados.</p>
     </footer>
 
 </body>
