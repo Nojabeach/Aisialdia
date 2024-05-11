@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import jakarta.servlet.annotation.WebServlet;
-import dao.DaoActividad;
 import dao.DaoEvento;
 import dao.DaoEventoConActividad;
 import jakarta.servlet.ServletException;
@@ -18,7 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import modelo.Actividad;
 import modelo.Evento;
-import com.google.gson.Gson;
+
 
 /**
  * Servlet implementation class GestorEvento
@@ -245,7 +244,7 @@ public class GestorEvento extends HttpServlet {
 	        // mensaje de éxito
 	        response.setStatus(HttpServletResponse.SC_CREATED);
 	        // Redirige a eventos.html con un parámetro en la URL
-	        response.sendRedirect("eventos.html?mensaje=Evento creado exitosamente! El evento está pendiente de aprobación y publicación por el equipo de AisiAldia.");
+	        response.sendRedirect("eventos.html");
 	        
 	        
 	    } catch (SQLException e) {
@@ -514,8 +513,10 @@ public class GestorEvento extends HttpServlet {
 			}
 
 			if (fechaEventoStr != null && !fechaEventoStr.isEmpty()) {
+				System.out.println("fechaEvento : "+ fechaEvento);
+				
 				fechaEvento = Date.valueOf(fechaEventoStr);
-				System.out.println(fechaEvento);
+				
 			}
 
 			/*
@@ -525,7 +526,8 @@ public class GestorEvento extends HttpServlet {
 			 * 
 			 * System.out.println(datos);
 			 */
-
+		
+			
 			out.print(eventosDao.listarJsonUltimosEventos(numEventos, tipoActividad, nombre, ubicacion, fechaEvento));
 		} catch (IllegalArgumentException e) {
 			// La fecha proporcionada no está en el formato correcto

@@ -39,7 +39,17 @@ function obtenerTodosLosEventosActivos() {
 
 function busquedaEventos() {
   const criterio = document.getElementById("search-option").value;
-  const textoBusqueda = document.getElementById("search").value;
+  let textoBusqueda = document.getElementById("search").value;
+
+  if (criterio === "fechaEvento") {
+    // Si el criterio es fechaEvento, construye un objeto Date
+    // y formatea la fecha en formato yyyy-mm-dd
+    const fecha = new Date(textoBusqueda);
+    const yyyy = fecha.getFullYear();
+    const mm = String(fecha.getMonth() + 1).padStart(2, '0'); // Enero es 0!
+    const dd = String(fecha.getDate()).padStart(2, '0');
+    textoBusqueda = `${yyyy}-${mm}-${dd}`;
+  }
 
   fetch(
       `GestorEvento?action=obtenerTodosLosEventosActivos&criterio=${criterio}&textoBusqueda=${textoBusqueda}`
@@ -53,3 +63,4 @@ function busquedaEventos() {
       console.log("Pintando eventos buscados");
   });
 }
+

@@ -222,6 +222,7 @@ public class GestorActividad extends HttpServlet {
 
 		try {
 			DaoActividad actividad = new DaoActividad();
+			//System.out.println("Entro a ver actividades");
 			out.print(actividad.listarJsonTodasActividades());
 			//System.out.println(actividad.listarJsonTodasActividades());
 		} catch (SQLException e) {

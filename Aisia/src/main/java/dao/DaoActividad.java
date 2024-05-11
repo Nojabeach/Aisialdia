@@ -105,13 +105,13 @@ public class DaoActividad {
 	 */
 	public List<Actividad> obtenerTodasLasActividades() throws SQLException {
 		List<Actividad> actividades = new ArrayList<>();
-		String sql = "SELECT * FROM actividades order by TipoActividad";
+		String sql = "SELECT * FROM actividades order by tipoActividad";
 		//System.out.println(sql);
 		try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
 				Actividad actividad = new Actividad();
-				actividad.setIdActividad(rs.getInt("idactividad"));
-				actividad.setTipoActividad(rs.getString("TipoActividad"));
+				actividad.setIdActividad(rs.getInt("idActividad"));
+				actividad.setTipoActividad(rs.getString("tipoActividad"));
 				actividad.setFotoActividad(rs.getString("fotoActividad"));
 
 				actividades.add(actividad);
