@@ -3,10 +3,16 @@
 document.addEventListener("DOMContentLoaded", function () {
   console.log ("Rellenando favoritos del perfil");
 
-// Variable global para almacenar el idUsuario
-var idUsuarioGlobal;
+  // Variable global para almacenar el idUsuario
+  var idUsuarioGlobal;
 
-// En el login, después de obtener el idUsuario
+  // En el login, después de obtener el idUsuario
+  idUsuarioGlobal = document.getElementById("nombreUsuario").textContent;
+  // Asignar el idUsuario al nombre de usuario en el perfil
+  let nombreUsuarioPerfil = document.getElementById("nombreUsuarioPerfil");
+  if (nombreUsuarioPerfil) {
+    nombreUsuarioPerfil.textContent = idUsuarioGlobal;
+  }
 
 
   perfil_obtenerFavoritos();
@@ -32,11 +38,6 @@ if (guardarBtn) {
 function rellenarFormularioPerfil() {
   console.log("Dentro de rellenarFormularioPerfil");
 
-  // Asignar el idUsuario al nombre de usuario en el perfil
-  let nombreUsuarioPerfil = document.getElementById("nombreUsuarioPerfil");
-  if (nombreUsuarioPerfil) {
-    nombreUsuarioPerfil.textContent = idUsuarioGlobal;
-  }
 
   // Llamada a servlet para obtener los datos del usuario y rellenar formularios
   let servlet = 'GestorUsuario';
