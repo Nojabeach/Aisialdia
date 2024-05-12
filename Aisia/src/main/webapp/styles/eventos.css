@@ -53,6 +53,22 @@ body{
   margin-bottom: 15px;
   margin-right: 30px;
 }
+/* Estilos para los select */
+select {
+  width: calc(100% - 40px);
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid var(--borde-principal);
+  border-radius: 5px;
+  background-color: var(--fondo-terciario);
+  color: var(--texto-principal);
+}
+
+/* Estilo para los botones dentro de los selects */
+select option {
+  padding: 10px;
+}
+
   #new-event-form label,
   #edit-event-form label{
     display: block;
@@ -63,8 +79,10 @@ body{
   
   #new-event-form input[type="text"],
   #edit-event-form input[type="text"],
+  #search-inputs input[type="text"],
   #new-event-form input[type="date"],
   #edit-event-form input[type="date"],
+  #search-inputs input[type="date"],
   #new-event-form textarea,
   #edit-event-form textarea{
     width: calc(100% - 40px);
@@ -92,10 +110,19 @@ body{
     background-color: var(--boton-primario-hover);
   }
   
+
+
+
   /* Separación entre el main y el footer */
   main {
     margin-bottom: 30px;
   }
+#search-button {  
+  margin-left: 30px;
+  margin-right: 30px;
+  width: calc(100% - 70px);
+  padding: 10px;
+}
   
   /* Media queries para dispositivos móviles y tablets */
   @media (max-width: 768px) {
@@ -107,8 +134,10 @@ body{
     /* Formulario de nuevo evento */
     #new-event-form input[type="text"],
     #edit-event-form input[type="text"],
+    #search-inputs input[type="text"],
     #new-event-form input[type="date"],
     #edit-event-form input[type="date"],
+    #search-inputs input[type="date"],
     #new-event-form textarea ,
     #edit-event-form textarea{
       width: 100%; /* Ancho completo */

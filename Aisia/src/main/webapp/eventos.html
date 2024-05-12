@@ -20,9 +20,10 @@
     
     <script src="js/pintarTabla.js"></script>
     <script src="js/pintarTablaB.js"></script>
-
+    <script src="js/pintarTablaAdd.js"></script>
+    
     <script src="js/ev_cargarObjetos.js"></script>
-    <script src="js/eventoCreadoOK.js"></script>
+
 
 </head>
 
@@ -74,16 +75,15 @@
                         <option value="fechaEvento">Fecha del evento</option>
                     </select>
 
-                    <fieldset>
+                    <fieldset id="buscarFieldset">
                         <legend>Opciones de búsqueda</legend>
                         <div id="search-inputs">
                             <label for="search">Buscar:</label>
                             <!-- Input dinámico -->
-                            <div id="search-input">
-                                <input type="text" id="search" name="search">
-                            </div>
-                            <button type="submit" id="search-button">Buscar</button>
+                            <input type="text" id="search" name="search">
+                           
                         </div>
+                        <button type="submit" id="search-button">Buscar</button>
                     </fieldset>
 
                     <div id="Buscar-tabla">

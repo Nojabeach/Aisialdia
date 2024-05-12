@@ -32,9 +32,9 @@ function pintarTabla(data, container) {
                 columnasConDatos.forEach(columna => {
                     if (item[columna] !== null && item[columna] !== undefined) {
                         let celda = document.createElement('td');
-                        if (columna.toLowerCase().endsWith('.png')) {
+                        if (item[columna].toLowerCase().endsWith('.png')) {
                             let image = document.createElement('img');
-                            image.src = `img/Iconos/${item[columna]}.png`;
+                            image.src = `img/Iconos/${item[columna]}`;
                             image.width = 32; // Establecer ancho a 32
                             image.height = 32; // Establecer alto a 32
                             image.alt = columna;

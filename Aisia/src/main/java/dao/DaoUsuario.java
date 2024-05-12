@@ -58,8 +58,8 @@ public class DaoUsuario {
 	public void registrarUsuario(Usuario usuario) throws SQLException, IllegalArgumentException {
 
 		String sql = "INSERT INTO usuarios (nombre, email, contrasena,fechaNacimiento,recibeNotificaciones,intereses,roles,permiso,consentimiento_datos,aceptacionTerminosWeb) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		System.out.println(sql);
-		System.out.println(sql);
+		
+		//System.out.println(sql);
 		PreparedStatement ps = con.prepareStatement(sql);
 		ps.setString(1, usuario.getNombre());
 		ps.setString(2, usuario.getEmail());

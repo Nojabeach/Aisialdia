@@ -277,7 +277,7 @@ public class GestorEvento extends HttpServlet {
 		Evento evento = new Evento(idEvento, nombre, detalles, fechaEvento);
 		try {
 			DaoEvento.getInstance().editarEvento(evento);
-			System.out.println("Evento editado exitosamente!");
+			//System.out.println("Evento editado exitosamente!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -300,7 +300,7 @@ public class GestorEvento extends HttpServlet {
 		Evento evento = new Evento(idEvento);
 		try {
 			DaoEvento.getInstance().eliminarEvento(evento);
-			System.out.println("Evento eliminado exitosamente!");
+			//System.out.println("Evento eliminado exitosamente!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -322,7 +322,7 @@ public class GestorEvento extends HttpServlet {
 		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
 		try {
 			DaoEvento.getInstance().publicarEvento(idEvento, request);
-			System.out.println("Evento publicado exitosamente!");
+			//System.out.println("Evento publicado exitosamente!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -513,7 +513,7 @@ public class GestorEvento extends HttpServlet {
 			}
 
 			if (fechaEventoStr != null && !fechaEventoStr.isEmpty()) {
-				System.out.println("fechaEvento : "+ fechaEvento);
+				//System.out.println("fechaEvento : "+ fechaEvento);
 				
 				fechaEvento = Date.valueOf(fechaEventoStr);
 				

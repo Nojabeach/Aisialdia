@@ -103,9 +103,9 @@ public class GestorActividad extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("Llegó una solicitud POST al servlet");
+		//System.out.println("Llegó una solicitud POST al servlet");
 		String action = request.getParameter("action");
-		System.out.println("Action: " + action);
+		//System.out.println("Action: " + action);
 		try {
 			switch (action) {
 			case "crearActividad":
@@ -147,9 +147,9 @@ public class GestorActividad extends HttpServlet {
 			throws IOException, ServletException {
 
 		String tipoActividad = request.getParameter("tipoActividad");
-		System.out.println(tipoActividad);
+		//System.out.println(tipoActividad);
 		String fileName = GestionFotos.subirFotoAlServidor(request.getPart("fotoActividad"), response);
-		System.out.println(fileName);
+		//System.out.println(fileName);
 		Actividad actividad = new Actividad(tipoActividad, fileName);
 
 		try {

@@ -1,25 +1,26 @@
 document.addEventListener("DOMContentLoaded", function () {
     const searchOption = document.getElementById("search-option");
-    const searchInputContainer = document.getElementById("search-input");
     const searchInput = document.getElementById("search");
 
     // Función para cambiar el tipo de input según la opción seleccionada
     function cambiarTipoInput() {
         const seleccion = searchOption.value;
+        const searchInputsContainer = document.getElementById("search-inputs");
+        searchInputsContainer.innerHTML = ""; // Limpiar el contenido actual
+
         if (seleccion === "fechaEvento") {
-            searchInput.innerHTML = ""; // Limpiar el contenido actual
             const inputDate = document.createElement("input");
             inputDate.type = "date";
             inputDate.id = "search";
             inputDate.name = "search";
-            searchInput.appendChild(inputDate);
+            inputDate.value = "2021-01-01";
+            searchInputsContainer.appendChild(inputDate);
         } else {
-            searchInput.innerHTML = ""; // Limpiar el contenido actual
             const inputText = document.createElement("input");
             inputText.type = "text";
             inputText.id = "search";
             inputText.name = "search";
-            searchInput.appendChild(inputText);
+            searchInputsContainer.appendChild(inputText);
         }
     }
 

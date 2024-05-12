@@ -1,11 +1,9 @@
-function pintarTablaSoloBorrar_Favorito(data, container) {
+
+function pintarTablaAgregarFavorito(data, container) {
     let tabla = document.createElement('table');
-    // Agregar clases de estilo a la tabla
     tabla.classList.add('tabla');
 
-    
-    // Limpiar la tabla antes de agregar nuevos datos
-    container.innerHTML = '';
+    container.innerHTML = ''; // Limpiar la tabla antes de agregar nuevos datos
 
     // Crear encabezados de tabla solo para las columnas con datos
     let columnasConDatos = Object.keys(data[0]).filter(columna => {
@@ -19,7 +17,7 @@ function pintarTablaSoloBorrar_Favorito(data, container) {
         th.textContent = columna;
         filaEncabezado.appendChild(th);
     });
-    // Agregar una columna extra para el botón de borrar
+    // Agregar una columna extra para el botón de agregar
     filaEncabezado.innerHTML += "<th>Acciones</th>";
     thead.appendChild(filaEncabezado);
     tabla.appendChild(thead);
@@ -33,10 +31,11 @@ function pintarTablaSoloBorrar_Favorito(data, container) {
             if (item[columna] !== 0 && item[columna] !== null && item[columna] !== undefined) {
                 let celda = document.createElement('td');
                 let valorCelda = item[columna].toString(); // Convertir a cadena
-
+                console.log("Fuera_Ruta de la imagen:", `img/Iconos/${valorCelda}`); 
                 if (valorCelda.toLowerCase().endsWith('.png')) {
                     let image = document.createElement('img');
                     image.src = `img/Iconos/${item[columna]}`;
+                    console.log("Ruta de la imagen:", image.src); // Log de la ruta de la imagen
                     image.alt = columna;
                     image.width = 32; // Establecer ancho a 32
                     image.height = 32; // Establecer alto a 32
@@ -48,17 +47,17 @@ function pintarTablaSoloBorrar_Favorito(data, container) {
             }
         });
 
-        // Crear celda para borrar
-        let celdaBorrar = document.createElement('td');
-        let botonBorrar = document.createElement('button');
-        botonBorrar.textContent = 'Borrar';
-        botonBorrar.dataset.eventoId = item.idEvento; // Agregar atributo de datos con el idEvento
+        // Crear celda para agregar
+        let celdaAgregar = document.createElement('td');
+        let botonAgregar = document.createElement('button');
+        botonAgregar.textContent = 'Agregar';
+        botonAgregar.dataset.eventoId = item.idEvento; // Agregar atributo de datos con el idEvento
 
-        // Agregar clase de estilo para el botón de borrar
-        botonBorrar.classList.add('boton-primario');
+        // Agregar clase de estilo para el botón de agregar
+        botonAgregar.classList.add('boton-primario');
 
-        celdaBorrar.appendChild(botonBorrar);
-        fila.appendChild(celdaBorrar);
+        celdaAgregar.appendChild(botonAgregar);
+        fila.appendChild(celdaAgregar);
 
         tbody.appendChild(fila);
     });
@@ -68,37 +67,36 @@ function pintarTablaSoloBorrar_Favorito(data, container) {
     // Agregar tabla al contenedor
     container.appendChild(tabla);
 
-    // Asignar evento de borrado a los botones
-    asignarEventoFavoritoBorrar();
+    // Asignar evento de agregar a los botones
+    asignarEventoFavoritoAgregar();
 }
 
-// Asignar evento de borrado a los botones
-function asignarEventoFavoritoBorrar() {
+function asignarEventoFavoritoAgregar() {
     document.querySelectorAll('.boton-primario').forEach(boton => {
         boton.addEventListener('click', function() {
             let idEvento = this.dataset.eventoId;
-            console.log('Asignar evento a borrar', idEvento);
-            eliminarEventoFavorito(idEvento);
+            console.log('Asignar evento a agregar', idEvento);
+            agregarEventoFavorito(idEvento);
         });
     });
 }
 
-function eliminarEventoFavorito(idEvento) {
-    console.log('Eliminando evento', idEvento);
+function agregarEventoFavorito(idEvento) {
+    console.log('Agregando evento', idEvento);
     fetch('GestorFavorito', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: `action=eliminarFavorito&idEvento=${idEvento}`
+        body: `action=agregarFavorito&idEvento=${idEvento}`
     })
         .then(response => {
             if (response.ok) {
-                console.log('Evento eliminado correctamente, actualizo la lista');
-                // Actualizar la lista después de eliminar
+                console.log('Evento agregado correctamente, actualizo la lista');
+                // Actualizar la lista después de agregar
                 obtenerFavoritos();
             } else {
-                console.error('Error al eliminar el evento');
+                console.error('Error al agregar el evento');
             }
         });
 }

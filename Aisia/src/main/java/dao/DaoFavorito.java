@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -51,13 +52,21 @@ public class DaoFavorito {
 	 * @throws SQLException Si ocurre un error al agregar el favorito.
 	 */
 	public void agregarFavoritoEvento(int idEvento, HttpServletRequest request) throws SQLException {
-		String sql = "INSERT INTO gestionfavoritos (idEvento, idUsuario) VALUES (?, ?)";
+		String sql = "INSERT INTO gestionfavoritos (idEvento, idUsuario, fechaCreacionFavorito) "
+				+ " SELECT ?, ?, ? "
+				+ " FROM dual"
+				+ " WHERE NOT EXISTS ( "
+				+ "    SELECT 1 "
+				+ "    FROM gestionfavoritos "
+				+ "    WHERE idEvento = ? AND idUsuario = ? )" ;
 		PreparedStatement ps = con.prepareStatement(sql);
 		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
-
+		 Date fechaCreacion = new Date(System.currentTimeMillis());
 		ps = con.prepareStatement(sql);
 		ps.setInt(1, idEvento);
 		ps.setInt(2, idUsuarioActual);
+		ps.setDate(3, fechaCreacion);
+		
 		ps.executeUpdate();
 
 	}
@@ -73,7 +82,7 @@ public class DaoFavorito {
 		String sql = "DELETE FROM gestionfavoritos WHERE idEvento = ? AND idUsuario = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
 		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
-		System.out.println(idUsuarioActual);
+		//System.out.println(idUsuarioActual);
 		ps = con.prepareStatement(sql);
 		ps.setInt(1, idEvento);
 		ps.setInt(2, idUsuarioActual);

@@ -32,7 +32,7 @@ function obtenerTodosLosEventosActivos() {
       console.log(data);
       const contenedorAPintar = document.getElementById("Publicados-tabla");
       contenedorAPintar.innerHTML = ""; // Limpiar el contenedor antes de agregar nuevos elementos
-      pintarTabla(data, contenedorAPintar); // Pintar la tabla
+      pintarTablaAgregarFavorito(data, contenedorAPintar); // Pintar la tabla
       console.log("Pintando eventos activos");
     });
 }
@@ -59,7 +59,7 @@ function busquedaEventos() {
       console.log("Buscando eventos por criterio: " + criterio);
       const contenedorAPintar = document.getElementById("Buscar-tabla");
       contenedorAPintar.innerHTML = ""; // Limpiar el contenedor antes de agregar nuevos elementos
-      pintarTabla(data, contenedorAPintar); // Pintar la tabla
+      pintarTablaB(data, contenedorAPintar); // Pintar la tabla
       console.log("Pintando eventos buscados");
   });
 }
