@@ -1,54 +1,58 @@
-function llamada(servlet, action, op, formularioId) {
+function cargarFormularioDesdeServlet(servlet, action, op, formularioId) {
+    console.log("Realizando llamada a:", servlet);
     fetch(`${servlet}?action=${action}&id=${op}`)
-    .then(response => {
+      .then((response) => {
         if (!response.ok) {
-            throw new Error('Error al cargar los datos');
+          throw new Error("Error al cargar los datos");
         }
         return response.json();
-    })
-    .then(data => {
+      })
+      .then((data) => {
+        console.log("Datos recibidos:", data);
         llenarFormulario(data, formularioId);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-
-function llenarFormulario(data, formularioId) {
-    // Obtener el formulario
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+  
+  function llenarFormulario(data, formularioId) {
+    console.log("Llenando formulario con datos:", data);
     let form = document.getElementById(formularioId);
-
-    // Llenar los campos del formulario con los datos recibidos
-    Object.keys(data).forEach(key => {
-        let element = form.elements[key];
-        if (element) {
-            element.value = data[key];
-        }
+    Object.keys(data).forEach((key) => {
+      let element = form.elements[key];
+      if (element) {
+        element.value = data[key];
+      }
     });
-}
-
-function getParameterByName(name) {
+  }
+  function validarFormulario(formularioId) {
+    console.log("Validando formulario:", formularioId);
+    let form = document.getElementById(formularioId);
+    let inputs = form.querySelectorAll("input, textarea");
+    let ok = true;
+  
+    inputs.forEach((input) => {
+      if (input.value.trim() === "") {
+        ok = false;
+        input.style.background = "rgba(255, 0, 0, 0.1)"; // Fondo rojo claro
+      } else {
+        input.style.background = "";
+      }
+    });
+  
+    if (!ok) {
+      console.log("Algunos campos están vacíos o incorrectos.");
+    }
+  
+    return ok;
+  }
+  function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-    results = regex.exec(location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
-
-function validarFormulario(formularioId) {
-    let form = document.getElementById(formularioId);
-    let inputs = form.querySelectorAll('input, textarea');
-    let ok = true;
-
-    inputs.forEach(input => {
-        if (input.value.trim() === "") {
-            ok = false;
-            input.style.background = "red";
-        } else {
-            input.style.background = "";
-        }
-    });
-
-    if (ok) {
-        form.submit();
-    }
-}
+      results = regex.exec(location.search);
+    return results === null
+      ? ""
+      : decodeURIComponent(results[1].replace(/\+/g, " "));
+  }
+  
