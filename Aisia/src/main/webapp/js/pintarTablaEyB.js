@@ -137,6 +137,8 @@ function pintarTablaEyB(data, idTabla) {
   });
 
   tabla.appendChild(tbody);
+
+    
 }
 
 function EyBeditarUsuario(usuario) {

@@ -53,4 +53,5 @@ function pintarTabla(data, container) {
 
     // Agregar tabla al contenedor
     container.appendChild(tabla);
+
 }

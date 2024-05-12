@@ -370,10 +370,10 @@ form button:hover {
 }
 .tabla {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  max-height: calc(100vh - 350px);
-  overflow: scroll;
+  max-height: calc(100vh - 550px);
+    border-collapse: collapse;
+    margin-top: 20px;
+    overflow: scroll;
 }
 
 .tabla thead {
