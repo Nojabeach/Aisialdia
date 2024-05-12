@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function rellenarFormularioPerfil(idUsuario) {
   console.log("Dentro de rellenarFormularioPerfil");
-    infoUsuario();
+  infoUsuario();
   // Llamada a servlet para obtener los datos del usuario y rellenar formularios
   let servlet = "GestorUsuario";
   let action = "obtenerInfoUsuario";
@@ -62,16 +62,14 @@ function perfil_obtenerFavoritos() {
       console.log("Pintando favoritos");
     });
 }
- function infoUsuario(){
-
-      // carga la info del usuario en el formulario
+function infoUsuario() {
+  // carga la info del usuario en el formulario
   fetch("GestorUsuario?action=checkLogin")
-  .then((response) => response.json())
-  .then((data) => {
-    // Mostrar la información del usuario en el div
-    document.getElementById("nombreUsuarioPerfil").innerText =
-      data.nombreUsuario;
-  })
-  .catch((error) => console.error("Error al cargar el usuario:", error));
-
- }
+    .then((response) => response.json())
+    .then((data) => {
+      // Mostrar la información del usuario en el div
+      document.getElementById("nombreUsuarioPerfil").innerText =
+        data.nombreUsuario;
+    })
+    .catch((error) => console.error("Error al cargar el usuario:", error));
+}

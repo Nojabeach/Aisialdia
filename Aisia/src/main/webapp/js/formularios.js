@@ -26,9 +26,11 @@ function llenarFormulario(data, formularioId) {
       let element = form.elements[key];
       if (element) {
           if (element.type === "date") {
-              element.value = data[key]; // Para campos de fecha
+              // Para campos de fecha
+              element.value = data[key] ? new Date(data[key]).toISOString().split('T')[0] : ""; // Formatear fecha si no es null
           } else if (element.type === "checkbox") {
-              element.checked = data[key]; // Para campos checkbox
+              // Para campos checkbox
+              element.checked = (data[key] === "true");
           } else if (element.tagName === "SELECT") {
               // Para campos select
               let options = element.options;
@@ -39,11 +41,13 @@ function llenarFormulario(data, formularioId) {
                   }
               }
           } else {
-              element.value = data[key]; // Para otros tipos de campos
+              // Para otros tipos de campos
+              element.value = data[key];
           }
       }
   });
 }
+
 
   function validarFormulario(formularioId) {
     console.log("Validando formulario:", formularioId);

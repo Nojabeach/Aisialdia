@@ -19,6 +19,7 @@
 
     <script src="js/formularios.js"></script> <!-- Script para manejar los formularios -->
     <script src="js/perfil_cargarObjetos.js"></script><!-- Script para cargar los datos del perfil -->
+    <script src="js/perfil_cambioPass.js"></script><!-- Script para cambiar la contraseña -->
 
 </head>
 
@@ -73,7 +74,16 @@
                                 <input type="email" id="email" name="email">
                             </div>
                             <div class="form-group">
-                                <button id="cambiarContrasena"> Cambiar contraseña </button>
+                                <fieldset>
+                                    <legend>Cambio de contraseña</legend>
+                                    <div class="form-group">
+                                        <label for="contrasenaOR">Contraseña Actual:</label>
+                                        <input type="password" id="contrasenaOR" name="contrasenaOR">
+                                        <label for="contrasenaAC">Contraseña Nueva:</label>
+                                        <input type="password" id="contrasenaAC" name="contrasenaAC">
+                                        <button id="cambiarContrasena"> Cambiar contraseña </button>
+                                    </div>
+                                </fieldset> 
                             </div>
                             <div class="form-group">
                                 <label for="fechaNacimiento">Fecha de Nacimiento:</label>
