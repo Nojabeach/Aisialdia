@@ -486,7 +486,7 @@ public class GestorEvento extends HttpServlet {
 		String fechaEventoStr = "";
 		String criterio = request.getParameter("criterio");
 		String textoBusqueda = request.getParameter("textoBusqueda");
-		// System.out.println(criterio + " : " + textoBusqueda);
+		 //System.out.println(criterio + " : " + textoBusqueda);
 
 		try {
 			DaoEventoConActividad eventosDao = new DaoEventoConActividad();
@@ -516,6 +516,8 @@ public class GestorEvento extends HttpServlet {
 				//System.out.println("fechaEvento : "+ fechaEvento);
 				
 				fechaEvento = Date.valueOf(fechaEventoStr);
+				
+				//System.out.println(fechaEvento);
 				
 			}
 

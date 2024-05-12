@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function rellenarFormularioPerfil() {
     console.log("dentro de rellenarFormularioPerfil");
-    alert("rellenarFormularioPerfil");
+    
   let servlet = 'GestorUsuario';
   let action = 'editarUsuario';
   let op = getParameterByName("idUsuario");

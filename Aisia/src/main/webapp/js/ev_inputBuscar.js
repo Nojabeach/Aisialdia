@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
             inputDate.type = "date";
             inputDate.id = "search";
             inputDate.name = "search";
-            inputDate.value = "2021-01-01";
+            inputDate.value = "2024-05-01";
             searchInputsContainer.appendChild(inputDate);
         } else {
             const inputText = document.createElement("input");

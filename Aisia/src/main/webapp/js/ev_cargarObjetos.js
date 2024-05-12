@@ -59,7 +59,7 @@ function busquedaEventos() {
       console.log("Buscando eventos por criterio: " + criterio);
       const contenedorAPintar = document.getElementById("Buscar-tabla");
       contenedorAPintar.innerHTML = ""; // Limpiar el contenedor antes de agregar nuevos elementos
-      pintarTablaB(data, contenedorAPintar); // Pintar la tabla
+      pintarTablaAgregarFavorito(data, contenedorAPintar); // Pintar la tabla
       console.log("Pintando eventos buscados");
   });
 }

@@ -1,14 +1,16 @@
-
 function pintarTablaAgregarFavorito(data, container) {
     let tabla = document.createElement('table');
     tabla.classList.add('tabla');
 
     container.innerHTML = ''; // Limpiar la tabla antes de agregar nuevos datos
 
-    // Crear encabezados de tabla solo para las columnas con datos
-    let columnasConDatos = Object.keys(data[0]).filter(columna => {
-        return data.some(item => item[columna] !== 0 && item[columna] !== null && item[columna] !== undefined);
-    });
+    // Crear encabezados de tabla
+    let columnasConDatos = [];
+    if (data.length > 0) {
+        columnasConDatos = Object.keys(data[0]).filter(columna => {
+            return data.some(item => item[columna] !== 0 && item[columna] !== null && item[columna] !== undefined);
+        });
+    }
 
     let thead = document.createElement('thead');
     let filaEncabezado = document.createElement('tr');
@@ -31,11 +33,11 @@ function pintarTablaAgregarFavorito(data, container) {
             if (item[columna] !== 0 && item[columna] !== null && item[columna] !== undefined) {
                 let celda = document.createElement('td');
                 let valorCelda = item[columna].toString(); // Convertir a cadena
-                console.log("Fuera_Ruta de la imagen:", `img/Iconos/${valorCelda}`); 
+
                 if (valorCelda.toLowerCase().endsWith('.png')) {
                     let image = document.createElement('img');
                     image.src = `img/Iconos/${item[columna]}`;
-                    console.log("Ruta de la imagen:", image.src); // Log de la ruta de la imagen
+
                     image.alt = columna;
                     image.width = 32; // Establecer ancho a 32
                     image.height = 32; // Establecer alto a 32
@@ -54,7 +56,7 @@ function pintarTablaAgregarFavorito(data, container) {
         botonAgregar.dataset.eventoId = item.idEvento; // Agregar atributo de datos con el idEvento
 
         // Agregar clase de estilo para el botón de agregar
-        botonAgregar.classList.add('boton-primario');
+        botonAgregar.classList.add('boton-terciario');
 
         celdaAgregar.appendChild(botonAgregar);
         fila.appendChild(celdaAgregar);
@@ -72,7 +74,7 @@ function pintarTablaAgregarFavorito(data, container) {
 }
 
 function asignarEventoFavoritoAgregar() {
-    document.querySelectorAll('.boton-primario').forEach(boton => {
+    document.querySelectorAll('.boton-terciario').forEach(boton => {
         boton.addEventListener('click', function() {
             let idEvento = this.dataset.eventoId;
             console.log('Asignar evento a agregar', idEvento);

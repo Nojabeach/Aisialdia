@@ -14,12 +14,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Enlace de scripts -->
     <script src="js/checkLogin.js"></script>
-    
+
     <script src="js/pintarTablaB.js"></script>
     <script src="js/ev_cargarObjetos.js"></script>
 
     <script src="js/perfil_cargarObjetos.js"></script>
-    
+
 </head>
 
 <body>
@@ -47,67 +47,69 @@
             <li><a href="perfilusuario.html">Mi Perfil</a></li>
         </ul>
     </nav>
-    <section id="perfil-section">
-        <h2>Perfil de Usuario</h2>
-        <div id="perfil-container">
-            <div id="perfil-info">
-                <div id="foto-container">
-                    <img id="foto" src="img/Varios/usuarioPerfil.png" alt="Foto de perfil por defecto">
+    <main id="seccionCuerpo">
+        <section id="perfil-section">
+            <h2>Perfil de Usuario</h2>
+            <div id="perfil-container">
+                <div id="perfil-info">
+                    <div id="foto-container">
+                        <img id="foto" src="img/Varios/usuarioPerfil.png" alt="Foto de perfil por defecto">
+                    </div>
+                    <div id="nombre-container">
+                        <p id="nombreUsuario"></p>
+                    </div>
                 </div>
-                <div id="nombre-container">
-                    <p id="nombreUsuario"></p>
+                <div id="form-container">
+                    <form id="perfil-form">
+                        <fieldset>
+                            <legend>DATOS DE USUARIO</legend>
+                            <div class="form-group">
+                                <label for="idUsuario">Nombre:</label>
+                                <input type="text" id="idUsuario" name="idUsuario">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Correo Electrónico:</label>
+
+                                <input type="email" id="email" name="email">
+                            </div>
+                            <div class="form-group">
+                                <label for="contrasena">Contraseña:</label>
+                                <input type="password" id="contrasena" name="contrasena">
+                            </div>
+                            <div class="form-group">
+                                <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                                <input type="date" id="fechaNacimiento" name="fechaNacimiento">
+                            </div>
+                            <div class="form-group">
+                                <label>Recibe Notificaciones
+                                    <input type="checkbox" id="recibeNotificaciones" name="recibeNotificaciones">
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="intereses" aria-label="Intereses">Intereses:</label>
+                                <select id="intereses" name="intereses" required>
+                                    <option value="">Seleccione un interés</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button id="editar-btn">Editar</button>
+                            </div>
+                            <div class="form-group">
+                                <button id="guardar-btn" style="display:none">Guardar</button>
+                            </div>
+                        </fieldset>
+                    </form>
                 </div>
             </div>
-            <div id="form-container">
-                <form id="perfil-form">
-                    <fieldset>
-                        <legend>DATOS DE USUARIO</legend>
-                        <div class="form-group">
-                            <label for="idUsuario">Nombre:</label>
-                            <input type="text" id="idUsuario" name="idUsuario">
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Correo Electrónico:</label>
+        </section>
 
-                            <input type="email" id="email" name="email">
-                        </div>
-                        <div class="form-group">
-                            <label for="contrasena">Contraseña:</label>
-                            <input type="password" id="contrasena" name="contrasena">
-                        </div>
-                        <div class="form-group">
-                            <label for="fechaNacimiento">Fecha de Nacimiento:</label>
-                            <input type="date" id="fechaNacimiento" name="fechaNacimiento">
-                        </div>
-                        <div class="form-group">
-                        <label>Recibe Notificaciones
-                            <input type="checkbox" id="recibeNotificaciones" name="recibeNotificaciones">
-                        </label></div>
-                        <div class="form-group">
-                            <label for="intereses" aria-label="Intereses">Intereses:</label>
-                            <select id="intereses" name="intereses" required>
-                                <option value="">Seleccione un interés</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                        <button id="editar-btn">Editar</button>
-                        </div>
-                        <div class="form-group">
-                        <button id="guardar-btn" style="display:none">Guardar</button>
-                        </div>
-                    </fieldset>
-                </form>
+        <section>
+            <h2>Mis Eventos Favoritos</h2>
+            <div id="favoritos-tabla">
+                <!-- La tabla FAVORITOS se generará dinámicamente aquí -->
             </div>
-        </div>
-    </section>
-
-    <section>
-        <h2>Mis Eventos Favoritos</h2>
-        <div id="favoritos-tabla">
-            <!-- La tabla FAVORITOS se generará dinámicamente aquí -->
-        </div>
-    </section>
-
+        </section>
+    </main>
 
     <footer role="contentinfo">
 

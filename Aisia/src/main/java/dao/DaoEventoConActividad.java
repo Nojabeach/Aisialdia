@@ -119,7 +119,7 @@ public class DaoEventoConActividad {
 	        sql += " AND e.ubicacion LIKE ?";
 	    }
 	    if (fecha != null) {
-	        sql += " AND e.fechaEvento = ?";
+	    	 sql += " AND DATE(e.fechaEvento) = ?";
 	    }
 
 	    sql += " ORDER BY e.fechaPublicacion DESC";
@@ -130,7 +130,7 @@ public class DaoEventoConActividad {
 	    }
 	    //System.out.println(sql);
 	    PreparedStatement ps = con.prepareStatement(sql);
-
+	 
 	    int paramIndex = 1;
 
 	    // Agregar parámetros a la consulta según sea necesario
@@ -144,7 +144,7 @@ public class DaoEventoConActividad {
 	        ps.setString(paramIndex++, "%" + ubicacion + "%");
 	    }
 	    if (fecha != null) {
-	        ps.setDate(paramIndex++, fecha);
+	    	  ps.setDate(paramIndex++, fecha);
 	    }
 	    // Si numEventos es mayor que 0 o igual a -1, establecer el límite
 	    if (numEventos != -1) {
