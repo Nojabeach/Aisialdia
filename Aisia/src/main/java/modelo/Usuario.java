@@ -167,6 +167,28 @@ public class Usuario {
 		this.email = email;
 	}
 
+
+	/**
+	 * Constructor para la clase Usuario.
+	 *
+	 * @param idUsuario     El identificador único del usuario.
+	 * @param nombre        El nombre del usuario.
+	 * @param email         La dirección de correo electrónico del usuario.
+	 * @param fechaNacimiento La fecha de nacimiento del usuario.
+	 * @param recibeNotificaciones Una bandera que indica si el usuario recibe notificaciones.
+	 * @param intereses     Los intereses del usuario.
+	 */
+	public Usuario(int idUsuario, String nombre, String email,  Date fechaNacimiento,
+			boolean recibeNotificaciones, String intereses) {
+		super();
+		this.idUsuario = idUsuario;
+		this.nombre = nombre;
+		this.email = email;
+		this.fechaNacimiento = fechaNacimiento;
+		this.recibeNotificaciones = recibeNotificaciones;
+		this.intereses = intereses;
+	}
+
 	/**
 	 * Crea un nuevo objeto Usuario con el ID, nombre, correo electrónico y
 	 * contraseña especificados.

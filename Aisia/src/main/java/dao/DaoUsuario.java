@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 
 import com.google.gson.Gson;
 
+import controlador.MetodosComunes;
 import jakarta.servlet.http.HttpServletRequest;
 
 import modelo.Usuario;
@@ -125,18 +127,30 @@ public class DaoUsuario {
 	 * @throws Exception Si ocurre un error al obtener el usuario.
 	 */
 	public Usuario obtenerINFOUsuarioPorID(int idUsuario) throws SQLException {
-		// Preparar la consulta SQL para obtener el usuario por ID
-		String sql = "SELECT * FROM usuarios WHERE idUsuario = ?";
-		try (PreparedStatement stmt = con.prepareStatement(sql)) {
-			stmt.setInt(1, idUsuario);
-			ResultSet rs = stmt.executeQuery();
-			if (rs.next()) {
-				return new Usuario(rs.getInt("idUsuario"), rs.getString("nombre"), rs.getString("email"),
-						rs.getInt("permiso"));
-			}
-		}
-		return null;
+	    // Preparar la consulta SQL para obtener el usuario por ID
+	    String sql = "SELECT * FROM usuarios WHERE idUsuario = ?";
+	    try (PreparedStatement stmt = con.prepareStatement(sql)) {
+	        stmt.setInt(1, idUsuario);
+	        ResultSet rs = stmt.executeQuery();
+	        if (rs.next()) {
+	            // Obtener los campos necesarios
+	            int id = rs.getInt("idUsuario");
+	            String nombre = rs.getString("nombre");
+	            String email = rs.getString("email");
+	          
+	            Date fechaNacimiento = rs.getDate("fechaNacimiento");
+	            boolean recibeNotificaciones = rs.getBoolean("recibeNotificaciones");
+	            String intereses = rs.getString("intereses");
+
+	            // Crear y retornar el objeto Usuario con los campos obtenidos
+	            return new Usuario(id, nombre, email,  fechaNacimiento, recibeNotificaciones, intereses);
+	            
+	        
+	        }
+	    }
+	    return null;
 	}
+
 
 	/**
 	 * Actualiza la información de un usuario en la base de datos.

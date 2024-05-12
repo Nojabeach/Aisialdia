@@ -76,6 +76,7 @@ public class GestorUsuario extends HttpServlet {
 				obtenerUsuariosPermiso(request, response, out);
 				break;
 			case "obtenerInfoUsuario":
+				//System.out.println("entro en info user");
 				obtenerINFOUsuario(request, response, out);
 				break;
 			case "obtenerContrasena":
@@ -356,7 +357,7 @@ public class GestorUsuario extends HttpServlet {
 		}
 
 		// Crear un nuevo usuario
-		Usuario usuario = new Usuario(nombre, email, getMD5(request.getParameter("contrasena")));
+		Usuario usuario = new Usuario(nombre, email, MetodosComunes.getMD5(request.getParameter("contrasena")));
 		usuario.setFechaNacimiento(fechaNacimiento);
 		usuario.setRecibeNotificaciones(recibeNotificaciones);
 		usuario.setIntereses(intereses);
@@ -385,35 +386,7 @@ public class GestorUsuario extends HttpServlet {
 		}
 	};
 
-	/**
-	 * Calcula el valor hash MD5 de una cadena de entrada.
-	 *
-	 * @param input La cadena de entrada para la cual se calculará el hash MD5.
-	 * @return La representación hexadecimal del hash MD5 de la cadena de entrada.
-	 */
-	public static String getMD5(String input) {
-		try {
-			// Obtener una instancia de MessageDigest con el algoritmo MD5
-			MessageDigest md = MessageDigest.getInstance("MD5");
-
-			// Calcular el hash de la cadena de entrada
-			byte[] messageDigest = md.digest(input.getBytes());
-
-			// Convertir el hash en una representación hexadecimal
-			BigInteger number = new BigInteger(1, messageDigest);
-			String hashtext = number.toString(16);
-
-			// Asegurarse de que la representación hexadecimal tenga 32 caracteres
-			while (hashtext.length() < 32) {
-				hashtext = "0" + hashtext;
-			}
-
-			return hashtext;
-		} catch (NoSuchAlgorithmException e) {
-			// Lanzar una RuntimeException si ocurre un error al calcular el hash
-			throw new RuntimeException(e);
-		}
-	}
+	
 
 	/**
 	 * Método para editar un usuario en la base de datos.
@@ -431,12 +404,12 @@ public class GestorUsuario extends HttpServlet {
 	private void editarUsuario(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, SQLException {
 		// Obtener parámetros del formulario
-		int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
 		String nombre = request.getParameter("nombre");
 		String email = request.getParameter("email");
 
 		// Crear un objeto Usuario con la información actualizada
-		Usuario usuario = new Usuario(idUsuario, nombre, email);
+		Usuario usuario = new Usuario(idUsuarioActual, nombre, email);
 
 		// Editar el usuario en la base de datos
 		try {
@@ -576,7 +549,7 @@ public class GestorUsuario extends HttpServlet {
 			// System.out.println(request.getParameter("contrasena"));
 
 			Usuario usuario = DaoUsuario.getInstance().iniciarSesion(usuarioSTR,
-					getMD5(request.getParameter("contrasena")));
+					MetodosComunes.getMD5(request.getParameter("contrasena")));
 
 			// System.out.println(usuario);
 
