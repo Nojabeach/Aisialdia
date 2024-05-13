@@ -2,43 +2,11 @@ document.addEventListener("DOMContentLoaded", function () {
   console.log("Rellenando favoritos del perfil");
 
   // Rellenar datos de usuario
+  infoUsuario(); // Obtener la información del usuario y mostrarla en el div
   perfil_rellenarIntereses();
   rellenarFormularioPerfil();
   perfil_obtenerFavoritos();
 
-
-  // Agregar evento al botón de guardar
-  let guardarBtn = document.getElementById("guardar-btn");
-  if (guardarBtn) {
-    guardarBtn.addEventListener("click", function (event) {
-      event.preventDefault(); // Evitar que el formulario se envíe automáticamente
-      if (validarFormulario("perfil-form")) {
-        // Si el formulario es válido, enviarlo
-        let form = document.getElementById("perfil-form");
-        form.submit();
-        // Llamada a servlet para guardar los datos del usuario
-        fetch("GestorUsuario?action=editarUsuario", {
-          method: "POST",
-          body: new FormData(form),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log(data);
-            if (data.result === "OK") {
-              // Si se guardaron los datos correctamente, mostrar mensaje de éxito
-              mostrarMensajeExito("Datos guardados correctamente.");
-            } else {
-              // Si no se guardaron los datos correctamente, mostrar mensaje de error
-              mostrarMensajeError(
-                "Error al guardar los datos. Inténtelo de nuevo."
-              );
-            }
-          });
-      } else {
-        console.log("El formulario contiene campos vacíos o incorrectos.");
-      }
-    });
-  }
 });
 
 function rellenarFormularioPerfil(idUsuario) {

@@ -167,15 +167,14 @@ public class DaoUsuario {
 	 *                      usuario.
 	 */
 	public void editarUsuario(Usuario usuario) throws SQLException {
-		String sql = "UPDATE usuarios SET nombre = ?, contraseña = ?, email = ?, fechaNacimiento = ?, intereses = ?, recibeNotificaciones = ? WHERE idUsuario = ?";
+		String sql = "UPDATE usuarios SET nombre = ?,  email = ?, fechaNacimiento = ?, intereses = ?, recibeNotificaciones = ? WHERE idUsuario = ?";
 		try (PreparedStatement ps = con.prepareStatement(sql)) {
 			ps.setString(1, usuario.getNombre());
-			ps.setString(2, usuario.getContrasena());
-			ps.setString(3, usuario.getEmail());
-			ps.setDate(4, usuario.getFechaNacimiento());
-			ps.setString(5, usuario.getIntereses());
-			ps.setBoolean(6, usuario.isRecibeNotificaciones());
-			ps.setInt(7, usuario.getIdUsuario());
+			ps.setString(2, usuario.getEmail());
+			ps.setDate(3, usuario.getFechaNacimiento());
+			ps.setString(4, usuario.getIntereses());
+			ps.setBoolean(5, usuario.isRecibeNotificaciones());
+			ps.setInt(6, usuario.getIdUsuario());
 			ps.executeUpdate();
 		}
 	}

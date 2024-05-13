@@ -66,7 +66,7 @@ function validarFormulario(formularioId) {
   inputs.forEach((input) => {
     if (input.value.trim() === "") {
       ok = false;
-      input.style.background = "rgba(255, 0, 0, 0.1)"; // Fondo rojo claro
+      input.style.background = "rgba(255, 0, 0, 0.4)"; // Fondo rojo claro
     } else {
       input.style.background = "";
     }
