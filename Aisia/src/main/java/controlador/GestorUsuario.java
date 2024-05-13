@@ -522,19 +522,18 @@ public class GestorUsuario extends HttpServlet {
 	private void cambiarContrasena(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, SQLException {
 		// Obtener parámetros del formulario
-		int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
-		String contrasenaActual = request.getParameter("contrasenaActual");
-		String contrasenaNueva = request.getParameter("contrasenaNueva");
-
+		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
+		
+	
 		// Obtener la contraseña actual del usuario desde la base de datos
-		String contrasenaAlmacenada = DaoUsuario.getInstance().obtenerContrasena(idUsuario);
+		String contrasenaAlmacenada = DaoUsuario.getInstance().obtenerContrasena(idUsuarioActual);
 
 		// Verificar si la contraseña actual proporcionada coincide con la almacenada
-		if (contrasenaAlmacenada != null && contrasenaAlmacenada.equals(contrasenaActual)) {
+		if (contrasenaAlmacenada != null && contrasenaAlmacenada.equals( MetodosComunes.getMD5(request.getParameter("contrasenaActual")))) {
 			// Cambiar la contraseña
 			try {
-				DaoUsuario.getInstance().cambiarContrasena(idUsuario, contrasenaActual, contrasenaNueva);
-				response.getWriter().println("Contraseña cambiada exitosamente!");
+				DaoUsuario.getInstance().cambiarContrasena(idUsuarioActual, contrasenaAlmacenada, MetodosComunes.getMD5(request.getParameter("contrasenaActual")));
+				
 			} catch (Exception e) {
 				ControlErrores.mostrarErrorGenerico("Error al cambiar la contraseña. Intente de nuevo.", response);
 			}
