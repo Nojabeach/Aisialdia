@@ -13,6 +13,7 @@
     <!-- Enlace de fonts,iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Enlace de scripts -->
+
     <script src="js/checkLogin.js"></script><!-- Script para comprobar si el usuario está logueado -->
 
     <script src="js/pintarTablaB.js"></script> <!-- Script para pintar la tabla de eventos favoritos -->
@@ -65,8 +66,8 @@
                         <fieldset>
                             <legend>DATOS DE USUARIO</legend>
                             <div class="form-group">
-                                <label for="idUsuario">Nombre:</label>
-                                <input type="text" id="idUsuario" name="idUsuario">
+                                <label for="nombre">Nombre:</label>
+                                <input type="text" id="nombre" name="nombre">
                             </div>
                             <div class="form-group">
                                 <label for="email">Correo Electrónico:</label>
@@ -101,11 +102,9 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <button id="editar-btn">Editar</button>
+                                <button id="guardar-btn">Guardar</button>
                             </div>
-                            <div class="form-group">
-                                <button id="guardar-btn" style="display:none">Guardar</button>
-                            </div>
+                            
                         </fieldset>
                     </form>
                 </div>

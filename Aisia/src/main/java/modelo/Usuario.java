@@ -178,15 +178,16 @@ public class Usuario {
 	 * @param recibeNotificaciones Una bandera que indica si el usuario recibe notificaciones.
 	 * @param intereses     Los intereses del usuario.
 	 */
-	public Usuario(int idUsuario, String nombre, String email,  Date fechaNacimiento,
-			boolean recibeNotificaciones, String intereses) {
+	public Usuario(int idUsuario, String nombre, String email,  
+			boolean recibeNotificaciones, String intereses,Date fechaNacimiento) {
 		super();
 		this.idUsuario = idUsuario;
 		this.nombre = nombre;
 		this.email = email;
-		this.fechaNacimiento = fechaNacimiento;
+		
 		this.recibeNotificaciones = recibeNotificaciones;
 		this.intereses = intereses;
+		this.fechaNacimiento = fechaNacimiento;
 	}
 
 	/**

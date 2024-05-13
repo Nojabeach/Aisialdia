@@ -42,9 +42,8 @@ function llenarFormulario(data, formularioId) {
         // Para campos select
         let options = element.options;
         for (let i = 0; i < options.length; i++) {
-          console.log("options[i].value", options[i].value);
-          console.log("data[key]", data[key]);
           if (options[i].value === data[key]) {
+            console.log("campo select", data[key]);
             options[i].selected = true;
             break;
           }

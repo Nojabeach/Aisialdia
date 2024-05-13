@@ -402,23 +402,26 @@ public class GestorUsuario extends HttpServlet {
 	 *                      usuario.
 	 */
 	private void editarUsuario(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, SQLException {
-		// Obtener parámetros del formulario
-		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
-		String nombre = request.getParameter("nombre");
-		String email = request.getParameter("email");
+            throws IOException, SQLException {
+        // Obtener parámetros del formulario
+        int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
+        String nombre = request.getParameter("nombre");
+        String email = request.getParameter("email");
+        Date fechaNacimiento = Date.valueOf(request.getParameter("fechaNacimiento"));
+        boolean recibeNotificaciones = request.getParameter("recibeNotificaciones") != null; // true si está presente en el formulario
+        String intereses = request.getParameter("intereses");
 
-		// Crear un objeto Usuario con la información actualizada
-		Usuario usuario = new Usuario(idUsuarioActual, nombre, email);
+        // Crear un objeto Usuario con la información actualizada
+        Usuario usuario = new Usuario(idUsuarioActual, nombre, email,  recibeNotificaciones, intereses,fechaNacimiento);
 
-		// Editar el usuario en la base de datos
-		try {
-			DaoUsuario.getInstance().editarUsuario(usuario);
-			response.getWriter().println("Usuario editado exitosamente!");
-		} catch (Exception e) {
-			ControlErrores.mostrarErrorGenerico("Error al editar el usuario. Intente de nuevo.", response);
-		}
-	}
+        // Editar el usuario en la base de datos
+        try {
+            DaoUsuario.getInstance().editarUsuario(usuario);
+            response.getWriter().println("Usuario editado exitosamente!");
+        } catch (Exception e) {
+            ControlErrores.mostrarErrorGenerico("Error al editar el usuario. Intente de nuevo.", response);
+        }
+    }
 
 	/**
 	 * Elimina un usuario de la base de datos.

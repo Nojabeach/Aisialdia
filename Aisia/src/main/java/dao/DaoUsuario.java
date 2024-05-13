@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import controlador.MetodosComunes;
 import jakarta.servlet.http.HttpServletRequest;
@@ -137,13 +138,13 @@ public class DaoUsuario {
 	            int id = rs.getInt("idUsuario");
 	            String nombre = rs.getString("nombre");
 	            String email = rs.getString("email");
-	          
-	            Date fechaNacimiento = rs.getDate("fechaNacimiento");
 	            boolean recibeNotificaciones = rs.getBoolean("recibeNotificaciones");
 	            String intereses = rs.getString("intereses");
 
+	            Date fechaNacimiento = rs.getDate("fechaNacimiento");
+	           
 	            // Crear y retornar el objeto Usuario con los campos obtenidos
-	            return new Usuario(id, nombre, email,  fechaNacimiento, recibeNotificaciones, intereses);
+	            return new Usuario(id, nombre, email,  recibeNotificaciones, intereses, fechaNacimiento);
 	            
 	        
 	        }
@@ -435,10 +436,29 @@ public class DaoUsuario {
 	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
 	 */
 	public String listariNFOUsuarioJson(int idUsuario) throws SQLException {
-		String json = "";
-		Gson gson = new Gson();
-		json = gson.toJson(this.obtenerINFOUsuarioPorID(idUsuario));
-		return json;
+	    Gson gson = GsonHelper.getGson();
+	    return gson.toJson(this.obtenerINFOUsuarioPorID(idUsuario));
+	}
+	
+	/**
+	 * Clase de ayuda para obtener una instancia de Gson con una configuración específica.
+	 */
+	public class GsonHelper {
+
+	    private static Gson gson;
+
+	    /**
+	     * Obtiene una instancia de Gson con el formato de fecha deseado.
+	     * @return Una instancia de Gson con el formato de fecha "yyyy-MM-dd".
+	     */
+	    public static Gson getGson() {
+	        if (gson == null) {
+	            GsonBuilder gsonBuilder = new GsonBuilder();
+	            gsonBuilder.setDateFormat("yyyy-MM-dd"); // Establece el formato de fecha deseado
+	            gson = gsonBuilder.create();
+	        }
+	        return gson;
+	    }
 	}
 
 	/**
