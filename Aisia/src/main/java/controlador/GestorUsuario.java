@@ -428,7 +428,7 @@ public class GestorUsuario extends HttpServlet {
 			// Devolver una respuesta JSON
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
-			response.getWriter().println("{\"result\": \"OK\"}");
+			//response.getWriter().println("{\"result\": \"OK\"}");
 		} catch (Exception e) {
 			// Manejar el error al editar el usuario en la base de datos
 			ControlErrores.mostrarErrorGenerico("{\"error\": \"Error al editar el usuario. Intente de nuevo.\"}",
@@ -524,15 +524,15 @@ public class GestorUsuario extends HttpServlet {
 		// Obtener parámetros del formulario
 		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
 		
-	
+		
 		// Obtener la contraseña actual del usuario desde la base de datos
 		String contrasenaAlmacenada = DaoUsuario.getInstance().obtenerContrasena(idUsuarioActual);
-
+		
 		// Verificar si la contraseña actual proporcionada coincide con la almacenada
-		if (contrasenaAlmacenada != null && contrasenaAlmacenada.equals( MetodosComunes.getMD5(request.getParameter("contrasenaActual")))) {
+		if (contrasenaAlmacenada != null && contrasenaAlmacenada.equals( MetodosComunes.getMD5(request.getParameter("contrasenaAC")))) {
 			// Cambiar la contraseña
 			try {
-				DaoUsuario.getInstance().cambiarContrasena(idUsuarioActual, contrasenaAlmacenada, MetodosComunes.getMD5(request.getParameter("contrasenaActual")));
+				DaoUsuario.getInstance().cambiarContrasena(idUsuarioActual, contrasenaAlmacenada, MetodosComunes.getMD5(request.getParameter("contrasenaAC")));
 				
 			} catch (Exception e) {
 				ControlErrores.mostrarErrorGenerico("Error al cambiar la contraseña. Intente de nuevo.", response);
