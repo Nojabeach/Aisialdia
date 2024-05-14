@@ -615,8 +615,8 @@ public class Usuario {
 	 *                   cambiar la contraseña.</li>
 	 *                   </ul>
 	 */
-	public void cambiarContrasena(int idUsuario, String contrasenaActual, String contrasenaNueva) throws Exception {
-		DaoUsuario.getInstance().cambiarContrasena(idUsuario, contrasenaActual, contrasenaNueva);
+	public void cambiarContrasena(int idUsuario,  String contrasenaNueva) throws Exception {
+		DaoUsuario.getInstance().cambiarContrasena(idUsuario,  contrasenaNueva);
 	}
 
 	/**

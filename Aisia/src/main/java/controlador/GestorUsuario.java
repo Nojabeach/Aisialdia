@@ -428,7 +428,7 @@ public class GestorUsuario extends HttpServlet {
 			// Devolver una respuesta JSON
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
-			//response.getWriter().println("{\"result\": \"OK\"}");
+			// response.getWriter().println("{\"result\": \"OK\"}");
 		} catch (Exception e) {
 			// Manejar el error al editar el usuario en la base de datos
 			ControlErrores.mostrarErrorGenerico("{\"error\": \"Error al editar el usuario. Intente de nuevo.\"}",
@@ -477,7 +477,7 @@ public class GestorUsuario extends HttpServlet {
 		// Marcar el evento como favorito
 		try {
 			DaoUsuario.getInstance().marcarEventoFavorito(idUsuario, idEvento);
-			response.getWriter().println("Evento marcado como favorito!");
+			//response.getWriter().println("Evento marcado como favorito!");
 		} catch (Exception e) {
 			ControlErrores.mostrarErrorGenerico("Error al marcar el evento como favorito. Intente de nuevo.", response);
 		}
@@ -501,7 +501,7 @@ public class GestorUsuario extends HttpServlet {
 		// Desmarcar el evento como favorito
 		try {
 			DaoUsuario.getInstance().desmarcarEventoFavorito(idUsuario, idEvento);
-			response.getWriter().println("Evento desmarcado como favorito!");
+			//response.getWriter().println("Evento desmarcado como favorito!");
 		} catch (Exception e) {
 			ControlErrores.mostrarErrorGenerico("Error al desmarcar el evento como favorito. Intente de nuevo.",
 					response);
@@ -523,17 +523,21 @@ public class GestorUsuario extends HttpServlet {
 			throws IOException, SQLException {
 		// Obtener parámetros del formulario
 		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
-		
-		
+
 		// Obtener la contraseña actual del usuario desde la base de datos
 		String contrasenaAlmacenada = DaoUsuario.getInstance().obtenerContrasena(idUsuarioActual);
-		
+
 		// Verificar si la contraseña actual proporcionada coincide con la almacenada
-		if (contrasenaAlmacenada != null && contrasenaAlmacenada.equals( MetodosComunes.getMD5(request.getParameter("contrasenaAC")))) {
+		if (contrasenaAlmacenada.equals(MetodosComunes.getMD5(request.getParameter("contrasenaOR")))) {
+			
+
 			// Cambiar la contraseña
 			try {
-				DaoUsuario.getInstance().cambiarContrasena(idUsuarioActual, contrasenaAlmacenada, MetodosComunes.getMD5(request.getParameter("contrasenaAC")));
+				DaoUsuario.getInstance().cambiarContrasena(idUsuarioActual,
+						MetodosComunes.getMD5(request.getParameter("contrasenaAC")));
 				
+				response.sendRedirect("perfilusuario.html");
+
 			} catch (Exception e) {
 				ControlErrores.mostrarErrorGenerico("Error al cambiar la contraseña. Intente de nuevo.", response);
 			}

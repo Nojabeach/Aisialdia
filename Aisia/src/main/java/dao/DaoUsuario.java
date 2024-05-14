@@ -237,12 +237,7 @@ public class DaoUsuario {
 	 * @param contrasenaNueva  Nueva contraseña del usuario.
 	 * @throws Exception Si ocurre un error al cambiar la contraseña.
 	 */
-	public void cambiarContrasena(int idUsuario, String contrasenaActual, String contrasenaNueva) throws Exception {
-		// Validar la contraseña actual
-		Usuario usuarioActual = obtenerINFOUsuarioPorID(idUsuario);
-		if (usuarioActual == null || !usuarioActual.getcontrasena().equals(contrasenaActual)) {
-			throw new Exception("Contraseña actual incorrecta.");
-		}
+	public void cambiarContrasena(int idUsuario,String contrasenaNueva) throws Exception {
 
 		// Actualizar la contraseña en la base de datos
 		String sql = "UPDATE usuarios SET contrasena = ? WHERE idUsuario = ?";
