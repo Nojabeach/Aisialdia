@@ -1,49 +1,30 @@
 function pintarTablaEyB(data, idTabla) {
-  let tabla = document.getElementById(idTabla);
-
+  let tabla = document.createElement("table");
   // Agregar clases de estilo a la tabla
   tabla.classList.add("tabla");
 
   // Limpiar la tabla antes de agregar nuevos datos
-  while (tabla.firstChild) {
-    tabla.removeChild(tabla.firstChild);
-  }
+  idTabla.innerHTML = "";
 
-  // Verificar si hay datos para mostrar
-  if (data.length === 0) {
-    return; // No hay datos, salir sin crear la tabla
-  }
+  // Crear encabezados de tabla solo para las columnas con datos
+  let columnasConDatos = Object.keys(data[0]).filter((columna) => {
+    return data.some(
+      (item) =>
+        item[columna] !== 0 &&
+        item[columna] !== null &&
+        item[columna] !== undefined
+    );
+  });
 
-  // Crear encabezados de tabla si hay datos
   let thead = document.createElement("thead");
   let filaEncabezado = document.createElement("tr");
-  let columnasConDatos = {};
-
-  // Identificar las columnas con datos
-  Object.keys(data[0]).forEach((columna) => {
-    columnasConDatos[columna] = false; // Inicializar todas las columnas como sin datos
+  columnasConDatos.forEach((columna) => {
+    let th = document.createElement("th");
+    th.textContent = columna;
+    filaEncabezado.appendChild(th);
   });
-
-  // Recorrer los datos para determinar las columnas con datos
-  data.forEach((item) => {
-    Object.entries(item).forEach(([clave, valor]) => {
-      if (valor !== null && valor !== undefined && valor !== "") {
-        columnasConDatos[clave] = true; // Marcar la columna como con datos si encuentra al menos un valor
-      }
-    });
-  });
-
-  // Crear encabezados solo para las columnas con datos
-  Object.entries(columnasConDatos).forEach(([columna, tieneDatos]) => {
-    if (tieneDatos) {
-      let th = document.createElement("th");
-      th.textContent = columna;
-      filaEncabezado.appendChild(th);
-    }
-  });
-
-  // Agregar columnas adicionales para editar y borrar
-  filaEncabezado.innerHTML += "<th>Editar</th><th>Borrar</th>";
+  // Agregar una columna extra para el botón de borrar
+  filaEncabezado.innerHTML += "<th>Acciones</th>";
   thead.appendChild(filaEncabezado);
   tabla.appendChild(thead);
 
@@ -51,50 +32,72 @@ function pintarTablaEyB(data, idTabla) {
   let tbody = document.createElement("tbody");
   data.forEach((item) => {
     let fila = document.createElement("tr");
-    Object.entries(item).forEach(([clave, valor]) => {
+
+    columnasConDatos.forEach((columna) => {
       if (
-        valor !== null &&
-        valor !== undefined &&
-        valor !== "" &&
-        columnasConDatos[clave]
+        item[columna] !== 0 &&
+        item[columna] !== null &&
+        item[columna] !== undefined
       ) {
         let celda = document.createElement("td");
-        if (valor.toLowerCase().endsWith('.png'))  {
-          let image = document.createElement('img');
-          image.src = `img/Iconos/${valor}`;
-          image.alt = clave;
+        let valorCelda = item[columna].toString(); // Convertir a cadena
+
+        if (valorCelda.toLowerCase().endsWith(".png")) {
+          let image = document.createElement("img");
+          image.src = `img/Iconos/${item[columna]}`;
+          image.alt = columna;
           image.width = 32; // Establecer ancho a 32
           image.height = 32; // Establecer alto a 32
           celda.appendChild(image);
         } else {
-          celda.textContent = valor;
+          celda.textContent = item[columna];
         }
         fila.appendChild(celda);
       }
     });
 
+    // Crear celda para borrar
+    let celdaBorrar = document.createElement("td");
+    let botonBorrar = document.createElement("button");
+    botonBorrar.textContent = "Borrar";
+
+    // Agregar atributos de datos al botón de borrar
+    botonBorrar.dataset.eventoId = item.idEvento; // Agregar atributo de datos con el idEvento
+    botonBorrar.dataset.actividadId = item.idActividad; // Agregar atributo de datos con el idActividad
+    botonBorrar.dataset.usuarioId = item.idUsuario; // Agregar atributo de datos con el idUsuario
+
+    // Agregar clase de estilo para el botón de borrar
+    botonBorrar.classList.add("boton-primario");
+
     // Crear celda para editar
     let celdaEditar = document.createElement("td");
     let botonEditar = document.createElement("button");
     botonEditar.textContent = "Editar";
-    botonEditar.classList.add("boton-primario"); // Agregar clase para el estilo del botón
 
-    // Crear celda para eliminar
-    let celdaEliminar = document.createElement("td");
-    let botonEliminar = document.createElement("button");
-    botonEliminar.textContent = "Eliminar";
-    botonEliminar.classList.add("boton-secundario"); // Agregar clase para el estilo del botón
+    botonEditar.classList.add("boton-primario"); // Agregar clase para el estilo del botón
+    botonEditar.dataset.eventoId = item.idEvento; // Agregar atributo de datos con el idEvento
+    botonEditar.dataset.actividadId = item.idActividad; // Agregar atributo de datos con el idActividad
+    botonEditar.dataset.usuarioId = item.idUsuario; // Agregar atributo de datos con el idUsuario
+
+    // Agregar clase de estilo para el botón de editar
+    botonEditar.classList.add("boton-secundario");
+
+    celdaBorrar.appendChild(botonBorrar);
+    fila.appendChild(celdaBorrar);
+
+    celdaEditar.appendChild(botonEditar);
+    fila.appendChild(celdaEditar);
 
     // Manejar diferentes casos de contenedor
-    switch (tabla.id) {
+    switch (idTabla.id) {
       case "usuarios-tabla":
         botonEditar.onclick = function () {
           // Lógica para editar el usuario
           EyBeditarUsuario(item);
         };
-        botonEliminar.onclick = function () {
+        botonBorrar.onclick = function () {
           // Lógica para eliminar el usuario
-          EyBeliminarUsuario(item.id);
+          EyBeliminarUsuario(item.idUsuario);
         };
         break;
       case "eventos-tabla":
@@ -102,9 +105,9 @@ function pintarTablaEyB(data, idTabla) {
           // Lógica para editar el evento
           EyBeditarEvento(item);
         };
-        botonEliminar.onclick = function () {
+        botonBorrar.onclick = function () {
           // Lógica para eliminar el evento
-          EyBeliminarEvento(item.id);
+          EyBeliminarEvento(item.idEvento);
         };
         break;
       case "actividades-tabla":
@@ -112,9 +115,9 @@ function pintarTablaEyB(data, idTabla) {
           // Lógica para editar la actividad
           EyBeditarActividad(item);
         };
-        botonEliminar.onclick = function () {
+        botonBorrar.onclick = function () {
           // Lógica para eliminar la actividad
-          EyBeliminarActividad(item.id);
+          EyBeliminarActividad(item.idActividad);
         };
         break;
       // Agregar más casos según sea necesario
@@ -122,104 +125,96 @@ function pintarTablaEyB(data, idTabla) {
         botonEditar.addEventListener("click", function () {
           alert("Botón sin configurar");
         });
-        botonEliminar.addEventListener("click", function () {
+        botonBorrar.addEventListener("click", function () {
           alert("Botón sin configurar");
         });
     }
-
-    celdaEditar.appendChild(botonEditar);
-    fila.appendChild(celdaEditar);
-
-    celdaEliminar.appendChild(botonEliminar);
-    fila.appendChild(celdaEliminar);
 
     tbody.appendChild(fila);
   });
 
   tabla.appendChild(tbody);
-
-    
 }
 
 function EyBeditarUsuario(usuario) {
   // Lógica para editar un usuario
   console.log("Editar usuario", usuario);
- 
-  let servlet = 'GestorUsuario';
-  let action = 'editarUsuario';
-  let op = getParameterByName("idUsuario");
-  let formularioId = 'editarUsuario.html';
+
+  let servlet = "GestorUsuario";
+  let action = "editarUsuario";
+  let op = usuario.idUsuario;
+  let formularioId = "editarUsuario.html";
   llamada(servlet, action, op, formularioId);
 }
 
 function EyBeliminarUsuario(idUsuario) {
   // Lógica para eliminar un usuario
   console.log("Eliminar usuario", idUsuario);
-  fetch('GestorUsuario?action=eliminarUsuario&idUsuario=' + idUsuario)
-  .then(response => {
+  fetch("GestorUsuario?action=eliminarUsuario&idUsuario=" + idUsuario).then(
+    (response) => {
       if (response.ok) {
-          console.log('Usuario eliminado correctamente, actualizo la lista');
-          // Actualizar la lista después de eliminar
-          AD_obtenerListadoUsuarios();
+        console.log("Usuario eliminado correctamente, actualizo la lista");
+        // Actualizar la lista después de eliminar
+        AD_obtenerListadoUsuarios();
       } else {
-          console.error('Error al eliminar el usuario');
+        console.error("Error al eliminar el usuario");
       }
-  });
+    }
+  );
 }
 
 function EyBeditarEvento(evento) {
   // Lógica para editar un evento
   console.log("Editar evento", evento);
- 
-  let servlet = 'GestorEvento';
-  let action = 'editarEvento';
-  let op = getParameterByName("idEvento");
-  let formularioId = 'editarEvento.html';
+
+  let servlet = "GestorEvento";
+  let action = "editarEvento";
+  let op = evento.idEvento;
+  let formularioId = "editarEvento.html";
   llamada(servlet, action, op, formularioId);
 }
 
 function EyBeliminarEvento(idEvento) {
   // Lógica para eliminar un evento
   console.log("Eliminar evento", idEvento);
-  fetch('GestorEvento?action=eliminarEvento&idEvento=' + idEvento)
-  .then(response => {
+  fetch("GestorEvento?action=eliminarEvento&idEvento=" + idEvento).then(
+    (response) => {
       if (response.ok) {
-          console.log('Evento eliminado correctamente, actualizo la lista');
-          // Actualizar la lista después de eliminar
-
-          AD_obtenerTodosLosEventosActivos();
-          AD_obtenerPendientesAprobar();
-          AD_obtenerPendientesPublicar();
-
+        console.log("Evento eliminado correctamente, actualizo la lista");
+        // Actualizar la lista después de eliminar
+        AD_obtenerTodosLosEventosActivos();
+        AD_obtenerPendientesAprobar();
+        AD_obtenerPendientesPublicar();
       } else {
-          console.error('Error al eliminar el evento');
+        console.error("Error al eliminar el evento");
       }
-  });
+    }
+  );
 }
 
 function EyBeditarActividad(actividad) {
   // Lógica para editar una actividad
   console.log("Editar actividad", actividad);
 
-  let servlet = 'GestorActividad';
-  let action = 'editarActividad';
-  let op = getParameterByName("actividad");
-  let formularioId = 'editarActividad.html'; 
+  let servlet = "GestorActividad";
+  let action = "editarActividad";
+  let op = actividad.idActividad;
+  let formularioId = "editarActividad.html";
   llamada(servlet, action, op, formularioId);
 }
-
 
 function EyBeliminarActividad(idActividad) {
   // Lógica para eliminar una actividad
   console.log("Eliminar actividad", idActividad);
-  fetch('GestorActividad?action=eliminarActividad&idActividad=' + idActividad)
-  .then(response => {
-      if (response.ok) {
-          console.log('Actividad eliminada correctamente, actualizo la lista');
-          // Actualizar la lista después de eliminar
-          AD_obtenerActividades();
-      } else {
-          console.error('Error al eliminar el evento');
-      }
+  fetch(
+    "GestorActividad?action=eliminarActividad&idActividad=" + idActividad
+  ).then((response) => {
+    if (response.ok) {
+      console.log("Actividad eliminada correctamente, actualizo la lista");
+      // Actualizar la lista después de eliminar
+      AD_obtenerActividades();
+    } else {
+      console.error("Error al eliminar la actividad");
+    }
   });
 }

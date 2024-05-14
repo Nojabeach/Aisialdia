@@ -13,31 +13,40 @@
     <!-- Enlace de fonts, iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Enlace de scripts -->
-    <script src="js/checkLogin.js" ></script>
-    <script src="js/admin_controlTabs.js" ></script>
-    <script src="js/ev_CrearEv_listarActividades.js" ></script>
-    <script src="js/pintarTabla.js" ></script>
-    <script src="js/pintarTablaEyB.js" ></script>
+    <script src="js/checkLogin.js"></script><!-- Script para comprobar si el usuario está logueado -->
+    <script src="js/admin_navbar.js"></script> <!-- Script para cargar las actividades en el formulario de eventos -->
+    <script src="js/admin_controlTabs.js"></script> <!-- Script para controlar la funcionalidad de las TABS-->
 
-    <script src="js/admin_cargarObjetos.js" ></script>
-    <script src="js/formularios.js" ></script>
-  
+
+    <script src="js/pintarTablaEyB.js"></script>
+
+    <script src="js/admin_cargarObjetos.js"></script>
+
+
 </head>
 
 <body>
     <div id="contenedor">
         <header id="cabecera">
-            <div id="divTitulo">
-                <h1>AisiAldia</h1>
-                <p>Ocio para todos</p>
+            <div class="header-content">
+                <div id="divTitulo">
+                    <h1>AisiAldia</h1>
+                    <p>Ocio para todos</p>
+                </div>
+                <div id="divUsuario">
+                    <p>Administrador</p>
+                    <p id="nombreUsuario"></p>
+                    <button id="botonCerrarSesion">Cerrar sesión</button>
+                </div>
             </div>
-            <div id="divUsuario">
-                <p>Administrador</p>
-                <p id="nombreUsuario"></p>
-                <button id="botonCerrarSesion">Cerrar sesión</button>
+            <div class="header-menu">
+                <button id="adminBtn">Admin</button>
+                <button id="userBtn">User</button>
             </div>
         </header>
-        <nav id="navbar">
+
+        <!-- Navbar para administrador -->
+        <nav id="navbar-admin">
             <ul>
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="#actividades">Actividades</a></li>
@@ -45,12 +54,22 @@
                 <li><a href="#usuarios">Usuarios</a></li>
             </ul>
         </nav>
+        
+        <nav id="navbar-usuario">
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="acercade.html">Acerca de</a></li>
+                <li><a href="events.html">Eventos</a></li>
+                <li><a href="perfilusuario.html">Mi Perfil</a></li>
+            </ul>
+        </nav>
+
         <main id="seccionCuerpo">
             <section id="actividades">
                 <h2>Actividades</h2>
                 <button onclick="crearActividad()">Crear actividad</button>
                 <div id="actividades-tabla"></div>
-                 <!-- La tabla de TODAS LAS ACTIVIDADES EXISTENTES se generará dinámicamente aquí -->
+                <!-- La tabla de TODAS LAS ACTIVIDADES EXISTENTES se generará dinámicamente aquí -->
             </section>
             <section id="eventos">
                 <h2>Eventos</h2>
@@ -66,44 +85,45 @@
                     <form id="new-event-form" action="GestorEvento?action=crearEvento" method="POST">
                         <fieldset>
                             <legend>Datos del Evento</legend>
-    
+
                             <div class="form-group">
                                 <label for="name">Nombre:</label>
                                 <input type="text" id="name" name="name" required>
                             </div>
-    
+
                             <div class="form-group">
                                 <label for="details">Detalles:</label>
                                 <textarea id="details" name="details" required></textarea>
                             </div>
-    
+
                             <div class="form-group">
                                 <label for="date">Fecha:</label>
                                 <input type="date" id="date" name="date" required>
                             </div>
-    
+
                             <div class="form-group">
                                 <label for="location">Ubicación:</label>
                                 <input type="text" id="location" name="location" required>
                             </div>
-    
+
                             <div class="form-group">
                                 <label for="activity">Actividad:</label>
                                 <div id="activity-container">
-                                    <img id="activity-image" src="img/Varios/default_ACT.png" alt="Icono de actividad" style="width: 48px; height: 48px;display: none; " >
+                                    <img id="activity-image" src="img/Varios/default_ACT.png" alt="Icono de actividad"
+                                        style="width: 48px; height: 48px;display: none; ">
                                     <select id="activity" name="activity" required>
                                         <!-- Las opciones se cargarán dinámicamente con JS -->
                                     </select>
-                                   
+
                                 </div>
                             </div>
                             <div class="form-group">
                                 <button type="submit" id="create-event-button">Crear Evento</button>
                             </div>
-    
+
                         </fieldset>
                     </form>
-                </div>   
+                </div>
                 <div id="eventos-activos" class="evento-tab">
                     <h3>Eventos Activos</h3>
                     <div id="Publicados-tabla">
