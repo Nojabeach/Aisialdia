@@ -145,7 +145,7 @@ public class DaoEvento {
 		String sql = "UPDATE eventos SET fechaPublicacion = current_date,fechaUltimaModificacion=current_date, "
 				+ "idModeradorPublicacion = ? WHERE idEvento = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
-		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
+		int idUsuarioActual = DaoUsuario.getInstance().obtenerIdUsuarioActual(request);
 		ps.setInt(1, idUsuarioActual);
 		ps.setInt(2, idEvento);
 		ps.executeUpdate();
@@ -162,7 +162,7 @@ public class DaoEvento {
 	 * @throws SQLException Si ocurre un error al rechazar el evento en la BD.
 	 */
 	public void rechazarEvento(int idEvento, HttpServletRequest request) throws SQLException {
-		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
+		int idUsuarioActual = DaoUsuario.getInstance().obtenerIdUsuarioActual(request);
 
 		String sql = "UPDATE eventos SET motivoFinalizacion = 'Rechazado',fechaFinalizacion=current_date,"
 				+ "fechaUltimaModificacion=current_date,idModeradorFinalizacion=? WHERE idEvento = ?";
@@ -184,7 +184,7 @@ public class DaoEvento {
 	public void aprobarPublicacionEvento(int idEvento, HttpServletRequest request) throws SQLException {
 		int idUsuarioActual = 0;
 		try {
-			idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
+			idUsuarioActual = DaoUsuario.getInstance().obtenerIdUsuarioActual(request);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

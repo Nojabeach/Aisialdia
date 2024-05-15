@@ -61,8 +61,8 @@ public class DaoUsuario {
 	public void registrarUsuario(Usuario usuario) throws SQLException, IllegalArgumentException {
 
 		String sql = "INSERT INTO usuarios (nombre, email, contrasena,fechaNacimiento,recibeNotificaciones,intereses,roles,permiso,consentimiento_datos,aceptacionTerminosWeb) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		
-		//System.out.println(sql);
+
+		// System.out.println(sql);
 		PreparedStatement ps = con.prepareStatement(sql);
 		ps.setString(1, usuario.getNombre());
 		ps.setString(2, usuario.getEmail());
@@ -128,30 +128,28 @@ public class DaoUsuario {
 	 * @throws Exception Si ocurre un error al obtener el usuario.
 	 */
 	public Usuario obtenerINFOUsuarioPorID(int idUsuario) throws SQLException {
-	    // Preparar la consulta SQL para obtener el usuario por ID
-	    String sql = "SELECT * FROM usuarios WHERE idUsuario = ?";
-	    try (PreparedStatement stmt = con.prepareStatement(sql)) {
-	        stmt.setInt(1, idUsuario);
-	        ResultSet rs = stmt.executeQuery();
-	        if (rs.next()) {
-	            // Obtener los campos necesarios
-	            int id = rs.getInt("idUsuario");
-	            String nombre = rs.getString("nombre");
-	            String email = rs.getString("email");
-	            boolean recibeNotificaciones = rs.getBoolean("recibeNotificaciones");
-	            String intereses = rs.getString("intereses");
+		// Preparar la consulta SQL para obtener el usuario por ID
+		String sql = "SELECT * FROM usuarios WHERE idUsuario = ?";
+		try (PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setInt(1, idUsuario);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				// Obtener los campos necesarios
+				int id = rs.getInt("idUsuario");
+				String nombre = rs.getString("nombre");
+				String email = rs.getString("email");
+				boolean recibeNotificaciones = rs.getBoolean("recibeNotificaciones");
+				String intereses = rs.getString("intereses");
 
-	            Date fechaNacimiento = rs.getDate("fechaNacimiento");
-	           
-	            // Crear y retornar el objeto Usuario con los campos obtenidos
-	            return new Usuario(id, nombre, email,  recibeNotificaciones, intereses, fechaNacimiento);
-	            
-	        
-	        }
-	    }
-	    return null;
+				Date fechaNacimiento = rs.getDate("fechaNacimiento");
+
+				// Crear y retornar el objeto Usuario con los campos obtenidos
+				return new Usuario(id, nombre, email, recibeNotificaciones, intereses, fechaNacimiento);
+
+			}
+		}
+		return null;
 	}
-
 
 	/**
 	 * Actualiza la información de un usuario en la base de datos.
@@ -237,7 +235,7 @@ public class DaoUsuario {
 	 * @param contrasenaNueva  Nueva contraseña del usuario.
 	 * @throws Exception Si ocurre un error al cambiar la contraseña.
 	 */
-	public void cambiarContrasena(int idUsuario,String contrasenaNueva) throws Exception {
+	public void cambiarContrasena(int idUsuario, String contrasenaNueva) throws Exception {
 
 		// Actualizar la contraseña en la base de datos
 		String sql = "UPDATE usuarios SET contrasena = ? WHERE idUsuario = ?";
@@ -342,7 +340,7 @@ public class DaoUsuario {
 	 * @return El ID del usuario actual, o -1 si no se encuentra el usuario en la
 	 *         sesión.
 	 */
-	public static int obtenerIdUsuarioActual(HttpServletRequest request) {
+	public  int obtenerIdUsuarioActual(HttpServletRequest request) {
 		Usuario usuarioSesion = (Usuario) request.getSession().getAttribute("usuario");
 		int IdUsuario = -1;
 		if (usuarioSesion != null) {
@@ -383,9 +381,9 @@ public class DaoUsuario {
 	public String obtenerContrasena(int idUsuario) throws SQLException {
 		// Preparar la consulta SQL para obtener la contraseña por ID de usuario
 		String sql = "SELECT contrasena FROM usuarios WHERE idUsuario = ?";
-		try (PreparedStatement stmt = con.prepareStatement(sql)) {
-			stmt.setInt(1, idUsuario);
-			ResultSet rs = stmt.executeQuery();
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, idUsuario);
+			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				return rs.getString("contrasena");
 			}
@@ -430,29 +428,31 @@ public class DaoUsuario {
 	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
 	 */
 	public String listariNFOUsuarioJson(int idUsuario) throws SQLException {
-	    Gson gson = GsonHelper.getGson();
-	    return gson.toJson(this.obtenerINFOUsuarioPorID(idUsuario));
+		Gson gson = GsonHelper.getGson();
+		return gson.toJson(this.obtenerINFOUsuarioPorID(idUsuario));
 	}
-	
+
 	/**
-	 * Clase de ayuda para obtener una instancia de Gson con una configuración específica.
+	 * Clase de ayuda para obtener una instancia de Gson con una configuración
+	 * específica.
 	 */
 	public class GsonHelper {
 
-	    private static Gson gson;
+		private static Gson gson;
 
-	    /**
-	     * Obtiene una instancia de Gson con el formato de fecha deseado.
-	     * @return Una instancia de Gson con el formato de fecha "yyyy-MM-dd".
-	     */
-	    public static Gson getGson() {
-	        if (gson == null) {
-	            GsonBuilder gsonBuilder = new GsonBuilder();
-	            gsonBuilder.setDateFormat("yyyy-MM-dd"); // Establece el formato de fecha deseado
-	            gson = gsonBuilder.create();
-	        }
-	        return gson;
-	    }
+		/**
+		 * Obtiene una instancia de Gson con el formato de fecha deseado.
+		 * 
+		 * @return Una instancia de Gson con el formato de fecha "yyyy-MM-dd".
+		 */
+		public static Gson getGson() {
+			if (gson == null) {
+				GsonBuilder gsonBuilder = new GsonBuilder();
+				gsonBuilder.setDateFormat("yyyy-MM-dd"); // Establece el formato de fecha deseado
+				gson = gsonBuilder.create();
+			}
+			return gson;
+		}
 	}
 
 	/**
@@ -483,4 +483,29 @@ public class DaoUsuario {
 		return json;
 	}
 
+	/**
+	 * Verifica si existe un usuario con el nombre especificado, excluyendo al
+	 * usuario actual que se está editando.
+	 *
+	 * @param nombre          El nombre del usuario que se desea verificar.
+	 * @param idUsuarioActual El ID del usuario actual que se está editando.
+	 * @return true si existe un usuario con el nombre especificado, excluyendo al
+	 *         usuario actual; false en caso contrario.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 */
+	public boolean existeUsuarioConNombre(String nombre, int idUsuarioActual) throws SQLException {
+
+		String sql = "SELECT COUNT(*) FROM usuarios WHERE nombre = ? AND idUsuario != ?";
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, nombre);
+			ps.setInt(2, idUsuarioActual);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					int count = rs.getInt(1);
+					return count > 0;
+				}
+			}
+		}
+		return false;
+	}
 }

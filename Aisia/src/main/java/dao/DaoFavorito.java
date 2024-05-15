@@ -55,7 +55,7 @@ public class DaoFavorito {
 		String sql = "INSERT INTO gestionfavoritos (idEvento, idUsuario, fechaCreacionFavorito) " + "SELECT ?, ?, ? "
 				+ "FROM dual " + "WHERE NOT EXISTS ( " + "    SELECT 1 " + "    FROM gestionfavoritos "
 				+ "    WHERE idEvento = ? AND idUsuario = ? )";
-		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
+		int idUsuarioActual = DaoUsuario.getInstance().obtenerIdUsuarioActual(request);
 		Date fechaCreacion = new Date(System.currentTimeMillis());
 
 		try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -79,7 +79,7 @@ public class DaoFavorito {
 	public void eliminarFavoritoEvento(int idEvento, HttpServletRequest request) throws SQLException {
 		String sql = "DELETE FROM gestionfavoritos WHERE idEvento = ? AND idUsuario = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
-		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
+		int idUsuarioActual = DaoUsuario.getInstance().obtenerIdUsuarioActual(request);
 		// System.out.println(idUsuarioActual);
 		ps = con.prepareStatement(sql);
 		ps.setInt(1, idEvento);

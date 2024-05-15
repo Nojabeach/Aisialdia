@@ -660,7 +660,7 @@ public class Usuario {
 	 */
 	public int obtenerIdUsuarioActual(HttpServletRequest request) throws SQLException {
 		DaoUsuario.getInstance();
-		return DaoUsuario.obtenerIdUsuarioActual(request);
+		return DaoUsuario.getInstance().obtenerIdUsuarioActual(request);
 	}
 
 	/**

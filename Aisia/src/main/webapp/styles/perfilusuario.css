@@ -46,3 +46,15 @@
 .form-group {
   margin-left: 30px; 
 }
+
+
+#mensaje-container {
+  display: none;
+  background-color: #f5c7c7; /* Rosado pastel */
+  color: #380202; /* Granate */
+  border-radius: 10px; /* Bordes redondeados */
+  padding: 10px 20px; /* Espaciado interno */
+  margin-top: 10px; /* Espaciado superior */
+  font-family: Arial, sans-serif; /* Fuente */
+  font-size: 16px; /* Tamaño de la fuente */
+}

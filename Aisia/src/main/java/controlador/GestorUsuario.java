@@ -8,6 +8,8 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.google.gson.JsonObject;
+
 import jakarta.servlet.annotation.WebServlet;
 import java.io.PrintWriter;
 
@@ -125,7 +127,7 @@ public class GestorUsuario extends HttpServlet {
 				cerrarSesion(request, response);
 				break;
 			case "iniciarSesion":
-				iniciarSesion(request, response);
+				iniciarSesion(request, response,null,null);
 				break;
 
 			default:
@@ -303,57 +305,39 @@ public class GestorUsuario extends HttpServlet {
 	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
 	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
 	 *                 respuesta HTTP.
-	 * @throws SQLException Si se produce un error al acceder a la base de datos.
+	 * @throws SQLException     Si se produce un error al acceder a la base de
+	 *                          datos.
 	 * @throws IOException
+	 * @throws ServletException
 	 */
 
 	private void registrarUsuario(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, IOException {
+			throws SQLException, IOException, ServletException {
 
 		// Obtener parámetros del formulario
-		// System.out.println("Registrando usuario...");
-
 		String nombre = request.getParameter("nombre");
-
-		// System.out.println("Nombre: " + nombre);
-
 		String email = request.getParameter("email");
-		// System.out.println("Email: " + email);
-
 		Date fechaNacimiento = Date.valueOf(request.getParameter("fechaNacimiento"));
-		// System.out.println("Fecha de nacimiento: " + fechaNacimiento);
-
-		boolean recibeNotificaciones = Boolean.parseBoolean(request.getParameter("recibeNotificaciones"));
-		// System.out.println("Recibe notificaciones: " + recibeNotificaciones);
-
+		boolean recibeNotificaciones = "on".equalsIgnoreCase(request.getParameter("recibeNotificaciones"));
 		String intereses = request.getParameter("intereses");
-		// System.out.println("Intereses: " + intereses);
-
 		String rolesStr = request.getParameter("roles");
 		Rol roles = (rolesStr != null && !rolesStr.isEmpty()) ? Rol.valueOf(rolesStr) : Rol.USUARIO;
-		// System.out.println("Roles: " + roles);
-
 		int permiso = (request.getParameter("permiso") != null) ? Integer.parseInt(request.getParameter("permiso")) : 1;
-
-		// System.out.println("Permiso: " + permiso);
-
-		// System.out.println("Consentimiento de datos: " +
-		// request.getParameter("consentimiento_datos"));
-		// System.out.println("Aceptación de términos y condiciones: " +
-		// request.getParameter("aceptacionTerminosWeb"));
-
 		boolean consentimientoDatos = "on".equalsIgnoreCase(request.getParameter("consentimiento_datos"));
 		Date fechaConsentimientoDatos = consentimientoDatos ? new Date(System.currentTimeMillis()) : null;
-		// System.out.println("Consentimiento de datos: " + fechaConsentimientoDatos);
-
 		boolean aceptacionTerminosWeb = "on".equalsIgnoreCase(request.getParameter("aceptacionTerminosWeb"));
 		Date fechaAceptacionTerminosWeb = aceptacionTerminosWeb ? new Date(System.currentTimeMillis()) : null;
-		// System.out.println("Aceptación de términos y condiciones web: " +
-		// fechaAceptacionTerminosWeb);
 
 		// Verificar si se proporcionaron todos los datos necesarios
 		if (nombre == null || email == null || nombre.isEmpty() || email.isEmpty()) {
 			ControlErrores.mostrarErrorGenerico("Todos los campos son obligatorios. Por favor, complete el formulario.",
+					response);
+			return;
+		}
+
+		// Verificar si el nombre de usuario ya existe
+		if (DaoUsuario.getInstance().existeUsuarioConNombre(nombre, -1)) {
+			ControlErrores.mostrarErrorGenerico("Ya existe un usuario con ese nombre. Por favor, elija otro nombre.",
 					response);
 			return;
 		}
@@ -371,22 +355,14 @@ public class GestorUsuario extends HttpServlet {
 		// Registrar el usuario en la base de datos
 		try {
 			DaoUsuario.getInstance().registrarUsuario(usuario);
-			response.setStatus(HttpServletResponse.SC_CREATED);
-			response.getWriter().println("Usuario registrado exitosamente!");
-
 			// Establecer permiso del usuario en la sesión
-			// SUSTITUIDO POR FUNCION INICIO SESION QUE ME REGISTRA ACCESO
-			// HttpSession session = request.getSession();
-			// session.setAttribute("usuario", usuario);
-			// session.setAttribute("permiso", usuario.getPermiso());
-
-			DaoUsuario.getInstance().iniciarSesion(nombre, usuario.getContrasena());
-			response.sendRedirect("eventos.html");
+			iniciarSesion(request, response, usuario.getNombre(), request.getParameter("contrasena"));
 
 		} catch (SQLException e) {
-			ControlErrores.mostrarErrorGenerico("Error al registrar el usuario. Intente de nuevo.", response);
+			// Mostrar mensaje de error detallado
+			ControlErrores.mostrarErrorGenerico("Error al registrar el usuario: " + e.getMessage(), response);
 		}
-	};
+	}
 
 	/**
 	 * Método para editar un usuario en la base de datos.
@@ -404,7 +380,7 @@ public class GestorUsuario extends HttpServlet {
 	private void editarUsuario(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, SQLException {
 		// Obtener parámetros del formulario
-		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
+		int idUsuarioActual = DaoUsuario.getInstance().obtenerIdUsuarioActual(request);
 		String nombre = request.getParameter("nombre");
 		String email = request.getParameter("email");
 		Date fechaNacimiento = null;
@@ -413,11 +389,21 @@ public class GestorUsuario extends HttpServlet {
 		} catch (IllegalArgumentException e) {
 			// Manejar el error de formato de fecha
 			ControlErrores.mostrarErrorGenerico("{\"error\": \"Formato de fecha de nacimiento inválido\"}", response);
+
+		}
+		boolean recibeNotificaciones = request.getParameter("recibeNotificaciones") != null;
+		String intereses = request.getParameter("intereses");
+
+		// Verificar si el nuevo nombre ya existe en la base de datos
+		if (DaoUsuario.getInstance().existeUsuarioConNombre(nombre, idUsuarioActual)) {
+			// ControlErrores.mostrarErrorGenerico( "{\"error\": \"Ya existe un usuario con
+			// ese nombre, inténtelo de nuevo con otro nombre.\"}", response);
+
+			ControlErrores.mostrarErrorGenerico(
+					"{\"error\": \"Ya existe un usuario con ese nombre, inténtelo de nuevo con otro nombre. Intente de nuevo.\"}",
+					response);
 			return;
 		}
-		boolean recibeNotificaciones = request.getParameter("recibeNotificaciones") != null; // true si está presente en
-																								// el formulario
-		String intereses = request.getParameter("intereses");
 
 		// Crear un objeto Usuario con la información actualizada
 		Usuario usuario = new Usuario(idUsuarioActual, nombre, email, recibeNotificaciones, intereses, fechaNacimiento);
@@ -425,15 +411,18 @@ public class GestorUsuario extends HttpServlet {
 		// Editar el usuario en la base de datos
 		try {
 			DaoUsuario.getInstance().editarUsuario(usuario);
-			// Devolver una respuesta JSON
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			// response.getWriter().println("{\"result\": \"OK\"}");
+
+			response.setStatus(HttpServletResponse.SC_OK);
+
+			response.sendRedirect("perfilusuario.html");
+
 		} catch (Exception e) {
 			// Manejar el error al editar el usuario en la base de datos
 			ControlErrores.mostrarErrorGenerico("{\"error\": \"Error al editar el usuario. Intente de nuevo.\"}",
 					response);
+
 		}
+
 	}
 
 	/**
@@ -477,7 +466,7 @@ public class GestorUsuario extends HttpServlet {
 		// Marcar el evento como favorito
 		try {
 			DaoUsuario.getInstance().marcarEventoFavorito(idUsuario, idEvento);
-			//response.getWriter().println("Evento marcado como favorito!");
+			// response.getWriter().println("Evento marcado como favorito!");
 		} catch (Exception e) {
 			ControlErrores.mostrarErrorGenerico("Error al marcar el evento como favorito. Intente de nuevo.", response);
 		}
@@ -501,7 +490,7 @@ public class GestorUsuario extends HttpServlet {
 		// Desmarcar el evento como favorito
 		try {
 			DaoUsuario.getInstance().desmarcarEventoFavorito(idUsuario, idEvento);
-			//response.getWriter().println("Evento desmarcado como favorito!");
+			// response.getWriter().println("Evento desmarcado como favorito!");
 		} catch (Exception e) {
 			ControlErrores.mostrarErrorGenerico("Error al desmarcar el evento como favorito. Intente de nuevo.",
 					response);
@@ -522,20 +511,19 @@ public class GestorUsuario extends HttpServlet {
 	private void cambiarContrasena(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, SQLException {
 		// Obtener parámetros del formulario
-		int idUsuarioActual = DaoUsuario.obtenerIdUsuarioActual(request);
+		int idUsuarioActual = DaoUsuario.getInstance().obtenerIdUsuarioActual(request);
 
 		// Obtener la contraseña actual del usuario desde la base de datos
 		String contrasenaAlmacenada = DaoUsuario.getInstance().obtenerContrasena(idUsuarioActual);
 
 		// Verificar si la contraseña actual proporcionada coincide con la almacenada
 		if (contrasenaAlmacenada.equals(MetodosComunes.getMD5(request.getParameter("contrasenaOR")))) {
-			
 
 			// Cambiar la contraseña
 			try {
 				DaoUsuario.getInstance().cambiarContrasena(idUsuarioActual,
 						MetodosComunes.getMD5(request.getParameter("contrasenaAC")));
-				
+
 				response.sendRedirect("perfilusuario.html");
 
 			} catch (Exception e) {
@@ -548,50 +536,47 @@ public class GestorUsuario extends HttpServlet {
 	}
 
 	/**
-	 * Inicia sesión de un usuario verificando las credenciales proporcionadas.
-	 *
-	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
-	 *                 respuesta HTTP.
-	 * @throws ServletException Si se produce un error en el servlet.
-	 * @throws IOException      Si se produce un error de entrada/salida.
+	 * Inicia sesión para el usuario proporcionado.
+	 * 
+	 * @param request             El objeto HttpServletRequest que representa la solicitud HTTP.
+	 * @param response            El objeto HttpServletResponse que representa la respuesta HTTP.
+	 * @param usuarioRegistro     El nombre de usuario registrado (opcional). Si se proporciona, se usará para iniciar sesión en lugar del parámetro "usuario" de la solicitud.
+	 * @param contrasenaRegistro  La contraseña del usuario registrado (opcional). Si se proporciona, se usará para iniciar sesión en lugar del parámetro "contrasena" de la solicitud.
+	 * 
+	 * @throws ServletException  Si ocurre un error de servlet.
+	 * @throws IOException       Si ocurre un error de entrada/salida al manejar la solicitud o la respuesta.
 	 */
-	private void iniciarSesion(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	private void iniciarSesion(HttpServletRequest request, HttpServletResponse response, String usuarioRegistro,
+			String contrasenaRegistro) throws ServletException, IOException {
 		// Obtener parámetros del formulario
 		String usuarioSTR = request.getParameter("usuario");
+		String contrasena = request.getParameter("contrasena");
+
+		// Si se proporcionan usuarioRegistro y contrasenaRegistro, usar esos valores
+		if (usuarioRegistro != null && contrasenaRegistro != null) {
+			usuarioSTR = usuarioRegistro;
+			contrasena = contrasenaRegistro;
+		}
 
 		// Iniciar sesión
 		try {
-			// Verificamos el inicio de sesión con la contraseña cifrada
-			// System.out.println(usuarioSTR);
-			// System.out.println(request.getParameter("contrasena"));
-
-			Usuario usuario = DaoUsuario.getInstance().iniciarSesion(usuarioSTR,
-					MetodosComunes.getMD5(request.getParameter("contrasena")));
-
-			// System.out.println(usuario);
+			Usuario usuario = DaoUsuario.getInstance().iniciarSesion(usuarioSTR, MetodosComunes.getMD5(contrasena));
 
 			if (usuario != null) {
 				HttpSession session = request.getSession();
 				session.setAttribute("usuario", usuario);
 				session.setAttribute("permiso", usuario.getPermiso());
-
 				session.setAttribute("idUsuario", usuario.getIdUsuario());
 
 				// Establecer el estado de la respuesta como OK
 				response.setStatus(HttpServletResponse.SC_OK);
 
 				int permiso = usuario.getPermiso();
-				// System.out.println("Permiso: " + permiso); // Debugging
 				if (permiso == 1) {
-					// System.out.println("entro en 1"); // Debugging
 					response.sendRedirect("eventos.html");
 				} else if (permiso == 2) {
-					// System.out.println("entro en 2"); // Debugging
 					response.sendRedirect("moderador.html");
 				} else if (permiso == 99) {
-					// System.out.println("entro en 99"); // Debugging
 					response.sendRedirect("admin.html");
 				} else {
 					response.sendRedirect("index.html");
@@ -599,7 +584,6 @@ public class GestorUsuario extends HttpServlet {
 			} else {
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 				response.sendRedirect("index.html");
-				// System.out.println("Credenciales incorrectas.");
 			}
 		} catch (Exception e) {
 			ControlErrores.mostrarErrorGenerico("Error al iniciar sesión. Intente de nuevo.", response);

@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import dao.DaoFavorito;
+import dao.DaoUsuario;
 
 /**
  * Servlet implementation class GestorFavorito
@@ -180,25 +181,30 @@ public class GestorFavorito extends HttpServlet {
 	 * @throws SQLException Si ocurre un error al interactuar con la base de datos.
 	 */
 	private void obtenerEventosFavoritos(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
-			throws IOException, SQLException {
+	        throws IOException, SQLException {
 
-		HttpSession session = request.getSession();
-		int idUsuario = (int) session.getAttribute("idUsuario");
-		//System.out.println(idUsuario);
+	    HttpSession session = request.getSession();
+	    Integer idUsuario = (Integer) session.getAttribute("idUsuario");
+	    
+	    if (idUsuario == null) {
+	        idUsuario = DaoUsuario.getInstance().obtenerIdUsuarioActual(request);
+	    }
+	    //System.out.println(idUsuario);
 
-		try {
+	    try {
 
-			DaoFavorito favorito = new DaoFavorito();
+	        DaoFavorito favorito = new DaoFavorito();
 
-			// Lista los eventos pendientes de aprobación en formato JSON y los envía al
-			// PrintWriter
-			out.print(favorito.listarJsonFavoritosUsuario(idUsuario));
+	        // Lista los eventos pendientes de aprobación en formato JSON y los envía al
+	        // PrintWriter
+	        out.print(favorito.listarJsonFavoritosUsuario(idUsuario));
 
-		} catch (SQLException e) {
-			// En caso de error, muestra un mensaje de error genérico y lo envía en formato
-			// JSON a la respuesta
-			e.printStackTrace();
-			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
-		}
+	    } catch (SQLException e) {
+	        // En caso de error, muestra un mensaje de error genérico y lo envía en formato
+	        // JSON a la respuesta
+	        e.printStackTrace();
+	        ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
+	    }
 	}
+
 }

@@ -7,7 +7,31 @@ document.addEventListener("DOMContentLoaded", function () {
   rellenarFormularioPerfil();
   perfil_obtenerFavoritos();
 
+  // Botón de guardar
+  document.getElementById('guardar-btn').addEventListener('click', function () {
+    actualizarUsuario();
+  });
+
+  // Botón de cambiar contraseña
+  document.getElementById('cambiarContrasena').addEventListener('click', function () {
+    mostrarMensaje('Contraseña ha sido guardada correctamente');
+  });
+
 });
+
+function actualizarUsuario() {
+  let formulario = document.getElementById("perfil-form");
+  let formData = new FormData(formulario);
+  fetch(formulario.action, {
+      method: formulario.method,
+      body: formData
+  })
+  .then(response => {
+      if (response.ok) {
+          mostrarMensaje('Datos guardados correctamente');
+      } 
+  })
+}
 
 function rellenarFormularioPerfil(idUsuario) {
   console.log("Dentro de rellenarFormularioPerfil");
@@ -32,6 +56,7 @@ function perfil_obtenerFavoritos() {
       console.log("Pintando favoritos");
     });
 }
+
 function infoUsuario() {
   // carga la info del usuario en el formulario
   fetch("GestorUsuario?action=checkLogin")
@@ -43,7 +68,6 @@ function infoUsuario() {
     })
     .catch((error) => console.error("Error al cargar el usuario:", error));
 }
-
 
 function perfil_rellenarIntereses(){
   // Obtener el elemento select donde se cargarán los intereses
@@ -63,5 +87,14 @@ function perfil_rellenarIntereses(){
       });
     })
     .catch((error) => console.error(error)); // Capturar y mostrar cualquier error que ocurra durante la solicitud
+}
 
-  }
+// Función para mostrar el mensaje
+function mostrarMensaje(mensaje) {
+  var mensajeContainer = document.getElementById('mensaje-container');
+  mensajeContainer.innerText = mensaje;
+  mensajeContainer.style.display = 'block';
+  setTimeout(function() {
+      mensajeContainer.style.display = 'none';
+  }, 4000); // Mostrar el mensaje durante 4 segundos
+}
