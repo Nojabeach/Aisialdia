@@ -24,6 +24,36 @@ function cargarFormularioDesdeServlet(
     });
 }
 
+function actividad_cargarFormularioDesdeServlet(servlet,
+  action,
+  op,
+  formularioId,
+  method
+) {
+  console.log("Realizando llamada a:", servlet);
+  fetch(`${servlet}?action=${action}&id=${op}`, {
+    method: method, // Pasar el método de solicitud como atributo
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Error al cargar los datos");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Datos recibidos:", data);
+      llenarFormulario(data, formularioId);
+      
+      // Mostrar el formulario y activar el botón de "Editar"
+      document.getElementById(formularioId).style.display = 'block';
+      document.getElementById('crear-actividad-button').style.display = 'none';
+      document.getElementById('editar-actividad-button').style.display = 'block';
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
 function llenarFormulario(data, formularioId) {
   console.log("Llenando formulario con datos:", data);
   let form = document.getElementById(formularioId);

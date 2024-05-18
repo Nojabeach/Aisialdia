@@ -12,6 +12,8 @@
   --amarillo-clarito: #f9fab4; /* Amarillo clarito */
   --amarillo-naranja-claro: #ecdec2; /* Amarillo naranja */ 
   --color-error: #e790a2; /* Rosa pastel */
+  --cerrar_sesion_hover:#c94f63;
+
 
   /* Colores de fondo */
   --fondo-principal: var(--color-secundario); /* Verde pastel */

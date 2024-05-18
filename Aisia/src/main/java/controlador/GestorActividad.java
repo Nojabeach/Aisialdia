@@ -201,7 +201,8 @@ public class GestorActividad extends HttpServlet {
 		} catch (SQLException e) {
 			e.printStackTrace();
 
-			ControlErrores.mostrarErrorGenerico("Error al editar la actividad. Contacte al administrador.", response);
+			// Mostrar error al usuario indicando que la actividad está vinculada a algún evento
+            ControlErrores.mostrarErrorGenerico("Error al eliminar la actividad. Vinculado ya con algún evento. No se puede borrar.", response);
 		}
 	}
 

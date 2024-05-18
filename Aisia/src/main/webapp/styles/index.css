@@ -136,6 +136,7 @@ img {
   display: flex;
   flex-wrap: wrap;
   background-image: url("./img/home-bg.jpg");
+  border-image: fill 0 linear-gradient(#0001,#000);
   background-size: cover;
   background-position: center;
   background-attachment: fixed;

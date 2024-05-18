@@ -83,19 +83,46 @@ public class DaoActividad {
 	}
 
 	/**
-	 * Elimina una actividad existente en la base de datos.
-	 * 
-	 * @param idActividad Identificador de la actividad a eliminar.
-	 * @throws Exception Si ocurre un error al eliminar la actividad.
-	 */
-	public void eliminarActividad(Actividad actividad) throws SQLException {
-		// Preparar la consulta SQL para eliminar la actividad
-		String sql = "DELETE FROM actividades WHERE idactividad = ?";
-		PreparedStatement ps = con.prepareStatement(sql);
-		ps.setInt(1, actividad.getIdActividad());
-		ps.executeUpdate();
-		ps.close();
-	}
+     * Elimina una actividad de la base de datos.
+     * 
+     * @param actividad La actividad a eliminar.
+     * @throws SQLException Si ocurre un error SQL durante la eliminación de la actividad.
+     */
+    public void eliminarActividad(Actividad actividad) throws SQLException {
+
+            // Verificar si hay referencias en la tabla clasificacionEventos
+            if (tieneReferenciasEnClasificacionEventos(actividad.getIdActividad())) {
+                throw new SQLException("Error al eliminar la actividad. Está vinculada a algún evento y no se puede borrar.");
+            }
+            
+            // Preparar la consulta SQL para eliminar la actividad
+            String sql = "DELETE FROM actividades WHERE idactividad = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, actividad.getIdActividad());
+            ps.executeUpdate();
+            ps.close();
+      
+    }
+    
+
+    /**
+     * Verifica si la actividad tiene referencias en la tabla clasificacionEventos.
+     * 
+     * @param idActividad El ID de la actividad a verificar.
+     * @return {@code true} si la actividad tiene referencias en clasificacionEventos, {@code false} en caso contrario.
+     * @throws SQLException Si ocurre un error SQL durante la consulta.
+     */
+    private boolean tieneReferenciasEnClasificacionEventos(int idActividad) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM clasificacionEventos WHERE idActividad = ?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, idActividad);
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        int count = rs.getInt(1);
+        rs.close();
+        ps.close();
+        return count > 0;
+    }
 
 	/**
 	 * Obtiene todas las actividades existentes en la base de datos.

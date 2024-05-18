@@ -95,8 +95,9 @@ function eliminarEventoFavorito(idEvento) {
         .then(response => {
             if (response.ok) {
                 console.log('Evento eliminado correctamente, actualizo la lista');
-                // Actualizar la lista después de eliminar
+                // Actualizar la lista después de eliminar : tanto en eventos como en perfil
                 obtenerFavoritos();
+                perfil_obtenerFavoritos();
             } else {
                 console.error('Error al eliminar el evento');
             }

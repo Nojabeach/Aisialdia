@@ -371,6 +371,7 @@ form button:hover {
 .tabla {
   width: 100%;
   max-height: calc(100vh - 550px);
+  border: 1px solid black;
     border-collapse: collapse;
     margin-top: 20px;
     overflow: scroll;

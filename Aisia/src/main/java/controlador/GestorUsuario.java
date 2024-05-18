@@ -99,7 +99,25 @@ public class GestorUsuario extends HttpServlet {
 			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
 		}
 	}
-
+	/**
+	 * Maneja las solicitudes POST enviadas al servlet. Las acciones disponibles son:
+	 * <ul>
+	 * <li><b>registrarUsuario:</b> Registra un nuevo usuario utilizando los datos proporcionados en la solicitud.</li>
+	 * <li><b>crearUsuario:</b> Crea un nuevo usuario a partir de los datos proporcionados en la solicitud.</li>
+	 * <li><b>editarUsuario:</b> Edita la información de un usuario utilizando los datos proporcionados en la solicitud.</li>
+	 * <li><b>eliminarUsuario:</b> Elimina un usuario de la base de datos.</li>
+	 * <li><b>marcarEventoFavorito:</b> Marca un evento como favorito para un usuario específico.</li>
+	 * <li><b>desmarcarEventoFavorito:</b> Elimina la marca de favorito de un evento para un usuario específico.</li>
+	 * <li><b>cambiarContrasena:</b> Cambia la contraseña de un usuario.</li>
+	 * <li><b>cerrarSesion:</b> Cierra la sesión de usuario.</li>
+	 * <li><b>iniciarSesion:</b> Inicia sesión para un usuario utilizando los datos proporcionados.</li>
+	 * </ul>
+	 *
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la respuesta HTTP.
+	 * @throws ServletException Si se produce un error en el servlet.
+	 * @throws IOException      Si se produce un error de entrada/salida.
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String action = request.getParameter("action");
@@ -107,6 +125,9 @@ public class GestorUsuario extends HttpServlet {
 			switch (action) {
 			case "registrarUsuario":
 				registrarUsuario(request, response);
+				break;
+			case "crearUsuario":
+				crearUsuario(request, response);
 				break;
 			case "editarUsuario":
 				editarUsuario(request, response);
@@ -127,7 +148,7 @@ public class GestorUsuario extends HttpServlet {
 				cerrarSesion(request, response);
 				break;
 			case "iniciarSesion":
-				iniciarSesion(request, response,null,null);
+				iniciarSesion(request, response, null, null);
 				break;
 
 			default:
@@ -365,6 +386,78 @@ public class GestorUsuario extends HttpServlet {
 	}
 
 	/**
+	 * Crea un nuevo usuario a partir de los datos proporcionados en la solicitud
+	 * HTTP. Permite al administrador asignar un rol específico al usuario creado.
+	 *
+	 * @param request  Objeto HttpServletRequest que contiene los datos del
+	 *                 formulario enviado.
+	 * @param response Objeto HttpServletResponse utilizado para enviar respuestas
+	 *                 al cliente.
+	 * @throws SQLException     Si ocurre un error al interactuar con la base de
+	 *                          datos.
+	 * @throws IOException      Si ocurre un error de entrada/salida durante la
+	 *                          ejecución del método.
+	 * @throws ServletException Si ocurre un error durante el procesamiento de la
+	 *                          solicitud del servlet.
+	 */
+	private void crearUsuario(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, IOException, ServletException {
+
+		// Obtener parámetros del formulario
+		String nombre = request.getParameter("nombre");
+		String email = request.getParameter("email");
+		Date fechaNacimiento = Date.valueOf(request.getParameter("fechaNacimiento"));
+		boolean recibeNotificaciones = "on".equalsIgnoreCase(request.getParameter("recibeNotificaciones"));
+		String intereses = request.getParameter("intereses");
+		String rolesStr = request.getParameter("roles");
+		Rol roles = (rolesStr != null && !rolesStr.isEmpty()) ? Rol.valueOf(rolesStr) : Rol.USUARIO;
+		int permiso = (request.getParameter("permiso") != null) ? Integer.parseInt(request.getParameter("permiso")) : 1;
+		boolean consentimientoDatos = "on".equalsIgnoreCase(request.getParameter("consentimiento_datos"));
+		Date fechaConsentimientoDatos = consentimientoDatos ? new Date(System.currentTimeMillis()) : null;
+		boolean aceptacionTerminosWeb = "on".equalsIgnoreCase(request.getParameter("aceptacionTerminosWeb"));
+		Date fechaAceptacionTerminosWeb = aceptacionTerminosWeb ? new Date(System.currentTimeMillis()) : null;
+
+		// Verificar si se proporcionaron todos los datos necesarios
+		if (nombre == null || email == null || nombre.isEmpty() || email.isEmpty()) {
+			ControlErrores.mostrarErrorGenerico("Todos los campos son obligatorios. Por favor, complete el formulario.",
+					response);
+			return;
+		}
+
+		// Verificar si el nombre de usuario ya existe
+		if (DaoUsuario.getInstance().existeUsuarioConNombre(nombre, -1)) {
+			ControlErrores.mostrarErrorGenerico("Ya existe un usuario con ese nombre. Por favor, elija otro nombre.",
+					response);
+			return;
+		}
+
+		// Crear un nuevo usuario
+		Usuario usuario = new Usuario(nombre, email, MetodosComunes.getMD5(request.getParameter("contrasena")));
+		usuario.setFechaNacimiento(fechaNacimiento);
+		usuario.setRecibeNotificaciones(recibeNotificaciones);
+		usuario.setIntereses(intereses);
+		usuario.setRoles(roles);
+		usuario.setPermiso(permiso);
+		usuario.setConsentimiento_datos(fechaConsentimientoDatos);
+		usuario.setAceptacionTerminosWeb(fechaAceptacionTerminosWeb);
+
+		// Asignar el rol específico si se proporciona
+		String rolEspecificoStr = request.getParameter("rolEspecifico");
+		if (rolEspecificoStr != null && !rolEspecificoStr.isEmpty()) {
+			Rol rolEspecifico = Rol.valueOf(rolEspecificoStr);
+			usuario.setRoles(rolEspecifico);
+		}
+
+		// Registrar el usuario en la base de datos
+		try {
+			DaoUsuario.getInstance().registrarUsuario(usuario);
+		} catch (SQLException e) {
+			// Mostrar mensaje de error detallado
+			ControlErrores.mostrarErrorGenerico("Error al registrar el usuario: " + e.getMessage(), response);
+		}
+	}
+
+	/**
 	 * Método para editar un usuario en la base de datos.
 	 * 
 	 * @param request  Objeto HttpServletRequest que contiene los parámetros del
@@ -538,13 +631,20 @@ public class GestorUsuario extends HttpServlet {
 	/**
 	 * Inicia sesión para el usuario proporcionado.
 	 * 
-	 * @param request             El objeto HttpServletRequest que representa la solicitud HTTP.
-	 * @param response            El objeto HttpServletResponse que representa la respuesta HTTP.
-	 * @param usuarioRegistro     El nombre de usuario registrado (opcional). Si se proporciona, se usará para iniciar sesión en lugar del parámetro "usuario" de la solicitud.
-	 * @param contrasenaRegistro  La contraseña del usuario registrado (opcional). Si se proporciona, se usará para iniciar sesión en lugar del parámetro "contrasena" de la solicitud.
+	 * @param request            El objeto HttpServletRequest que representa la
+	 *                           solicitud HTTP.
+	 * @param response           El objeto HttpServletResponse que representa la
+	 *                           respuesta HTTP.
+	 * @param usuarioRegistro    El nombre de usuario registrado (opcional). Si se
+	 *                           proporciona, se usará para iniciar sesión en lugar
+	 *                           del parámetro "usuario" de la solicitud.
+	 * @param contrasenaRegistro La contraseña del usuario registrado (opcional). Si
+	 *                           se proporciona, se usará para iniciar sesión en
+	 *                           lugar del parámetro "contrasena" de la solicitud.
 	 * 
-	 * @throws ServletException  Si ocurre un error de servlet.
-	 * @throws IOException       Si ocurre un error de entrada/salida al manejar la solicitud o la respuesta.
+	 * @throws ServletException Si ocurre un error de servlet.
+	 * @throws IOException      Si ocurre un error de entrada/salida al manejar la
+	 *                          solicitud o la respuesta.
 	 */
 	private void iniciarSesion(HttpServletRequest request, HttpServletResponse response, String usuarioRegistro,
 			String contrasenaRegistro) throws ServletException, IOException {

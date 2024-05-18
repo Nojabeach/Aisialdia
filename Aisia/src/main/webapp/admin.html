@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!DOCTYPE html>
-<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -12,17 +10,17 @@
     <link rel="shortcut icon" href="img/Logos/logo_transparent - noText.png" type="image/x-icon" />
     <!-- Enlace de estilos -->
     <link rel="stylesheet" href="styles/estilocomun.css">
-    <link rel="stylesheet" href="styles/eventos.css">
+
     <link rel="stylesheet" href="styles/admin.css">
     <!-- Enlace de fonts, iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Enlace de scripts -->
     <script src="js/checkLogin.js"></script><!-- Script para comprobar si el usuario está logueado -->
-    <script src="js/admin_navbar.js"></script> <!-- Script para cargar las actividades en el formulario de eventos -->
+    <script src="js/actividad_pintarTablaByE.js"></script>
+    <!-- Script para control de creacion de tabla editar y borrar de actividades-->
+
+    <script src="js/admin_navbar.js"></script> <!-- Script para cargar las navbar de admin o user -->
     <script src="js/admin_controlTabs.js"></script> <!-- Script para controlar la funcionalidad de las TABS-->
-
-
-    <script src="js/pintarTablaEyB.js"></script>
 
     <script src="js/admin_cargarObjetos.js"></script>
 
@@ -34,8 +32,12 @@
         <header id="cabecera">
             <div class="header-content">
                 <div id="divTitulo">
-                    <h1>AisiAldia</h1>
-                    <p>Ocio para todos</p>
+                    <ul>
+                        <li><img src="img/Logos/LogoRecortado_noText.png" alt="Logo de AisiAldia" id="logo"></li>
+                        <li>
+                            <h1>AisiAldia</h1>
+                        </li>
+                    </ul>
                 </div>
                 <div id="divUsuario">
                     <p>Administrador</p>
@@ -44,26 +46,28 @@
                 </div>
             </div>
             <div class="header-menu">
-                <button id="adminBtn">Admin</button>
-                <button id="userBtn">User</button>
+                <fieldset class="header-menu-fieldset">
+                    <legend>Visualización tipo</legend>
+                    <button id="adminBtn">Admin</button>
+                    <button id="userBtn">User</button>
+                </fieldset>
             </div>
         </header>
 
         <!-- Navbar para administrador -->
         <nav id="navbar-admin">
             <ul>
-                <li><a href="index.html">Inicio</a></li>
                 <li><a href="#actividades">Actividades</a></li>
                 <li><a href="#eventos">Eventos</a></li>
                 <li><a href="#usuarios">Usuarios</a></li>
             </ul>
         </nav>
-        
+
         <nav id="navbar-usuario">
             <ul>
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="acercade.html">Acerca de</a></li>
-                <li><a href="events.html">Eventos</a></li>
+                <li><a href="eventos.html">Eventos</a></li>
                 <li><a href="perfilusuario.html">Mi Perfil</a></li>
             </ul>
         </nav>
@@ -71,9 +75,51 @@
         <main id="seccionCuerpo">
             <section id="actividades">
                 <h2>Actividades</h2>
-                <button onclick="crearActividad()">Crear actividad</button>
-                <div id="actividades-tabla"></div>
-                <!-- La tabla de TODAS LAS ACTIVIDADES EXISTENTES se generará dinámicamente aquí -->
+                <p>Haga click sobre la opción deseada:</p>
+                <nav id="actividades-navbar">
+                    <a href="#actividades-crear">Crear Actividad</a>
+                    <a href="#actividades-activas">Visualizar Actividades</a>
+                </nav>
+
+                <div id="actividades-crear" class="actividades-tab">
+                    <form class="form-admin" id="actividadesForm" action="GestorActividades?action=crearActividad"
+                        method="POST" enctype="multipart/form-data">
+                        <input type="hidden" id="action" name="action" value="crearActividad">
+                        <input type="hidden" id="idActividad" name="idActividad">
+                        <fieldset>
+                            <legend>Datos de la Actividad</legend>
+
+                            <div class="form-group">
+                                <label for="tipoActividad">Tipo de Actividad:</label>
+                                <input type="text" id="tipoActividad" name="tipoActividad" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="photo">Foto:</label>
+                                <input type="file" id="photo" name="photo">
+                                <div id="photo-preview">
+                                    <img src="#" alt="Preview" id="fotoActividad" style="display: none;">
+                                    <button type="button" id="delete-photo" style="display: none;">Eliminar
+                                        Foto</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" id="crear-actividad-button">Crear Actividad</button>
+                                <button type="submit" id="editar-actividad-button" hidden>Editar Actividad</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+
+                <div id="actividades-activas" class="actividades-tab">
+                    <h3>Todas las Actividades</h3>
+                    <div id="actividades-tabla">
+                        <!-- La tabla de TODAS LAS ACTIVIDADES EXISTENTES se generará dinámicamente aquí -->
+                    </div>
+                </div>
+
+
+
+
             </section>
             <section id="eventos">
                 <h2>Eventos</h2>
@@ -86,7 +132,7 @@
                     <a href="#eventos-rechazados">Eventos Rechazados</a>
                 </nav>
                 <div id="eventos-crear" class="evento-tab">
-                    <form id="new-event-form" action="GestorEvento?action=crearEvento" method="POST">
+                    <form id="eventosForm" class="form-admin" action="GestorEvento?action=crearEvento" method="POST">
                         <fieldset>
                             <legend>Datos del Evento</legend>
 
@@ -122,7 +168,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <button type="submit" id="create-event-button">Crear Evento</button>
+                                <button type="submit" id="crear-evento-button">Crear Evento</button>
                             </div>
 
                         </fieldset>
@@ -163,8 +209,67 @@
 
             <section id="usuarios">
                 <h2>Usuarios</h2>
-                <button onclick="crearUsuario()">Crear usuario</button>
-                <div id="usuariosSection"></div>
+                <p>Haga click sobre la opción deseada:</p>
+                <nav id="usuarios-navbar">
+                    <a href="#usuarios-crear">Crear Usuario</a>
+                    <a href="#usuarios-activos">Visualizar Usuarios</a>
+                </nav>
+
+                <div id="usuarios-crear" class="usuarios-tab">
+                    <form id="usuariosForm" class="form-admin" action="GestorUsuario?action=crearUsuario" method="post">
+                        <fieldset>
+                            <legend>Datos del Usuario</legend>
+                            <div class="form-group">
+                                <label for="nombre" aria-label="Nombre">Nombre:</label>
+                                <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" aria-label="Correo electrónico">Correo electrónico:</label>
+                                <input type="email" id="email" name="email" placeholder="Escribe tu correo electrónico"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contrasena" aria-label="Contraseña">Contraseña:</label>
+                                <input type="password" id="contrasena" name="contrasena"
+                                    placeholder="Escribe tu contraseña" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="fechaNacimiento" aria-label="Fecha de nacimiento">Fecha de
+                                    nacimiento:</label>
+                                <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="recibeNotificaciones" aria-label="Recibe notificaciones">
+                                    <input type="checkbox" id="recibeNotificaciones" name="recibeNotificaciones">
+                                    Recibir notificaciones
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="intereses" aria-label="Intereses">Intereses:</label>
+                                <select id="intereses" name="intereses" required>
+                                    <option value="">Seleccione un interés</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="roles" aria-label="Rol">Rol:</label>
+                                <select id="roles" name="roles" required>
+                                    <option value="USUARIO">Usuario</option>
+                                    <option value="MODERADOR">Moderador</option>
+                                    <option value="ADMINISTRADOR">Administrador</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" id="crear-usuario-button">Crear Usuario</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div id="usuarios-activos" class="usuarios-tab">
+                    <h3>Todos los usuarios</h3>
+                    <div id="usuarios-tabla">
+                        <!-- La tabla de TODOS LOS USUARIOS EXISTENTES se generará dinámicamente aquí -->
+                    </div>
+                </div>
             </section>
         </main>
 
