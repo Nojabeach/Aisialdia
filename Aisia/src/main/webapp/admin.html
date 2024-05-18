@@ -17,7 +17,9 @@
     <!-- Enlace de scripts -->
     <script src="js/checkLogin.js"></script><!-- Script para comprobar si el usuario está logueado -->
     <script src="js/actividad_pintarTablaByE.js"></script>
-    <!-- Script para control de creacion de tabla editar y borrar de actividades-->
+    <script src="js/evento_pintarTablaByE.js"></script>
+    <script src="js/usuario_pintarTablaByE.js"></script>
+    <!-- Script para control de creacion de tabla editar y borrar de actividades,eventos y usuarios-->
 
     <script src="js/admin_navbar.js"></script> <!-- Script para cargar las navbar de admin o user -->
     <script src="js/admin_controlTabs.js"></script> <!-- Script para controlar la funcionalidad de las TABS-->
@@ -78,14 +80,13 @@
                 <p>Haga click sobre la opción deseada:</p>
                 <nav id="actividades-navbar">
                     <a href="#actividades-crear">Crear Actividad</a>
+                    <a href="#actividades-editar" >Editar Actividad</a>
                     <a href="#actividades-activas">Visualizar Actividades</a>
                 </nav>
 
                 <div id="actividades-crear" class="actividades-tab">
-                    <form class="form-admin" id="actividadesForm" action="GestorActividades?action=crearActividad"
+                    <form class="form-admin" id="actividadesForm" action="GestorActividad?action=crearActividad"
                         method="POST" enctype="multipart/form-data">
-                        <input type="hidden" id="action" name="action" value="crearActividad">
-                        <input type="hidden" id="idActividad" name="idActividad">
                         <fieldset>
                             <legend>Datos de la Actividad</legend>
 
@@ -95,16 +96,43 @@
                             </div>
                             <div class="form-group">
                                 <label for="photo">Foto:</label>
-                                <input type="file" id="photo" name="photo">
+                                <input type="file" id="fotoActividad" name="fotoActividad">
                                 <div id="photo-preview">
-                                    <img src="#" alt="Preview" id="fotoActividad" style="display: none;">
+                                    <img src="#" alt="Preview" id="img-photo" style="display: none;">
                                     <button type="button" id="delete-photo" style="display: none;">Eliminar
                                         Foto</button>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <button type="submit" id="crear-actividad-button">Crear Actividad</button>
-                                <button type="submit" id="editar-actividad-button" hidden>Editar Actividad</button>
+                               
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+
+                <div id="actividades-editar" class="actividades-tab">
+                    <form class="form-admin" id="EDITactividadesForm" action="GestorActividad?action=editarActividad"
+                        method="POST" enctype="multipart/form-data">
+                        <fieldset>
+                            <legend>Datos de la Actividad</legend>
+
+                            <div class="form-group">
+                                <label for="tipoActividad">Tipo de Actividad:</label>
+                                <input type="text" id="EDITtipoActividad" name="tipoActividad" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="photo">Foto:</label>
+                                <input type="file" id="EDITfotoActividad" name="fotoActividad">
+                                <div id="photo-preview">
+                                    <img src="#" alt="Preview" id="EDITimg-photo" style="display: none;">
+                                    <button type="button" id="EDITdelete-photo" style="display: none;">Eliminar
+                                        Foto</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" id="editar-actividad-button">Editar Actividad</button>
+                               
                             </div>
                         </fieldset>
                     </form>
@@ -126,6 +154,7 @@
                 <p>Haga click sobre la opción deseada:</p>
                 <nav id="eventos-navbar">
                     <a href="#eventos-crear">Crear Evento</a>
+                    <a href="#eventos-editar">Editar Evento</a>
                     <a href="#eventos-activos">Eventos Activos</a>
                     <a href="#eventos-pendientes">Eventos Pendientes de Aprobar</a>
                     <a href="#pendientes-publicar">Pendientes de Publicar</a>
@@ -137,25 +166,25 @@
                             <legend>Datos del Evento</legend>
 
                             <div class="form-group">
-                                <label for="name">Nombre:</label>
-                                <input type="text" id="name" name="name" required>
+                                <label for="nombre">Nombre:</label>
+                                <input type="text" id="nombre" name="nombre" required>
                             </div>
-
+    
                             <div class="form-group">
-                                <label for="details">Detalles:</label>
-                                <textarea id="details" name="details" required></textarea>
+                                <label for="detalles">Detalles:</label>
+                                <textarea id="detalles" name="detalles" required></textarea>
                             </div>
-
+    
                             <div class="form-group">
-                                <label for="date">Fecha:</label>
-                                <input type="date" id="date" name="date" required>
+                                <label for="fechaEvento">Fecha:</label>
+                                <input type="date" id="fechaEvento" name="fechaEvento" required>
                             </div>
-
+    
                             <div class="form-group">
-                                <label for="location">Ubicación:</label>
-                                <input type="text" id="location" name="location" required>
+                                <label for="ubicacion">Ubicación:</label>
+                                <input type="text" id="ubicacion" name="ubicacion" required>
                             </div>
-
+    
                             <div class="form-group">
                                 <label for="activity">Actividad:</label>
                                 <div id="activity-container">
@@ -164,11 +193,55 @@
                                     <select id="activity" name="activity" required>
                                         <!-- Las opciones se cargarán dinámicamente con JS -->
                                     </select>
-
+    
                                 </div>
                             </div>
                             <div class="form-group">
                                 <button type="submit" id="crear-evento-button">Crear Evento</button>
+                            </div>
+
+                        </fieldset>
+                    </form>
+                </div>
+
+                <div id="eventos-editar" class="evento-tab">
+                    <form id="EDITeventosForm" class="form-admin" action="GestorEvento?action=editarEvento" method="POST">
+                        <fieldset>
+                            <legend>Datos del Evento</legend>
+
+                            <div class="form-group">
+                                <label for="nombre">Nombre:</label>
+                                <input type="text" id="nombre" name="EDITnombre" required>
+                            </div>
+    
+                            <div class="form-group">
+                                <label for="detalles">Detalles:</label>
+                                <textarea id="detalles" name="EDITdetalles" required></textarea>
+                            </div>
+    
+                            <div class="form-group">
+                                <label for="fechaEvento">Fecha:</label>
+                                <input type="date" id="fechaEvento" name="EDITfechaEvento" required>
+                            </div>
+    
+                            <div class="form-group">
+                                <label for="ubicacion">Ubicación:</label>
+                                <input type="text" id="ubicacion" name="EDITubicacion" required>
+                            </div>
+    
+                            <div class="form-group">
+                                <label for="activity">Actividad:</label>
+                                <div id="activity-container">
+                                    <img id="activity-image" src="img/Varios/default_ACT.png" alt="Icono de actividad"
+                                        style="width: 48px; height: 48px;display: none; ">
+                                    <select id="activity" name="EDITactivity" required>
+                                        <!-- Las opciones se cargarán dinámicamente con JS -->
+                                    </select>
+    
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" id="editar-evento-button">Editar Evento</button>
                             </div>
 
                         </fieldset>
@@ -212,6 +285,7 @@
                 <p>Haga click sobre la opción deseada:</p>
                 <nav id="usuarios-navbar">
                     <a href="#usuarios-crear">Crear Usuario</a>
+                    <a href="#usuarios-editar">Editar Usuario</a>
                     <a href="#usuarios-activos">Visualizar Usuarios</a>
                 </nav>
 
@@ -260,6 +334,55 @@
                             </div>
                             <div class="form-group">
                                 <button type="submit" id="crear-usuario-button">Crear Usuario</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div id="usuarios-editar" class="usuarios-tab">
+                    <form id="usuariosForm" class="form-admin" action="GestorUsuario?action=editarUsuario" method="post">
+                        <fieldset>
+                            <legend>Datos del Usuario</legend>
+                            <div class="form-group">
+                                <label for="nombre" aria-label="Nombre">Nombre:</label>
+                                <input type="text" id="nombre" name="EDITnombre" placeholder="Escribe tu nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" aria-label="Correo electrónico">Correo electrónico:</label>
+                                <input type="email" id="email" name="EDITemail" placeholder="Escribe tu correo electrónico"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contrasena" aria-label="Contraseña">Contraseña:</label>
+                                <input type="password" id="contrasena" name="EDITcontrasena"
+                                    placeholder="Escribe tu contraseña" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="fechaNacimiento" aria-label="Fecha de nacimiento">Fecha de
+                                    nacimiento:</label>
+                                <input type="date" id="fechaNacimiento" name="EDITfechaNacimiento" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="recibeNotificaciones" aria-label="Recibe notificaciones">
+                                    <input type="checkbox" id="recibeNotificaciones" name="EDITrecibeNotificaciones">
+                                    Recibir notificaciones
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="intereses" aria-label="Intereses">Intereses:</label>
+                                <select id="intereses" name="EDITintereses" required>
+                                    <option value="">Seleccione un interés</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="roles" aria-label="Rol">Rol:</label>
+                                <select id="roles" name="EDITroles" required>
+                                    <option value="USUARIO">Usuario</option>
+                                    <option value="MODERADOR">Moderador</option>
+                                    <option value="ADMINISTRADOR">Administrador</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" id="editar-usuario-button">Editar Usuario</button>
                             </div>
                         </fieldset>
                     </form>

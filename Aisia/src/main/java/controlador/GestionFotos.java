@@ -37,6 +37,7 @@ public class GestionFotos {
 			File uploads = new File(PATH_FILES);
 
 			if (part == null || part.getSize() == 0) {
+				//System.out.println("No se ha seleccionado ninguna foto.");
 				ControlErrores.mostrarErrorGenerico("No se ha seleccionado ninguna foto.", response);
 				return null;
 			}
@@ -44,27 +45,43 @@ public class GestionFotos {
 			String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
 
 			if (fileName == null || fileName.isEmpty()) {
+				//System.out.println("Nombre de archivo inválido.");
 				ControlErrores.mostrarErrorGenerico("Nombre de archivo inválido.", response);
 				return null;
 			}
 
+			System.out.println("Nombre del archivo: " + fileName);
+
 			InputStream input = part.getInputStream();
 
 			if (!uploads.exists() && !uploads.mkdirs()) {
+				//System.out.println("Error al crear el directorio de subida.");
 				ControlErrores.mostrarErrorGenerico("Error al crear el directorio de subida.", response);
 				return null;
 			}
 
 			File file = new File(uploads, fileName);
 
+			// Renombrar la foto si ya existe
+			int i = 1;
+			while (file.exists()) {
+				String[] splitName = fileName.split("\\.");
+				String newName = splitName[0] + "_" + i + "." + splitName[1];
+				file = new File(uploads, newName);
+				i++;
+			}
+
 			try {
 				Files.copy(input, file.toPath());
-				return fileName;
+				//System.out.println("Foto subida correctamente: " + file.getName());
+				return file.getName();
 			} catch (IOException e) {
+				//System.out.println("Error al copiar la foto. Intente de nuevo.");
 				ControlErrores.mostrarErrorGenerico("Error al copiar la foto. Intente de nuevo.", response);
 				return null;
 			}
 		} catch (Exception e) {
+			//System.out.println("Error al subir la foto. Intente de nuevo.");
 			ControlErrores.mostrarErrorGenerico("Error al subir la foto. Intente de nuevo.", response);
 			return null;
 		}

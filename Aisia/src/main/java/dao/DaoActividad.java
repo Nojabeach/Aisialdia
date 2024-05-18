@@ -52,7 +52,7 @@ public class DaoActividad {
 		// Preparar la consulta SQL para crear la actividad
 		String sql = "INSERT INTO actividades (tipoActividad,fotoActividad) VALUES (?,?)";
 		PreparedStatement ps = con.prepareStatement(sql);
-		System.out.println(actividad.getTipoActividad());
+		//System.out.println(actividad.getTipoActividad());
 		ps.setString(1, actividad.getTipoActividad());
 		ps.setString(2, actividad.getFotoActividad() != null ? actividad.getFotoActividad() : null); // if-else en una
 																										// sola línea,

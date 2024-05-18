@@ -10,16 +10,14 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import controlador.MetodosComunes;
 import jakarta.servlet.http.HttpServletRequest;
-
 import modelo.Usuario;
 import modelo.Usuario.Rol;
 
 public class DaoUsuario {
 
 	private Connection con = null;
-	private static DaoUsuario instance;
+	private static DaoUsuario instance = null;
 
 	/**
 	 * Clase de Acceso a Datos (DAO) para la gestión de usuarios en el sistema.
@@ -255,7 +253,7 @@ public class DaoUsuario {
 	 */
 	public ArrayList<Usuario> obtenerUsuarios() throws SQLException {
 
-		String sql = "SELECT * FROM usuarios";
+		String sql = "SELECT * FROM usuarios order by nombre";
 		PreparedStatement ps = con.prepareStatement(sql);
 		ResultSet rs = ps.executeQuery();
 
@@ -299,7 +297,7 @@ public class DaoUsuario {
 	 *                      usuarios.
 	 */
 	public ArrayList<Usuario> obtenerUsuarios(int PERMISO) throws SQLException {
-		String sql = "SELECT * FROM usuarios WHERE permiso=?";
+		String sql = "SELECT * FROM usuarios WHERE permiso=? order by nombre";
 		PreparedStatement ps = con.prepareStatement(sql);
 		ps.setInt(1, PERMISO);
 		ResultSet rs = ps.executeQuery();
@@ -340,7 +338,7 @@ public class DaoUsuario {
 	 * @return El ID del usuario actual, o -1 si no se encuentra el usuario en la
 	 *         sesión.
 	 */
-	public  int obtenerIdUsuarioActual(HttpServletRequest request) {
+	public int obtenerIdUsuarioActual(HttpServletRequest request) {
 		Usuario usuarioSesion = (Usuario) request.getSession().getAttribute("usuario");
 		int IdUsuario = -1;
 		if (usuarioSesion != null) {
@@ -390,6 +388,10 @@ public class DaoUsuario {
 		}
 		return null;
 	}
+
+	// ---------------------------------------------------------------------------------
+	// VOLCADOS JSON
+	// ---------------------------------------------------------------------------------
 
 	/**
 	 * Genera una representación JSON de la lista de usuarios.

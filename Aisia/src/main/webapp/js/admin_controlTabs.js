@@ -30,38 +30,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 });
             }
-
-            // Mostrar u ocultar el botón de "Crear Actividad" y "Editar Actividad" según la pestaña seleccionada
-            if (targetTabId === 'actividades-crear') {
-                document.getElementById('crear-actividad-button').style.display = 'block';
-                document.getElementById('editar-actividad-button').style.display = 'none';
-            } else {
-                document.getElementById('crear-actividad-button').style.display = 'none';
-                document.getElementById('editar-actividad-button').style.display = 'block';
-            }
         }
     });
 
-    // Agregar evento de clic al botón "Editar" en la tabla dinámica
-    const editarBotones = document.querySelectorAll('.editar-actividad-button');
-    editarBotones.forEach(boton => {
-        boton.addEventListener('click', function() {
-            const actividadId = this.getAttribute('data-actividad-id');
-            const actividadNombre = this.getAttribute('data-actividad-nombre');
-            const actividadDetalles = this.getAttribute('data-actividad-detalles');
-
-            // Llenar el formulario con los datos de la actividad
-            document.getElementById('idActividad').value = actividadId;
-            document.getElementById('name').value = actividadNombre;
-            document.getElementById('details').value = actividadDetalles;
-
-            // Mostrar el formulario y ocultar el botón "Crear Actividad"
-            document.getElementById('activity-form').style.display = 'block';
-            document.getElementById('crear-actividad-button').style.display = 'none';
-            document.getElementById('editar-actividad-button').style.display = 'block';
-        });
-    });
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     const eventosNavbar = document.getElementById('eventos-navbar');
     const eventoTabs = document.querySelectorAll('.evento-tab');

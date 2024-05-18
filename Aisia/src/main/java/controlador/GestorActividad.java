@@ -58,7 +58,7 @@ public class GestorActividad extends HttpServlet {
 		try {
 			switch (accion) {
 			case "visualizarActividades":
-				//System.out.println("entro en visualizar");
+				// System.out.println("entro en visualizar");
 				visualizarActividades(request, response, out);
 				break;
 			case "obtenerActividadporID":
@@ -103,9 +103,9 @@ public class GestorActividad extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		//System.out.println("Llegó una solicitud POST al servlet");
+		// System.out.println("Llegó una solicitud POST al servlet");
 		String action = request.getParameter("action");
-		//System.out.println("Action: " + action);
+		// System.out.println("Action: " + action);
 		try {
 			switch (action) {
 			case "crearActividad":
@@ -147,15 +147,28 @@ public class GestorActividad extends HttpServlet {
 			throws IOException, ServletException {
 
 		String tipoActividad = request.getParameter("tipoActividad");
-		//System.out.println(tipoActividad);
 		String fileName = GestionFotos.subirFotoAlServidor(request.getPart("fotoActividad"), response);
-		//System.out.println(fileName);
+
+		if (fileName == null) {
+			return; // Si no se pudo subir la foto, salimos del método
+		}
+
+		// Actualizar el tipo de actividad con el nombre de la foto si no está vacío
+		// accede al primer elemento del array resultante, que es la parte del nombre
+		// del archivo antes del primer punto. Esa es la parte que se asigna a la
+		// variable tipoActividad
+		if (!fileName.isEmpty()) {
+			tipoActividad = fileName.split("\\.")[0];
+		}
+
 		Actividad actividad = new Actividad(tipoActividad, fileName);
 
 		try {
 			DaoActividad.getInstance().crearActividad(actividad);
-			response.setStatus(HttpServletResponse.SC_CREATED);
-			response.getWriter().println("Actividad creada exitosamente!");
+			 response.setStatus(HttpServletResponse.SC_CREATED);
+			 response.sendRedirect("admin.html");
+			 
+			// response.getWriter().println("Actividad creada exitosamente!");
 		} catch (SQLException e) {
 			ControlErrores.mostrarErrorGenerico("Error al crear la actividad. Intente de nuevo." + e, response);
 		}
@@ -201,8 +214,10 @@ public class GestorActividad extends HttpServlet {
 		} catch (SQLException e) {
 			e.printStackTrace();
 
-			// Mostrar error al usuario indicando que la actividad está vinculada a algún evento
-            ControlErrores.mostrarErrorGenerico("Error al eliminar la actividad. Vinculado ya con algún evento. No se puede borrar.", response);
+			// Mostrar error al usuario indicando que la actividad está vinculada a algún
+			// evento
+			ControlErrores.mostrarErrorGenerico(
+					"Error al eliminar la actividad. Vinculado ya con algún evento. No se puede borrar.", response);
 		}
 	}
 
@@ -223,9 +238,9 @@ public class GestorActividad extends HttpServlet {
 
 		try {
 			DaoActividad actividad = new DaoActividad();
-			//System.out.println("Entro a ver actividades");
+			// System.out.println("Entro a ver actividades");
 			out.print(actividad.listarJsonTodasActividades());
-			//System.out.println(actividad.listarJsonTodasActividades());
+			// System.out.println(actividad.listarJsonTodasActividades());
 		} catch (SQLException e) {
 			ControlErrores.mostrarErrorGenerico("Error al obtener las actividades. Intente de nuevo.", response);
 		}

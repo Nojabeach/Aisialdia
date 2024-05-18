@@ -60,7 +60,7 @@ function AD_obtenerPendientesPublicar() {
     });
 }
 function AD_obtenerUsuarios() {
-  fetch("GestorUsuario?action=visualizarUsuarios")
+  fetch("GestorUsuario?action=obtenerUsuarios")
   .then((response) => response.json())
   .then((data) => {
     console.log("Admin Usuarios obtenidos:", data);

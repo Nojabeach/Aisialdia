@@ -167,24 +167,24 @@ public class Usuario {
 		this.email = email;
 	}
 
-
 	/**
 	 * Constructor para la clase Usuario.
 	 *
-	 * @param idUsuario     El identificador único del usuario.
-	 * @param nombre        El nombre del usuario.
-	 * @param email         La dirección de correo electrónico del usuario.
-	 * @param fechaNacimiento La fecha de nacimiento del usuario.
-	 * @param recibeNotificaciones Una bandera que indica si el usuario recibe notificaciones.
-	 * @param intereses     Los intereses del usuario.
+	 * @param idUsuario            El identificador único del usuario.
+	 * @param nombre               El nombre del usuario.
+	 * @param email                La dirección de correo electrónico del usuario.
+	 * @param fechaNacimiento      La fecha de nacimiento del usuario.
+	 * @param recibeNotificaciones Una bandera que indica si el usuario recibe
+	 *                             notificaciones.
+	 * @param intereses            Los intereses del usuario.
 	 */
-	public Usuario(int idUsuario, String nombre, String email,  
-			boolean recibeNotificaciones, String intereses,Date fechaNacimiento) {
+	public Usuario(int idUsuario, String nombre, String email, boolean recibeNotificaciones, String intereses,
+			Date fechaNacimiento) {
 		super();
 		this.idUsuario = idUsuario;
 		this.nombre = nombre;
 		this.email = email;
-		
+
 		this.recibeNotificaciones = recibeNotificaciones;
 		this.intereses = intereses;
 		this.fechaNacimiento = fechaNacimiento;
@@ -615,8 +615,8 @@ public class Usuario {
 	 *                   cambiar la contraseña.</li>
 	 *                   </ul>
 	 */
-	public void cambiarContrasena(int idUsuario,  String contrasenaNueva) throws Exception {
-		DaoUsuario.getInstance().cambiarContrasena(idUsuario,  contrasenaNueva);
+	public void cambiarContrasena(int idUsuario, String contrasenaNueva) throws Exception {
+		DaoUsuario.getInstance().cambiarContrasena(idUsuario, contrasenaNueva);
 	}
 
 	/**
@@ -659,7 +659,6 @@ public class Usuario {
 	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
 	 */
 	public int obtenerIdUsuarioActual(HttpServletRequest request) throws SQLException {
-		DaoUsuario.getInstance();
 		return DaoUsuario.getInstance().obtenerIdUsuarioActual(request);
 	}
 

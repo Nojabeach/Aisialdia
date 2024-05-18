@@ -1,25 +1,17 @@
 package controlador;
 
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.List;
-
-import com.google.gson.JsonObject;
-
-import jakarta.servlet.annotation.WebServlet;
-import java.io.PrintWriter;
 
 import dao.DaoUsuario;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
 import modelo.Usuario;
 import modelo.Usuario.Rol;
 
@@ -99,22 +91,31 @@ public class GestorUsuario extends HttpServlet {
 			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
 		}
 	}
+
 	/**
-	 * Maneja las solicitudes POST enviadas al servlet. Las acciones disponibles son:
+	 * Maneja las solicitudes POST enviadas al servlet. Las acciones disponibles
+	 * son:
 	 * <ul>
-	 * <li><b>registrarUsuario:</b> Registra un nuevo usuario utilizando los datos proporcionados en la solicitud.</li>
-	 * <li><b>crearUsuario:</b> Crea un nuevo usuario a partir de los datos proporcionados en la solicitud.</li>
-	 * <li><b>editarUsuario:</b> Edita la información de un usuario utilizando los datos proporcionados en la solicitud.</li>
+	 * <li><b>registrarUsuario:</b> Registra un nuevo usuario utilizando los datos
+	 * proporcionados en la solicitud.</li>
+	 * <li><b>crearUsuario:</b> Crea un nuevo usuario a partir de los datos
+	 * proporcionados en la solicitud.</li>
+	 * <li><b>editarUsuario:</b> Edita la información de un usuario utilizando los
+	 * datos proporcionados en la solicitud.</li>
 	 * <li><b>eliminarUsuario:</b> Elimina un usuario de la base de datos.</li>
-	 * <li><b>marcarEventoFavorito:</b> Marca un evento como favorito para un usuario específico.</li>
-	 * <li><b>desmarcarEventoFavorito:</b> Elimina la marca de favorito de un evento para un usuario específico.</li>
+	 * <li><b>marcarEventoFavorito:</b> Marca un evento como favorito para un
+	 * usuario específico.</li>
+	 * <li><b>desmarcarEventoFavorito:</b> Elimina la marca de favorito de un evento
+	 * para un usuario específico.</li>
 	 * <li><b>cambiarContrasena:</b> Cambia la contraseña de un usuario.</li>
 	 * <li><b>cerrarSesion:</b> Cierra la sesión de usuario.</li>
-	 * <li><b>iniciarSesion:</b> Inicia sesión para un usuario utilizando los datos proporcionados.</li>
+	 * <li><b>iniciarSesion:</b> Inicia sesión para un usuario utilizando los datos
+	 * proporcionados.</li>
 	 * </ul>
 	 *
 	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
-	 * @param response Objeto HttpServletResponse que se utilizará para enviar la respuesta HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
 	 * @throws ServletException Si se produce un error en el servlet.
 	 * @throws IOException      Si se produce un error de entrada/salida.
 	 */
