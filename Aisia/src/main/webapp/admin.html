@@ -17,8 +17,14 @@
     <!-- Enlace de scripts -->
     <script src="js/checkLogin.js"></script><!-- Script para comprobar si el usuario está logueado -->
     <script src="js/actividad_pintarTablaByE.js"></script>
+
     <script src="js/evento_pintarTablaByE.js"></script>
+    <script src="js/ev_finalizar.js"></script>
+    <script src="js/pintarTablaAprobar.js"></script>
+    <script src="js/pintarTablaPublicar.js"></script>
+
     <script src="js/usuario_pintarTablaByE.js"></script>
+ 
     <!-- Script para control de creacion de tabla editar y borrar de actividades,eventos y usuarios-->
 
     <script src="js/admin_navbar.js"></script> <!-- Script para cargar las navbar de admin o user -->
@@ -249,19 +255,32 @@
                 </div>
                 <div id="eventos-activos" class="evento-tab">
                     <h3>Eventos Activos</h3>
+                    <form id="finalizarEventosForm">
+                        <label for="motivoFinalizacion">Motivo:</label>
+                        <select id="motivos" name="motivoFinalizacion" required>
+                            <option value="">Seleccione un motivo</option>
+                            <option value="FinVisibilidad">Fin de Visibilidad</option>
+                            <option value="Rechazado">Rechazado</option>
+                            <option value="ReporteNegativo">Reporte Negativo</option>
+                            <option value="Otros">Otros</option>
+                        </select>
+                            <button id="botonFinalizar">Finalizar</button>
+                            <div id="eventIDDisplay">ID del Evento Seleccionado: Ninguno</div>
+                    </form>
                     <div id="Publicados-tabla">
                         <!-- La tabla de EVENTOS PUBLICADOS Y ACTIVOS se generará dinámicamente aquí -->
                     </div>
                 </div>
+                
                 <div id="eventos-pendientes" class="evento-tab">
                     <h3>Eventos Pendientes de Aprobar</h3>
-                    <div id="PendienteAprobar-tabla">
+                    <div id="PendientesAprobar-tabla">
                         <!-- Aquí va la tabla de eventos pendientes de aprobar -->
                     </div>
                 </div>
                 <div id="pendientes-publicar" class="evento-tab">
                     <h3>Pendientes de Publicar</h3>
-                    <div id="PendientePublicar-tabla">
+                    <div id="PendientesPublicar-tabla">
                         <!-- Aquí va la tabla de eventos pendientes de publicar -->
                     </div>
                 </div>
@@ -327,9 +346,9 @@
                             <div class="form-group">
                                 <label for="roles" aria-label="Rol">Rol:</label>
                                 <select id="roles" name="roles" required>
-                                    <option value="USUARIO">Usuario</option>
-                                    <option value="MODERADOR">Moderador</option>
-                                    <option value="ADMINISTRADOR">Administrador</option>
+                                    <option value="usuario">Usuario</option>
+                                    <option value="moderador">Moderador</option>
+                                    <option value="administrador">Administrador</option>
                                 </select>
                             </div>
                             <div class="form-group">

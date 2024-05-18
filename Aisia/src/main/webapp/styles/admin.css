@@ -173,7 +173,13 @@ nav#navbar-usuario ul li a:hover {
   border: 1px solid #966305; /* Agregamos un borde al pasar el ratón */
   border-radius: 10px; /* Mantenemos los bordes redondeados */
 }
-
+#eventIDDisplay {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+}
 /* Estilos para el main */
 main {
   padding: 20px;

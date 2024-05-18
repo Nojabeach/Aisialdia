@@ -43,7 +43,7 @@ function AD_obtenerPendientesAprobar() {
       const contenedorAPintar = document.getElementById(
         "PendientesAprobar-tabla"
       );
-      evento_pintarTablaEditarYBorrar(data, contenedorAPintar);
+      pintarTablaAprobarRechazar(data, contenedorAPintar);
       console.log("Pintando eventos pendientes de aprobar");
     });
 }
@@ -55,7 +55,7 @@ function AD_obtenerPendientesPublicar() {
       const contenedorAPintar = document.getElementById(
         "PendientesPublicar-tabla"
       );
-      evento_pintarTablaEditarYBorrar(data, contenedorAPintar);
+      pintarTablaPublicar(data, contenedorAPintar);
       console.log("Pintando eventos pendientes de publicar");
     });
 }

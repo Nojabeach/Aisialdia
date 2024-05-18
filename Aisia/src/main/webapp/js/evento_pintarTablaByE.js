@@ -22,6 +22,7 @@ function evento_pintarTablaEditarYBorrar(data, container) {
     let tbody = document.createElement('tbody');
     data.forEach(item => {
         let fila = document.createElement('tr');
+        fila.dataset.eventId = item.idEvento; // Añadir el atributo data-event-id a cada fila
 
         columnasConDatos.forEach(columna => {
             if (item[columna] !== 0 && item[columna] !== null && item[columna] !== undefined) {
@@ -47,13 +48,13 @@ function evento_pintarTablaEditarYBorrar(data, container) {
 
         let botonBorrar = document.createElement('button');
         botonBorrar.textContent = 'Borrar';
-        botonBorrar.dataset.idEvento = item.idEvento; // Cambiar a idEvento
+        botonBorrar.dataset.idEvento = item.idEvento;
         botonBorrar.classList.add('boton-primario');
         celdaBoton.appendChild(botonBorrar);
 
         let botonEditar = document.createElement('button');
         botonEditar.textContent = 'Editar';
-        botonEditar.dataset.idEvento = item.idEvento; // Cambiar a idEvento
+        botonEditar.dataset.idEvento = item.idEvento;
         botonEditar.classList.add('boton-secundario');
         celdaBoton.appendChild(botonEditar);
 
@@ -64,43 +65,43 @@ function evento_pintarTablaEditarYBorrar(data, container) {
     tabla.appendChild(tbody);
     container.appendChild(tabla);
 
-    asignarEventoABorrar(); // Cambiar a asignarEventoABorrar
+    asignarEventoABorrar();
 }
 
-function asignarEventoABorrar() { // Cambiar a asignarEventoABorrar
+function asignarEventoABorrar() {
     document.querySelectorAll('.boton-primario, .boton-secundario').forEach(boton => {
         boton.addEventListener('click', function() {
-            let idEvento = this.dataset.idEvento; // Cambiar a idEvento
+            let idEvento = this.dataset.idEvento;
             let action = this.textContent.toLowerCase();
 
             if (action === 'borrar') {
-                eliminarEvento(idEvento); // Cambiar a eliminarEvento
+                eliminarEvento(idEvento);
             } else if (action === 'editar') {
-                editarEvento(idEvento); // Cambiar a editarEvento
+                editarEvento(idEvento);
             }
         });
     });
 }
 
-function eliminarEvento(idEvento) { // Cambiar a eliminarEvento
-    console.log('Eliminando evento', idEvento); // Cambiar a evento
-    fetch('GestorEvento', { // Cambiar a GestorEvento
+function eliminarEvento(idEvento) {
+    console.log('Eliminando evento', idEvento);
+    fetch('GestorEvento', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: `action=eliminarEvento&idEvento=${idEvento}` // Cambiar a idEvento y eliminarEvento
+        body: `action=eliminarEvento&idEvento=${idEvento}`
     })
     .then(response => {
         if (response.ok) {
-            console.log('Evento eliminado correctamente, actualizo la lista'); // Cambiar a evento
-            AD_obtenerEventos(); // Cambiar a AD_obtenerEventos
+            console.log('Evento eliminado correctamente, actualizo la lista');
+            AD_obtenerEventos();
         } else {
             console.error('Error al eliminar el evento');
         }
     })
 }
 
-function editarEvento(idEvento) { // Cambiar a editarEvento
+function editarEvento(idEvento) {
     //1º rellenar formulario y poner boton de editar
 }
