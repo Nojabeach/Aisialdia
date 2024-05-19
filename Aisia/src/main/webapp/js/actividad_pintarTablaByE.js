@@ -1,31 +1,3 @@
-
-
-// Interceptar el submit del formulario de edición
-document.getElementById("EDITeventosForm").addEventListener("submit", function(event) {
-    event.preventDefault(); // Evita el submit tradicional
-
-    const form = event.target;
-    const formData = new FormData(form);
-
-    fetch(form.action, {
-        method: form.method,
-        body: new URLSearchParams(formData)
-    })
-    .then(response => {
-        if (response.ok) {
-            // Aquí puedes manejar la respuesta del servidor si es necesario
-            console.log('Formulario enviado correctamente');
-            mostrarTab('actividades-activas'); // Muestra el tab "actividades-activas" después de enviar el formulario
-        } else {
-            console.error('Error al enviar el formulario');
-        }
-    })
-    .catch(error => {
-        console.error('Error en la solicitud:', error);
-    });
-});
-
-
 function actividad_pintarTablaEditarYBorrar(data, container) {
     let tabla = document.createElement('table');
     tabla.classList.add('tabla');
@@ -149,7 +121,7 @@ function editarActividad(idActividad, tabId) {
     let op = idActividad;
     let metodo = "GET";
     let formularioId = "EDITactividadesForm";
-
+    console.log('Editar actividad', idActividad);
     actividad_cargarFormularioDesdeServlet(servlet, action, op, formularioId, metodo);
 }
 

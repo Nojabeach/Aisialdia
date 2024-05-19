@@ -18,7 +18,6 @@ import jakarta.servlet.http.HttpSession;
 import modelo.Actividad;
 import modelo.Evento;
 
-
 /**
  * Servlet implementation class GestorEvento
  * 
@@ -178,85 +177,83 @@ public class GestorEvento extends HttpServlet {
 	 *                          datos
 	 */
 	private void crearEvento(HttpServletRequest request, HttpServletResponse response)
-	        throws IOException, ServletException, SQLException {
+			throws IOException, ServletException, SQLException {
 
-	    String nombre = request.getParameter("nombre");
-	    String detalles = request.getParameter("detalles");
-	    String fechaEventoStr = request.getParameter("fechaEvento");
-	    Date fechaEvento = null;
+		String nombre = request.getParameter("nombre");
+		String detalles = request.getParameter("detalles");
+		String fechaEventoStr = request.getParameter("fechaEvento");
+		Date fechaEvento = null;
 
-	    // Convertir la cadena a Date si es válida o asignar la fecha de hoy si es vacía o nula
-	    if (fechaEventoStr != null && !fechaEventoStr.isEmpty()) {
-	        try {
-	            fechaEvento = Date.valueOf(fechaEventoStr);
-	        } catch (IllegalArgumentException e) {
-	            // Manejar la excepción de fecha inválida
-	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-	            ControlErrores.mostrarErrorGenerico("Error: La fecha del evento es inválida.", response);
-	            return;
-	        }
-	    } else {
-	        // Asignar la fecha de hoy si no se proporciona una fecha
-	        fechaEvento = new Date(System.currentTimeMillis());
-	    }
-	    Date fechaCreacion = new Date(System.currentTimeMillis());
+		// Convertir la cadena a Date si es válida o asignar la fecha de hoy si es vacía
+		// o nula
+		if (fechaEventoStr != null && !fechaEventoStr.isEmpty()) {
+			try {
+				fechaEvento = Date.valueOf(fechaEventoStr);
+			} catch (IllegalArgumentException e) {
+				// Manejar la excepción de fecha inválida
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				ControlErrores.mostrarErrorGenerico("Error: La fecha del evento es inválida.", response);
+				return;
+			}
+		} else {
+			// Asignar la fecha de hoy si no se proporciona una fecha
+			fechaEvento = new Date(System.currentTimeMillis());
+		}
+		Date fechaCreacion = new Date(System.currentTimeMillis());
 
-	    HttpSession session = request.getSession();
-	    int idUsuarioCreador = (int) session.getAttribute("idUsuario");
+		HttpSession session = request.getSession();
+		int idUsuarioCreador = (int) session.getAttribute("idUsuario");
 
-	    String ubicacion = request.getParameter("ubicacion");
+		String ubicacion = request.getParameter("ubicacion");
 
-	    // Validar los campos nombre, detalles y ubicación
-	    if (nombre == null || nombre.isEmpty() || detalles == null || detalles.isEmpty() || ubicacion == null || ubicacion.isEmpty()) {
-	        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-	        ControlErrores.mostrarErrorGenerico("Error: Todos los campos son obligatorios.", response);
-	        return;
-	    }
+		// Validar los campos nombre, detalles y ubicación
+		if (nombre == null || nombre.isEmpty() || detalles == null || detalles.isEmpty() || ubicacion == null
+				|| ubicacion.isEmpty()) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			ControlErrores.mostrarErrorGenerico("Error: Todos los campos son obligatorios.", response);
+			return;
+		}
 
-	 // Obtener la lista de actividades seleccionadas
-	    String[] actividadIds = request.getParameterValues("activity");
-	    List<Actividad> actividades = new ArrayList<>();
-	    if (actividadIds != null) {
-	        for (String actividadId : actividadIds) {
-	            int idActividad = Integer.parseInt(actividadId);
-	            String tipoActividad = request.getParameter("activity-" + actividadId + "-tipo");
-	            // Puedes obtener la fotoActividad si la necesitas
-	            String fotoActividad = request.getParameter("activity-" + actividadId + "-foto");
+		// Obtener la lista de actividades seleccionadas
+		String[] actividadIds = request.getParameterValues("activity");
+		List<Actividad> actividades = new ArrayList<>();
+		if (actividadIds != null) {
+			for (String actividadId : actividadIds) {
+				int idActividad = Integer.parseInt(actividadId);
+				String tipoActividad = request.getParameter("activity-" + actividadId + "-tipo");
+				// Puedes obtener la fotoActividad si la necesitas
+				String fotoActividad = request.getParameter("activity-" + actividadId + "-foto");
 
-	            Actividad actividad = new Actividad();
-	            actividad.setIdActividad(idActividad);
-	            actividad.setTipoActividad(tipoActividad);
-	            // Puedes guardar la fotoActividad si la necesitas
-	            actividad.setFotoActividad(fotoActividad);
+				Actividad actividad = new Actividad();
+				actividad.setIdActividad(idActividad);
+				actividad.setTipoActividad(tipoActividad);
+				// Puedes guardar la fotoActividad si la necesitas
+				actividad.setFotoActividad(fotoActividad);
 
-	            actividades.add(actividad);
-	        }
-	    }
+				actividades.add(actividad);
+			}
+		}
 
+		// Crear el objeto Evento
+		Evento evento = new Evento(nombre, detalles, fechaEvento, idUsuarioCreador, ubicacion, fechaCreacion);
 
-	    // Crear el objeto Evento
-	    Evento evento = new Evento(nombre, detalles, fechaEvento, idUsuarioCreador, ubicacion, fechaCreacion);
+		try {
+			// Intenta crear el evento en la base de datos
+			DaoEvento.getInstance().crearEvento(evento, actividades, new Timestamp(System.currentTimeMillis()));
+			// Si tiene éxito, establece el código de estado HTTP 201 (Created) y envía un
+			// mensaje de éxito
+			response.setStatus(HttpServletResponse.SC_CREATED);
 
-	    try {
-	        // Intenta crear el evento en la base de datos
-	        DaoEvento.getInstance().crearEvento(evento, actividades, new Timestamp(System.currentTimeMillis()));
-	        // Si tiene éxito, establece el código de estado HTTP 201 (Created) y envía un
-	        // mensaje de éxito
-	        response.setStatus(HttpServletResponse.SC_CREATED);
-	        // Redirige a eventos.html con un parámetro en la URL
-	        response.sendRedirect("eventos.html");
-	        
-	        
-	    } catch (SQLException e) {
-	        // En caso de error, muestra un mensaje de error genérico y establece el código
-	        // de estado HTTP 500 (Internal Server Error)
-	        e.printStackTrace();
-	        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-	        ControlErrores.mostrarErrorGenerico("Error al crear el evento. Intente de nuevo.", response);
-	    }
+			response.sendRedirect("eventos.html");
+
+		} catch (SQLException e) {
+			// En caso de error, muestra un mensaje de error genérico y establece el código
+			// de estado HTTP 500 (Internal Server Error)
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			ControlErrores.mostrarErrorGenerico("Error al crear el evento. Intente de nuevo.", response);
+		}
 	}
-
-
 
 	/**
 	 * Edita un evento existente en la base de datos.
@@ -277,7 +274,7 @@ public class GestorEvento extends HttpServlet {
 		Evento evento = new Evento(idEvento, nombre, detalles, fechaEvento);
 		try {
 			DaoEvento.getInstance().editarEvento(evento);
-			//System.out.println("Evento editado exitosamente!");
+			// System.out.println("Evento editado exitosamente!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -300,7 +297,7 @@ public class GestorEvento extends HttpServlet {
 		Evento evento = new Evento(idEvento);
 		try {
 			DaoEvento.getInstance().eliminarEvento(evento);
-			//System.out.println("Evento eliminado exitosamente!");
+			// System.out.println("Evento eliminado exitosamente!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -322,7 +319,7 @@ public class GestorEvento extends HttpServlet {
 		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
 		try {
 			DaoEvento.getInstance().publicarEvento(idEvento, request);
-			//System.out.println("Evento publicado exitosamente!");
+			// System.out.println("Evento publicado exitosamente!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -486,7 +483,7 @@ public class GestorEvento extends HttpServlet {
 		String fechaEventoStr = "";
 		String criterio = request.getParameter("criterio");
 		String textoBusqueda = request.getParameter("textoBusqueda");
-		 //System.out.println(criterio + " : " + textoBusqueda);
+		// System.out.println(criterio + " : " + textoBusqueda);
 
 		try {
 			DaoEventoConActividad eventosDao = new DaoEventoConActividad();
@@ -513,12 +510,12 @@ public class GestorEvento extends HttpServlet {
 			}
 
 			if (fechaEventoStr != null && !fechaEventoStr.isEmpty()) {
-				//System.out.println("fechaEvento : "+ fechaEvento);
-				
+				// System.out.println("fechaEvento : "+ fechaEvento);
+
 				fechaEvento = Date.valueOf(fechaEventoStr);
-				
-				//System.out.println(fechaEvento);
-				
+
+				// System.out.println(fechaEvento);
+
 			}
 
 			/*
@@ -528,8 +525,7 @@ public class GestorEvento extends HttpServlet {
 			 * 
 			 * System.out.println(datos);
 			 */
-		
-			
+
 			out.print(eventosDao.listarJsonUltimosEventos(numEventos, tipoActividad, nombre, ubicacion, fechaEvento));
 		} catch (IllegalArgumentException e) {
 			// La fecha proporcionada no está en el formato correcto

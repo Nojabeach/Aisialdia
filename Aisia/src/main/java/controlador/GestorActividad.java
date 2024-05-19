@@ -6,8 +6,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import modelo.Actividad;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -165,9 +167,9 @@ public class GestorActividad extends HttpServlet {
 
 		try {
 			DaoActividad.getInstance().crearActividad(actividad);
-			 response.setStatus(HttpServletResponse.SC_CREATED);
-			 response.sendRedirect("admin.html");
-			 
+			response.setStatus(HttpServletResponse.SC_CREATED);
+			response.sendRedirect("admin.html");
+
 			// response.getWriter().println("Actividad creada exitosamente!");
 		} catch (SQLException e) {
 			ControlErrores.mostrarErrorGenerico("Error al crear la actividad. Intente de nuevo." + e, response);
@@ -180,18 +182,46 @@ public class GestorActividad extends HttpServlet {
 	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
 	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
 	 *                 respuesta HTTP.
-	 * @throws SQLException Si se produce un error en la base de datos.
-	 * @throws IOException  Si se produce un error de entrada/salida.
+	 * @throws SQLException     Si se produce un error en la base de datos.
+	 * @throws IOException      Si se produce un error de entrada/salida.
+	 * @throws ServletException Si ocurre un error durante el procesamiento de la
+	 *                          solicitud.
 	 */
 	private void editarActividad(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, IOException {
+			throws SQLException, IOException, ServletException {
+		// Obtener los parámetros del formulario
 		int idActividad = Integer.parseInt(request.getParameter("idActividad"));
-		Actividad a = new Actividad(idActividad);
+		String tipoActividad = request.getParameter("tipoActividad");
+		String fotoActividad = request.getParameter("fotoActividad");
+
+		// Crear una instancia de Actividad con los datos obtenidos
+		Actividad actividad = new Actividad(idActividad, tipoActividad, fotoActividad);
+
 		try {
-			DaoActividad.getInstance().editarActividad(a);
+			// Editar la actividad en la base de datos
+			DaoActividad.getInstance().editarActividad(actividad);
+
+			// Verificar si la imagen ya existe en el servidor
+			String nombreArchivo = new File(fotoActividad).getName();
+			String rutaCompleta = GestionFotos.PATH_FILES + File.separator + nombreArchivo;
+			File imagenServidor = new File(rutaCompleta);
+
+			if (!imagenServidor.exists()) {
+				// Copiar la imagen desde el cliente al servidor
+				Part imagenPart = request.getPart("fotoActividad");
+				String fileName = GestionFotos.subirFotoAlServidor(imagenPart, response);
+				if (fileName == null) {
+					// Error al subir la foto
+					return;
+				}
+			}
+
+			// response.sendRedirect("admin.html");
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 
+			// En caso de error, mostrar un mensaje de error genérico
 			ControlErrores.mostrarErrorGenerico("Error al editar la actividad. Contacte al administrador.", response);
 		}
 	}
@@ -208,9 +238,31 @@ public class GestorActividad extends HttpServlet {
 	private void eliminarActividad(HttpServletRequest request, HttpServletResponse response)
 			throws Exception, IOException {
 		int idActividad = Integer.parseInt(request.getParameter("idActividad"));
-		Actividad a = new Actividad(idActividad);
+
 		try {
-			DaoActividad.getInstance().eliminarActividad(a);
+			// Obtener la actividad antes de eliminarla para conocer el nombre del archivo
+			Actividad actividad = DaoActividad.getInstance().obtenerActividadPorId(idActividad);
+			if (actividad == null) {
+				ControlErrores.mostrarErrorGenerico("La actividad no existe.", response);
+				return;
+			}
+
+			String fileName = actividad.getFotoActividad();
+
+			// Eliminar la actividad de la base de datos
+			DaoActividad.getInstance().eliminarActividad(actividad);
+
+			// Eliminar la foto del servidor si el nombre del archivo no es nulo o vacío
+			if (fileName != null && !fileName.isEmpty()) {
+				boolean fotoEliminada = GestionFotos.eliminarFotoDelServidor(fileName, response);
+				if (!fotoEliminada) {
+					ControlErrores.mostrarErrorGenerico("Error al eliminar la foto del servidor.", response);
+				}
+			}
+
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.sendRedirect("admin.html");
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 

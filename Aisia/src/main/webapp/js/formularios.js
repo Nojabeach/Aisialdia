@@ -43,11 +43,10 @@ function actividad_cargarFormularioDesdeServlet(servlet,
     .then((data) => {
       console.log("Datos recibidos:", data);
       llenarFormulario(data, formularioId);
-      
+
       // Mostrar el formulario y activar el botón de "Editar"
       document.getElementById(formularioId).style.display = 'block';
-      document.getElementById('crear-actividad-button').style.display = 'none';
-      document.getElementById('editar-actividad-button').style.display = 'block';
+
     })
     .catch((error) => {
       console.error("Error:", error);
@@ -73,7 +72,7 @@ function evento_cargarFormularioDesdeServlet(servlet,
     .then((data) => {
       console.log("Datos recibidos:", data);
       llenarFormulario(data, formularioId);
-      
+
       // Mostrar el formulario y activar el botón de "Editar"
       document.getElementById(formularioId).style.display = 'block';
       document.getElementById('crear-evento-button').style.display = 'none';
@@ -102,7 +101,7 @@ function usuario_cargarFormularioDesdeServlet(servlet,
     .then((data) => {
       console.log("Datos recibidos:", data);
       llenarFormulario(data, formularioId);
-      
+
       // Mostrar el formulario y activar el botón de "Editar"
       document.getElementById(formularioId).style.display = 'block';
       document.getElementById('crear-usuario-button').style.display = 'none';
@@ -111,8 +110,7 @@ function usuario_cargarFormularioDesdeServlet(servlet,
     .catch((error) => {
       console.error("Error:", error);
     });
-}
-function llenarFormulario(data, formularioId) {
+}function llenarFormulario(data, formularioId) {
   console.log("Llenando formulario con datos:", data);
   let form = document.getElementById(formularioId);
   Object.keys(data).forEach((key) => {
@@ -121,7 +119,7 @@ function llenarFormulario(data, formularioId) {
       if (element.type === "date") {
         console.log("campo fecha", data[key]);
         // Para campos de fecha
-        element.value = data[key]  
+        element.value = data[key];
       } else if (element.type === "checkbox") {
         // Para campos checkbox
         console.log("campo checkbox", data[key]);
@@ -136,6 +134,26 @@ function llenarFormulario(data, formularioId) {
             break;
           }
         }
+      } else if (element.type === "file") {
+        // Para campos de tipo "file"
+        let imgPath = `img/Iconos/`; // Obtener la ruta base del directorio de imágenes
+        let imgName = data[key]; // Nombre del archivo de imagen
+        let blob = new Blob([imgPath + imgName], { type: "image/png" }); // Crear un objeto Blob
+        let file = new File([blob], imgName, { type: "image/png" }); // Crear un objeto File
+        let fileList = new DataTransfer(); // Crear un objeto DataTransfer
+        fileList.items.add(file); // Agregar el archivo al objeto DataTransfer
+      
+        let imgPhoto  = document.getElementById('EDITimg-photo'); // Obtener el elemento de imagen
+        imgPhoto.src = imgPath + imgName; // Asignar la ruta de la imagen cargada
+        imgPhoto.width = 100;
+        imgPhoto.height = 100;
+        imgPhoto.style.display = 'block'; // Mostrar la imagen
+        document.getElementById('EDITdelete-photo').style.display = 'inline'; // Mostrar el botón para eliminar la foto
+        console.log("imagen añadida", data[key]);
+
+        let inputElement = document.getElementById('EDITfotoActividad'); // Obtener el campo de archivo
+        console.log("inputElement", inputElement);
+        inputElement.files = fileList.files;
       } else {
         console.log("campo texto", data[key]);
         // Para otros tipos de campos
@@ -144,6 +162,7 @@ function llenarFormulario(data, formularioId) {
     }
   });
 }
+
 
 function validarFormulario(formularioId) {
   console.log("Validando formulario:", formularioId);

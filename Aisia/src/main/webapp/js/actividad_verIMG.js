@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 imgPhoto.width = 100;
                 imgPhoto.height = 100;
                 imgPhoto.style.display = 'block';
+                document.getElementById('img-photo').style.display = 'block';
                 document.getElementById('delete-photo').style.display = 'inline';
             };
             reader.readAsDataURL(file);
@@ -23,18 +24,17 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-
     document.getElementById('EDITfotoActividad').addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                const EDITtipoActividad = document.getElementById('EDITtipoActividad').value;
-                const imgPhoto = `img/Iconos/${EDITtipoActividad}.png`;;
+                const imgPhoto = document.getElementById('EDITimg-photo');
                 imgPhoto.src = e.target.result;
                 imgPhoto.width = 100;
                 imgPhoto.height = 100;
                 imgPhoto.style.display = 'block';
+                document.getElementById('EDITimg-photo').style.display = 'block';
                 document.getElementById('EDITdelete-photo').style.display = 'inline';
             };
             reader.readAsDataURL(file);
@@ -53,13 +53,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const imgPhoto = document.getElementById('img-photo');
         imgPhoto.src = '#';
         imgPhoto.style.display = 'none';
+        document.getElementById('img-photo').style.display = 'none';
         document.getElementById('delete-photo').style.display = 'none';
     }
 
     function EDITresetPhotoPreview() {
-        const imgPhoto = document.getElementById('EDITimg-photo');
+        const imgPhoto = document.getElementById('EDITimg-photo'); // Obtener el elemento img
         imgPhoto.src = '#';
         imgPhoto.style.display = 'none';
+        document.getElementById('EDITimg-photo').style.display = 'none';
         document.getElementById('EDITdelete-photo').style.display = 'none';
     }
 });

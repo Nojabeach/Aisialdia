@@ -18,21 +18,26 @@
     <script src="js/checkLogin.js"></script><!-- Script para comprobar si el usuario está logueado -->
 
     <script src="js/formularios.js"></script> <!-- Script para controlar los formularios -->
-
-    <script src="js/actividad_pintarTablaByE.js"></script>
+    <script src="js/actividad_actualizarTabla.js"></script>
+    <!-- Script para actualizar los datos de la tabla de actividaes-->
+    <script src="js/actividad_pintarTablaByE.js"></script><!-- Script para pintar la tabla de actividades -->
     <script src="js/actividad_verIMG.js"></script>
+    <!-- Script para ver la imagen de la actividad tanto en crear como en editar -->
 
     <script src="js/ev_CrearEv_listarActividades.js"></script>
+    <!-- Script para cargar las actividades en el formulario de creación de eventos -->
     <script src="js/admin_ev_edit_listarActividades.js"></script>
+    <!-- Script para cargar las actividades en el formulario de edición de eventos -->
 
-    <script src="js/evento_pintarTablaByE.js"></script>
-    <script src="js/ev_finalizar.js"></script>
+    <script src="js/evento_pintarTablaByE.js"></script><!-- Script para pintar la tabla de eventos -->
+    <script src="js/ev_finalizar.js"></script><!-- Script para finalizar eventos -->
     <script src="js/pintarTablaAprobar.js"></script>
+    <!-- Script para pintar la tabla de eventos pendientes de aprobar -->
     <script src="js/pintarTablaPublicar.js"></script>
+    <!-- Script para pintar la tabla de eventos pendientes de publicar -->
 
-    <script src="js/usuario_pintarTablaByE.js"></script>
+    <script src="js/usuario_pintarTablaByE.js"></script><!-- Script para pintar la tabla de usuarios -->
 
-    <!-- Script para control de creacion de tabla editar y borrar de actividades,eventos y usuarios-->
 
     <script src="js/admin_navbar.js"></script> <!-- Script para cargar las navbar de admin o user -->
     <script src="js/admin_controlTabs.js"></script> <!-- Script para controlar la funcionalidad de las TABS-->
@@ -110,8 +115,9 @@
                                 <label for="photo">Foto:</label>
                                 <input type="file" id="fotoActividad" name="fotoActividad">
                                 <div id="photo-preview">
-                                    <img src="#" alt="Preview" id="img-photo">
-                                    <button type="button" id="delete-photo">Eliminar Foto</button>
+                                    <img src="#" alt="Preview" id="img-photo" style="display: none;">
+                                    <button type="button" id="delete-photo" style="display: none;">Eliminar
+                                        Foto</button>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -120,11 +126,14 @@
                         </fieldset>
                     </form>
                 </div>
-                <div id="editar-actividades" class="actividades-tab">
-                    <form class="form-admin" id="editarActividadesForm" action="GestorActividad?action=editarActividad"
-                          method="POST" enctype="multipart/form-data">
+                <div id="actividades-editar" class="actividades-tab" style="display: none;">
+                    <form class="form-admin" id="EDITactividadesForm" action="GestorActividad?action=editarActividad"
+                        method="POST" enctype="multipart/form-data">
                         <fieldset>
                             <legend>Editar Actividad</legend>
+                            <div class="form-group">
+                                <input type="text" id="EDITidActividad" name="idActividad" hidden>
+                            </div>
                             <div class="form-group">
                                 <label for="EDITtipoActividad">Tipo de Actividad:</label>
                                 <input type="text" id="EDITtipoActividad" name="tipoActividad" required>
@@ -133,8 +142,9 @@
                                 <label for="EDITfotoActividad">Foto:</label>
                                 <input type="file" id="EDITfotoActividad" name="fotoActividad">
                                 <div id="photo-preview">
-                                    <img src="#" alt="Preview" id="EDITimg-photo">
-                                    <button type="button" id="EDITdelete-photo">Eliminar Foto</button>
+                                    <img src="#" alt="Preview" id="EDITimg-photo" style="display: none;">
+                                    <button type="button" id="EDITdelete-photo" style="display: none;">Eliminar
+                                        Foto</button>
                                 </div>
                             </div>
                             <div class="form-group">

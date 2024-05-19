@@ -73,10 +73,11 @@ public class DaoActividad {
 	 */
 	public void editarActividad(Actividad actividad) throws SQLException {
 		// Preparar la consulta SQL para modificar la actividad
-		String sql = "UPDATE actividades SET tipoActividad = ? WHERE idactividad = ?";
+		String sql = "UPDATE actividades SET tipoActividad = ? ,fotoActividad= ? WHERE idactividad = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
 		ps.setString(1, actividad.getTipoActividad());
-		ps.setInt(2, actividad.getIdActividad());
+		ps.setString(2, actividad.getFotoActividad());
+		ps.setInt(3, actividad.getIdActividad());
 		ps.executeUpdate();
 		ps.close();
 
