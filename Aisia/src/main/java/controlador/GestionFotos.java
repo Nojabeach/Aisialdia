@@ -50,7 +50,7 @@ public class GestionFotos {
 				return null;
 			}
 
-			System.out.println("Nombre del archivo: " + fileName);
+			//System.out.println("Nombre del archivo: " + fileName);
 
 			InputStream input = part.getInputStream();
 

@@ -56,7 +56,18 @@ function evento_pintarTablaEditarYBorrar(data, container) {
         botonEditar.textContent = 'Editar';
         botonEditar.dataset.idEvento = item.idEvento;
         botonEditar.classList.add('boton-secundario');
+        botonEditar.dataset.tabId = 'eventos-editar'; // ID del tab a mostrar
         celdaBoton.appendChild(botonEditar);
+
+// Asigna evento al botón Editar
+botonEditar.addEventListener('click', function() {
+    let idEvento = this.dataset.idEvento;
+    console.log('Editar evento', idEvento);
+    let tabId = this.dataset.tabId;
+    console.log('Editar en tab', tabId);
+    editarEvento(idEvento, tabId);
+});
+
 
         fila.appendChild(celdaBoton);
         tbody.appendChild(fila);
@@ -102,6 +113,25 @@ function eliminarEvento(idEvento) {
     })
 }
 
-function editarEvento(idEvento) {
-    //1º rellenar formulario y poner boton de editar
+function editarEvento(idEvento, tabId) {
+    // Mostrar el tab correspondiente
+    mostrarTab(tabId);
+    let servlet = "GestorEvento";
+    let action = "obtenerEventoporID";
+    let op = idEvento;
+    let metodo = "GET";
+    let formularioId = "EDITeventoForm";
+
+    actividad_cargarFormularioDesdeServlet(servlet, action, op, formularioId, metodo);
+}
+
+function mostrarTab(tabId) {
+    const tab = document.getElementById(tabId);
+    const allTabs = document.querySelectorAll('.evento-tab'); 
+
+    allTabs.forEach(tab => {
+        tab.style.display = 'none';
+    });
+
+    tab.style.display = 'block';
 }

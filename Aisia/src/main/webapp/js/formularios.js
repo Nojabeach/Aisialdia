@@ -31,7 +31,7 @@ function actividad_cargarFormularioDesdeServlet(servlet,
   method
 ) {
   console.log("Realizando llamada a:", servlet);
-  fetch(`${servlet}?action=${action}&id=${op}`, {
+  fetch(`${servlet}?action=${action}&idActividad=${op}`, {
     method: method, // Pasar el método de solicitud como atributo
   })
     .then((response) => {

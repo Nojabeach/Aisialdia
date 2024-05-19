@@ -1,3 +1,31 @@
+
+
+// Interceptar el submit del formulario de edición
+document.getElementById("EDITeventosForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Evita el submit tradicional
+
+    const form = event.target;
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+        method: form.method,
+        body: new URLSearchParams(formData)
+    })
+    .then(response => {
+        if (response.ok) {
+            // Aquí puedes manejar la respuesta del servidor si es necesario
+            console.log('Formulario enviado correctamente');
+            mostrarTab('actividades-activas'); // Muestra el tab "actividades-activas" después de enviar el formulario
+        } else {
+            console.error('Error al enviar el formulario');
+        }
+    })
+    .catch(error => {
+        console.error('Error en la solicitud:', error);
+    });
+});
+
+
 function actividad_pintarTablaEditarYBorrar(data, container) {
     let tabla = document.createElement('table');
     tabla.classList.add('tabla');
@@ -31,6 +59,7 @@ function actividad_pintarTablaEditarYBorrar(data, container) {
                 if (valorCelda.toLowerCase().endsWith('.png')) {
                     let image = document.createElement('img');
                     image.src = `img/Iconos/${item[columna]}`;
+                    console.log(image.src);
                     image.alt = columna;
                     image.width = 32;
                     image.height = 32;
@@ -55,8 +84,18 @@ function actividad_pintarTablaEditarYBorrar(data, container) {
         botonEditar.textContent = 'Editar';
         botonEditar.dataset.idActividad = item.idActividad;
         botonEditar.classList.add('boton-secundario');
+        botonEditar.dataset.tabId = 'actividades-editar'; // ID del tab a mostrar
         celdaBoton.appendChild(botonEditar);
 
+        // Asigna evento al botón Editar
+        botonEditar.addEventListener('click', function() {
+            let idActividad = this.dataset.idActividad;
+            console.log('Editar actividad', idActividad);
+            let tabId = this.dataset.tabId;
+            console.log('Editar en tab', tabId);
+            editarActividad(idActividad, tabId);
+        });
+        
         fila.appendChild(celdaBoton);
         tbody.appendChild(fila);
     });
@@ -76,11 +115,13 @@ function asignarActividadABorrar() {
             if (action === 'borrar') {
                 eliminarActividad(idActividad);
             } else if (action === 'editar') {
-                editarActividad(idActividad);
+                let tabId = this.dataset.tabId;
+                editarActividad(idActividad, tabId); // Pasa el tabId aquí
             }
         });
     });
 }
+
 function eliminarActividad(idActividad) {
     console.log('Eliminando actividad', idActividad);
     fetch('GestorActividad', {
@@ -94,18 +135,32 @@ function eliminarActividad(idActividad) {
         if (response.ok) {
             console.log('Actividad eliminada correctamente, actualizo la lista');
             AD_obtenerActividades();
+        } else {
             console.error('Error al eliminar el evento');
         }
-    })
+    });
 }
 
-    function editarActividad(idActividad){
-        let servlet = "GestorActividad";
-        let action = "editarActividad";
-        let op = idActividad;
-        let metodo = "POST";
-        let formularioId = "activity-form";
+function editarActividad(idActividad, tabId) {
+    // Mostrar el tab correspondiente
+    mostrarTab(tabId);
+    let servlet = "GestorActividad";
+    let action = "obtenerActividadporID";
+    let op = idActividad;
+    let metodo = "GET";
+    let formularioId = "EDITactividadesForm";
 
-        actividad_cargarFormularioDesdeServlet(servlet, action, op, formularioId,metodo);
-    }
+    actividad_cargarFormularioDesdeServlet(servlet, action, op, formularioId, metodo);
+}
+
+function mostrarTab(tabId) {
+    const tab = document.getElementById(tabId);
+    const allTabs = document.querySelectorAll('.actividades-tab'); 
+
+    allTabs.forEach(tab => {
+        tab.style.display = 'none';
+    });
+
+    tab.style.display = 'block';
+}
 

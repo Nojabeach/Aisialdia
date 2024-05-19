@@ -16,15 +16,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Enlace de scripts -->
     <script src="js/checkLogin.js"></script><!-- Script para comprobar si el usuario está logueado -->
-    <script src="js/actividad_pintarTablaByE.js"></script>
 
+    <script src="js/formularios.js"></script> <!-- Script para controlar los formularios -->
+
+    <script src="js/actividad_pintarTablaByE.js"></script>
+    <script src="js/actividad_verIMG.js"></script>
+
+    <script src="js/ev_CrearEv_listarActividades.js"></script>
+    <script src="js/admin_ev_edit_listarActividades.js"></script>
     <script src="js/evento_pintarTablaByE.js"></script>
     <script src="js/ev_finalizar.js"></script>
     <script src="js/pintarTablaAprobar.js"></script>
     <script src="js/pintarTablaPublicar.js"></script>
 
     <script src="js/usuario_pintarTablaByE.js"></script>
- 
+
     <!-- Script para control de creacion de tabla editar y borrar de actividades,eventos y usuarios-->
 
     <script src="js/admin_navbar.js"></script> <!-- Script para cargar las navbar de admin o user -->
@@ -86,7 +92,7 @@
                 <p>Haga click sobre la opción deseada:</p>
                 <nav id="actividades-navbar">
                     <a href="#actividades-crear">Crear Actividad</a>
-                    <a href="#actividades-editar" >Editar Actividad</a>
+                    <a href="#actividades-editar">Editar Actividad</a>
                     <a href="#actividades-activas">Visualizar Actividades</a>
                 </nav>
 
@@ -111,7 +117,7 @@
                             </div>
                             <div class="form-group">
                                 <button type="submit" id="crear-actividad-button">Crear Actividad</button>
-                               
+
                             </div>
                         </fieldset>
                     </form>
@@ -130,7 +136,7 @@
                             <div class="form-group">
                                 <label for="photo">Foto:</label>
                                 <input type="file" id="EDITfotoActividad" name="fotoActividad">
-                                <div id="photo-preview">
+                                <div id="EDITphoto-preview">
                                     <img src="#" alt="Preview" id="EDITimg-photo" style="display: none;">
                                     <button type="button" id="EDITdelete-photo" style="display: none;">Eliminar
                                         Foto</button>
@@ -138,7 +144,7 @@
                             </div>
                             <div class="form-group">
                                 <button type="submit" id="editar-actividad-button">Editar Actividad</button>
-                               
+
                             </div>
                         </fieldset>
                     </form>
@@ -175,22 +181,22 @@
                                 <label for="nombre">Nombre:</label>
                                 <input type="text" id="nombre" name="nombre" required>
                             </div>
-    
+
                             <div class="form-group">
                                 <label for="detalles">Detalles:</label>
                                 <textarea id="detalles" name="detalles" required></textarea>
                             </div>
-    
+
                             <div class="form-group">
                                 <label for="fechaEvento">Fecha:</label>
                                 <input type="date" id="fechaEvento" name="fechaEvento" required>
                             </div>
-    
+
                             <div class="form-group">
                                 <label for="ubicacion">Ubicación:</label>
                                 <input type="text" id="ubicacion" name="ubicacion" required>
                             </div>
-    
+
                             <div class="form-group">
                                 <label for="activity">Actividad:</label>
                                 <div id="activity-container">
@@ -199,7 +205,7 @@
                                     <select id="activity" name="activity" required>
                                         <!-- Las opciones se cargarán dinámicamente con JS -->
                                     </select>
-    
+
                                 </div>
                             </div>
                             <div class="form-group">
@@ -211,7 +217,8 @@
                 </div>
 
                 <div id="eventos-editar" class="evento-tab">
-                    <form id="EDITeventosForm" class="form-admin" action="GestorEvento?action=editarEvento" method="POST">
+                    <form id="EDITeventosForm" class="form-admin" action="GestorEvento?action=editarEvento"
+                        method="POST">
                         <fieldset>
                             <legend>Datos del Evento</legend>
 
@@ -219,31 +226,31 @@
                                 <label for="nombre">Nombre:</label>
                                 <input type="text" id="nombre" name="EDITnombre" required>
                             </div>
-    
+
                             <div class="form-group">
                                 <label for="detalles">Detalles:</label>
                                 <textarea id="detalles" name="EDITdetalles" required></textarea>
                             </div>
-    
+
                             <div class="form-group">
                                 <label for="fechaEvento">Fecha:</label>
                                 <input type="date" id="fechaEvento" name="EDITfechaEvento" required>
                             </div>
-    
+
                             <div class="form-group">
                                 <label for="ubicacion">Ubicación:</label>
                                 <input type="text" id="ubicacion" name="EDITubicacion" required>
                             </div>
-    
+
                             <div class="form-group">
-                                <label for="activity">Actividad:</label>
-                                <div id="activity-container">
-                                    <img id="activity-image" src="img/Varios/default_ACT.png" alt="Icono de actividad"
+                                <label for="EDITactivity">Actividad:</label>
+                                <div id="EDITactivity-container">
+                                    <img id="EDITactivity-image" src="img/Varios/default_ACT.png" alt="Icono de actividad"
                                         style="width: 48px; height: 48px;display: none; ">
                                     <select id="activity" name="EDITactivity" required>
                                         <!-- Las opciones se cargarán dinámicamente con JS -->
                                     </select>
-    
+
                                 </div>
                             </div>
                             <div class="form-group">
@@ -264,14 +271,14 @@
                             <option value="ReporteNegativo">Reporte Negativo</option>
                             <option value="Otros">Otros</option>
                         </select>
-                            <button id="botonFinalizar">Finalizar</button>
-                            <div id="eventIDDisplay">ID del Evento Seleccionado: Ninguno</div>
+                        <button id="botonFinalizar">Finalizar</button>
+                        <div id="eventIDDisplay">ID del Evento Seleccionado: Ninguno</div>
                     </form>
                     <div id="Publicados-tabla">
                         <!-- La tabla de EVENTOS PUBLICADOS Y ACTIVOS se generará dinámicamente aquí -->
                     </div>
                 </div>
-                
+
                 <div id="eventos-pendientes" class="evento-tab">
                     <h3>Eventos Pendientes de Aprobar</h3>
                     <div id="PendientesAprobar-tabla">
@@ -358,17 +365,19 @@
                     </form>
                 </div>
                 <div id="usuarios-editar" class="usuarios-tab">
-                    <form id="usuariosForm" class="form-admin" action="GestorUsuario?action=editarUsuario" method="post">
+                    <form id="usuariosForm" class="form-admin" action="GestorUsuario?action=editarUsuario"
+                        method="post">
                         <fieldset>
                             <legend>Datos del Usuario</legend>
                             <div class="form-group">
                                 <label for="nombre" aria-label="Nombre">Nombre:</label>
-                                <input type="text" id="nombre" name="EDITnombre" placeholder="Escribe tu nombre" required>
+                                <input type="text" id="nombre" name="EDITnombre" placeholder="Escribe tu nombre"
+                                    required>
                             </div>
                             <div class="form-group">
                                 <label for="email" aria-label="Correo electrónico">Correo electrónico:</label>
-                                <input type="email" id="email" name="EDITemail" placeholder="Escribe tu correo electrónico"
-                                    required>
+                                <input type="email" id="email" name="EDITemail"
+                                    placeholder="Escribe tu correo electrónico" required>
                             </div>
                             <div class="form-group">
                                 <label for="contrasena" aria-label="Contraseña">Contraseña:</label>
