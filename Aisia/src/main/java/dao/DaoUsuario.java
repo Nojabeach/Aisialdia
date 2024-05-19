@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -245,88 +246,64 @@ public class DaoUsuario {
 	}
 
 	/**
-	 * Obtiene la lista de todos los usuarios de la base de datos.
-	 * 
-	 * @return ArrayList de Usuario que contiene todos los usuarios obtenidos de la
-	 *         base de datos.
-	 * @throws SQLException Si se produce un error al acceder a la base de datos.
+	 * Obtiene una lista de todos los usuarios en la base de datos.
+	 *
+	 * @return Una lista de usuarios.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
 	 */
-	public ArrayList<Usuario> obtenerUsuarios() throws SQLException {
+	public List<Usuario> obtenerUsuarios() throws SQLException {
+		String sql = "SELECT * FROM usuarios ORDER BY idUsuario";
+		List<Usuario> usuarios = new ArrayList<>();
 
-		String sql = "SELECT * FROM usuarios order by nombre";
-		PreparedStatement ps = con.prepareStatement(sql);
-		ResultSet rs = ps.executeQuery();
-
-		ArrayList<Usuario> ls = null;
-		/*
-		 * next-> . null [4][5][6][7][8][7] null
-		 */
-		while (rs.next()) {
-			if (ls == null) {
-				ls = new ArrayList<Usuario>();
+		try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) {
+				Usuario usuario = new Usuario();
+				usuario.setIdUsuario(rs.getInt("IdUsuario")); // ID del usuario
+				usuario.setNombre(rs.getString("nombre")); // Nombre del usuario
+				usuario.setEmail(rs.getString("email")); // Email del usuario
+				usuario.setContrasena(rs.getString("contrasena")); // Contraseña del usuario
+				usuario.setFechaNacimiento(rs.getDate("fechaNacimiento")); // Fecha de nacimiento del usuario
+				usuario.setRecibeNotificaciones(rs.getBoolean("recibeNotificaciones")); // Si recibe notificaciones
+				usuario.setIntereses(rs.getString("intereses")); // Intereses del usuario
+				usuario.setPermiso(rs.getInt("permiso")); // Permiso del usuario
+				usuario.setRoles(Rol.valueOf(rs.getString("rol"))); // Rol del usuario
+				usuario.setConsentimiento_datos(rs.getDate("consentimiento_datos")); // Fecha de consentimiento de datos
+				usuario.setAceptacionTerminosWeb(rs.getDate("aceptacionTerminosWeb")); // Fecha de aceptación de
+																						// términos web
+				usuarios.add(usuario);
 			}
-
-			ls.add(new Usuario(rs.getInt("idUsuario"), // Obtener el ID del usuario de la consulta SQL
-					rs.getString("nombre"), // Obtener el nombre del usuario de la consulta SQL
-					rs.getString("email"), // Obtener el email del usuario de la consulta SQL
-					rs.getString("contrasena"), // Obtener la contraseña del usuario de la consulta SQL
-					rs.getDate("fechaNacimiento"), // Obtener la fecha de nacimiento del usuario de la consulta SQL
-					rs.getBoolean("recibeNotificaciones"), // Obtener si recibe notificaciones del usuario de la
-															// consulta SQL
-					rs.getString("intereses"), // Obtener los intereses del usuario de la consulta SQL
-					rs.getInt("permiso"), // Obtener el permiso del usuario de la consulta SQL
-					Rol.valueOf(rs.getString("rol")), // Obtener el rol del usuario de la consulta SQL y convertirlo en
-														// un enum
-					rs.getDate("consentimiento_datos"), // Obtener la fecha de consentimiento de datos del usuario de la
-														// consulta SQL
-					rs.getDate("aceptacionTerminosWeb") // Obtener la fecha de aceptación de términos web del usuario de
-														// la consulta SQL
-			));
-
 		}
-		return ls;
 
+		return usuarios;
 	}
 
 	/**
 	 * Retorna una lista de usuarios filtrada por tipo de permiso.
-	 * 
-	 * @param tipo El tipo de permiso por el que se desea filtrar los usuarios.
+	 *
+	 * @param PERMISO El tipo de permiso por el que se desea filtrar los usuarios.
 	 * @return Una lista de usuarios que tienen el permiso especificado.
 	 * @throws SQLException Si ocurre algún error de SQL al intentar obtener los
 	 *                      usuarios.
 	 */
-	public ArrayList<Usuario> obtenerUsuarios(int PERMISO) throws SQLException {
-		String sql = "SELECT * FROM usuarios WHERE permiso=? order by nombre";
-		PreparedStatement ps = con.prepareStatement(sql);
-		ps.setInt(1, PERMISO);
-		ResultSet rs = ps.executeQuery();
+	public List<Usuario> obtenerUsuarios(int PERMISO) throws SQLException {
+		String sql = "SELECT * FROM usuarios WHERE permiso=? ORDER BY nombre";
+		List<Usuario> usuarios = new ArrayList<>();
 
-		ArrayList<Usuario> ls = null;
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setInt(1, PERMISO);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					Usuario usuario = new Usuario(rs.getInt("idUsuario"), rs.getString("nombre"), rs.getString("email"),
+							rs.getDate("fechaNacimiento"), rs.getBoolean("recibeNotificaciones"),
+							rs.getString("intereses"), rs.getInt("permiso"), Rol.valueOf(rs.getString("rol"))
 
-		while (rs.next()) {
-			if (ls == null) {
-				ls = new ArrayList<Usuario>();
+					);
+					usuarios.add(usuario);
+				}
 			}
-
-			ls.add(new Usuario(rs.getInt("idUsuario"), // Obtener el ID del usuario de la consulta SQL
-					rs.getString("nombre"), // Obtener el nombre del usuario de la consulta SQL
-					rs.getString("email"), // Obtener el email del usuario de la consulta SQL
-					rs.getString("contrasena"), // Obtener la contraseña del usuario de la consulta SQL
-					rs.getDate("fechaNacimiento"), // Obtener la fecha de nacimiento del usuario de la consulta SQL
-					rs.getBoolean("recibeNotificaciones"), // Obtener si recibe notificaciones del usuario de la
-															// consulta SQL
-					rs.getString("intereses"), // Obtener los intereses del usuario de la consulta SQL
-					rs.getInt("permiso"), // Obtener el permiso del usuario de la consulta SQL
-					Rol.valueOf(rs.getString("rol")), // Obtener el rol del usuario de la consulta SQL y convertirlo en
-														// un enum
-					rs.getDate("consentimiento_datos"), // Obtener la fecha de consentimiento de datos del usuario de la
-														// consulta SQL
-					rs.getDate("aceptacionTerminosWeb") // Obtener la fecha de aceptación de términos web del usuario de
-														// la consulta SQL
-			));
 		}
-		return ls;
+
+		return usuarios;
 	}
 
 	/**

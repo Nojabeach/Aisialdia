@@ -63,6 +63,7 @@ public class GestorUsuario extends HttpServlet {
 		try {
 			switch (action) {
 			case "obtenerUsuarios":
+				//System.out.println("entro en obtenerUsuarios");
 				obtenerUsuarios(request, response, out);
 				break;
 			case "obtenerUsuariosSegunPermiso":

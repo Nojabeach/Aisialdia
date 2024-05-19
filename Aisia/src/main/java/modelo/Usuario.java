@@ -206,6 +206,32 @@ public class Usuario {
 		this.permiso = permiso;
 	}
 
+	/**
+	 * Constructor de la clase Usuario, que se usa en la pantalla de Administracion
+	 * de los usuarios
+	 *
+	 * @param idUsuario            El ID del usuario.
+	 * @param nombre               El nombre del usuario.
+	 * @param email                El email del usuario.
+	 * @param fechaNacimiento      La fecha de nacimiento del usuario.
+	 * @param recibeNotificaciones Indica si el usuario recibe notificaciones.
+	 * @param intereses            Los intereses del usuario.
+	 * @param permiso              El permiso del usuario.
+	 * @param roles                Los roles del usuario.
+	 */
+	public Usuario(int idUsuario, String nombre, String email, Date fechaNacimiento, boolean recibeNotificaciones,
+			String intereses, int permiso, Rol roles) {
+
+		this.idUsuario = idUsuario;
+		this.nombre = nombre;
+		this.email = email;
+		this.fechaNacimiento = fechaNacimiento;
+		this.recibeNotificaciones = recibeNotificaciones;
+		this.intereses = intereses;
+		this.permiso = permiso;
+		this.roles = roles;
+	}
+
 	// GETTERS Y SETTERS PARA TODOS LOS ATRIBUTOS
 	// --------------------------------------------------------------------------------------------
 
@@ -645,7 +671,7 @@ public class Usuario {
 	 * @throws SQLException Si ocurre algún error de SQL al intentar obtener los
 	 *                      usuarios.
 	 */
-	public ArrayList<Usuario> obtenerUsuarios(int PERMISO) throws SQLException {
+	public List<Usuario> obtenerUsuarios(int PERMISO) throws SQLException {
 		return DaoUsuario.getInstance().obtenerUsuarios(PERMISO);
 	}
 

@@ -1,12 +1,11 @@
 function evento_pintarTablaEditarYBorrar(data, container) {
     let tabla = document.createElement('table');
     tabla.classList.add('tabla');
-
     container.innerHTML = '';
 
-    let columnasConDatos = Object.keys(data[0]).filter(columna => {
-        return data.some(item => item[columna] !== 0 && item[columna] !== null && item[columna] !== undefined);
-    });
+    let columnasConDatos = Object.keys(data[0]).filter(columna => 
+        data.some(item => item[columna] !== 0 && item[columna] !== null && item[columna] !== undefined)
+    );
 
     let thead = document.createElement('thead');
     let filaEncabezado = document.createElement('tr');
@@ -15,32 +14,33 @@ function evento_pintarTablaEditarYBorrar(data, container) {
         th.textContent = columna;
         filaEncabezado.appendChild(th);
     });
-    filaEncabezado.innerHTML += "<th class='boton-header'>Acciones</th>";
+    let thAcciones = document.createElement('th');
+    thAcciones.classList.add('boton-header');
+    thAcciones.textContent = 'Acciones';
+    filaEncabezado.appendChild(thAcciones);
     thead.appendChild(filaEncabezado);
     tabla.appendChild(thead);
 
     let tbody = document.createElement('tbody');
     data.forEach(item => {
         let fila = document.createElement('tr');
-        fila.dataset.eventId = item.idEvento; // Añadir el atributo data-event-id a cada fila
+        fila.dataset.eventId = item.idEvento;
 
         columnasConDatos.forEach(columna => {
-            if (item[columna] !== 0 && item[columna] !== null && item[columna] !== undefined) {
-                let celda = document.createElement('td');
-                let valorCelda = item[columna].toString();
+            let celda = document.createElement('td');
+            let valorCelda = item[columna];
 
-                if (valorCelda.toLowerCase().endsWith('.png')) {
-                    let image = document.createElement('img');
-                    image.src = `img/Iconos/${item[columna]}`;
-                    image.alt = columna;
-                    image.width = 32;
-                    image.height = 32;
-                    celda.appendChild(image);
-                } else {
-                    celda.textContent = item[columna];
-                }
-                fila.appendChild(celda);
+            if (valorCelda && valorCelda.toString().toLowerCase().endsWith('.png')) {
+                let image = document.createElement('img');
+                image.src = `img/Iconos/${valorCelda}`;
+                image.alt = columna;
+                image.width = 32;
+                image.height = 32;
+                celda.appendChild(image);
+            } else {
+                celda.textContent = valorCelda !== null ? valorCelda : '';
             }
+            fila.appendChild(celda);
         });
 
         let celdaBoton = document.createElement('td');
@@ -50,25 +50,15 @@ function evento_pintarTablaEditarYBorrar(data, container) {
         botonBorrar.textContent = 'Borrar';
         botonBorrar.dataset.idEvento = item.idEvento;
         botonBorrar.classList.add('boton-primario');
-        celdaBoton.appendChild(botonBorrar);
 
         let botonEditar = document.createElement('button');
         botonEditar.textContent = 'Editar';
         botonEditar.dataset.idEvento = item.idEvento;
         botonEditar.classList.add('boton-secundario');
-        botonEditar.dataset.tabId = 'eventos-editar'; // ID del tab a mostrar
+        botonEditar.dataset.tabId = 'eventos-editar';
+
+        celdaBoton.appendChild(botonBorrar);
         celdaBoton.appendChild(botonEditar);
-
-// Asigna evento al botón Editar
-botonEditar.addEventListener('click', function() {
-    let idEvento = this.dataset.idEvento;
-    console.log('Editar evento', idEvento);
-    let tabId = this.dataset.tabId;
-    console.log('Editar en tab', tabId);
-    editarEvento(idEvento, tabId);
-});
-
-
         fila.appendChild(celdaBoton);
         tbody.appendChild(fila);
     });
@@ -77,19 +67,24 @@ botonEditar.addEventListener('click', function() {
     container.appendChild(tabla);
 
     asignarEventoABorrar();
+    asignarEventoAEditar();
 }
 
 function asignarEventoABorrar() {
-    document.querySelectorAll('.boton-primario, .boton-secundario').forEach(boton => {
+    document.querySelectorAll('.boton-primario').forEach(boton => {
         boton.addEventListener('click', function() {
             let idEvento = this.dataset.idEvento;
-            let action = this.textContent.toLowerCase();
+            eliminarEvento(idEvento);
+        });
+    });
+}
 
-            if (action === 'borrar') {
-                eliminarEvento(idEvento);
-            } else if (action === 'editar') {
-                editarEvento(idEvento);
-            }
+function asignarEventoAEditar() {
+    document.querySelectorAll('.boton-secundario').forEach(boton => {
+        boton.addEventListener('click', function() {
+            let idEvento = this.dataset.idEvento;
+            let tabId = this.dataset.tabId;
+            editarEvento(idEvento, tabId);
         });
     });
 }
@@ -107,27 +102,28 @@ function eliminarEvento(idEvento) {
         if (response.ok) {
             console.log('Evento eliminado correctamente, actualizo la lista');
             AD_obtenerEventos();
+            AD_obtenerPendientesAprobar();
+            AD_obtenerPendientesPublicar();
         } else {
             console.error('Error al eliminar el evento');
         }
-    })
+    });
 }
 
 function editarEvento(idEvento, tabId) {
-    // Mostrar el tab correspondiente
     mostrarTab(tabId);
     let servlet = "GestorEvento";
     let action = "obtenerEventoporID";
     let op = idEvento;
     let metodo = "GET";
-    let formularioId = "EDITeventoForm";
+    let formularioId = "EDITeventosForm";
 
-    actividad_cargarFormularioDesdeServlet(servlet, action, op, formularioId, metodo);
+    evento_cargarFormularioDesdeServlet(servlet, action, op, formularioId, metodo);
 }
 
 function mostrarTab(tabId) {
     const tab = document.getElementById(tabId);
-    const allTabs = document.querySelectorAll('.evento-tab'); 
+    const allTabs = document.querySelectorAll('.evento-tab');
 
     allTabs.forEach(tab => {
         tab.style.display = 'none';

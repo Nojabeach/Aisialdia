@@ -92,7 +92,7 @@
                 <p>Haga click sobre la opción deseada:</p>
                 <nav id="actividades-navbar">
                     <a href="#actividades-crear">Crear Actividad</a>
-                    <a href="#actividades-editar">Editar Actividad</a>
+                    <a href="#actividades-editar" hidden>Editar Actividad</a>
                     <a href="#actividades-activas">Visualizar Actividades</a>
                 </nav>
 
@@ -166,7 +166,7 @@
                 <p>Haga click sobre la opción deseada:</p>
                 <nav id="eventos-navbar">
                     <a href="#eventos-crear">Crear Evento</a>
-                    <a href="#eventos-editar">Editar Evento</a>
+                    <a href="#eventos-editar" hidden>Editar Evento</a>
                     <a href="#eventos-activos">Eventos Activos</a>
                     <a href="#eventos-pendientes">Eventos Pendientes de Aprobar</a>
                     <a href="#pendientes-publicar">Pendientes de Publicar</a>
@@ -245,8 +245,8 @@
                             <div class="form-group">
                                 <label for="EDITactivity">Actividad:</label>
                                 <div id="EDITactivity-container">
-                                    <img id="EDITactivity-image" src="img/Varios/default_ACT.png" alt="Icono de actividad"
-                                        style="width: 48px; height: 48px;display: none; ">
+                                    <img id="EDITactivity-image" src="img/Varios/default_ACT.png"
+                                        alt="Icono de actividad" style="width: 48px; height: 48px;display: none; ">
                                     <select id="activity" name="EDITactivity" required>
                                         <!-- Las opciones se cargarán dinámicamente con JS -->
                                     </select>
@@ -311,7 +311,7 @@
                 <p>Haga click sobre la opción deseada:</p>
                 <nav id="usuarios-navbar">
                     <a href="#usuarios-crear">Crear Usuario</a>
-                    <a href="#usuarios-editar">Editar Usuario</a>
+                    <a href="#usuarios-editar" hidden>Editar Usuario</a>
                     <a href="#usuarios-activos">Visualizar Usuarios</a>
                 </nav>
 
@@ -365,7 +365,7 @@
                     </form>
                 </div>
                 <div id="usuarios-editar" class="usuarios-tab">
-                    <form id="usuariosForm" class="form-admin" action="GestorUsuario?action=editarUsuario"
+                    <form id="EDITusuariosForm" class="form-admin" action="GestorUsuario?action=editarUsuario"
                         method="post">
                         <fieldset>
                             <legend>Datos del Usuario</legend>

@@ -95,13 +95,33 @@ function eliminarUsuario(idUsuario) { // Cambiado el nombre de la función
         if (response.ok) {
             console.log('Usuario eliminado correctamente, actualizo la lista');
             // Llama a la función para obtener y mostrar usuarios nuevamente
-            obtenerYMostrarUsuarios();
+            AD_obtenerUsuarios();
         } else {
             console.error('Error al eliminar el usuario');
         }
     });
 }
 
-function editarUsuario(idUsuario) { // Cambiado el nombre de la función
-    //1º rellenar formulario y poner boton de editar
+
+
+function editarUsuario(idUsuario, tabId) {
+    mostrarTab(tabId);
+    let servlet = "GestorUsuario";
+    let action = "obtenerInfoUsuario";
+    let op = idUsuario;
+    let metodo = "GET";
+    let formularioId = "EDITusuariosForm";
+
+    usuario_cargarFormularioDesdeServlet(servlet, action, op, formularioId, metodo);
+}
+
+function mostrarTab(tabId) {
+    const tab = document.getElementById(tabId);
+    const allTabs = document.querySelectorAll('.usuarios-tab');
+
+    allTabs.forEach(tab => {
+        tab.style.display = 'none';
+    });
+
+    tab.style.display = 'block';
 }
