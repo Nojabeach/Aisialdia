@@ -86,4 +86,33 @@ public class GestionFotos {
 			return null;
 		}
 	}
+	
+	/**
+     * Elimina una foto del servidor.
+     *
+     * @param fileName El nombre del archivo a eliminar.
+     * @param response Objeto HttpServletResponse utilizado para enviar respuestas HTTP.
+     * @return true si el archivo fue eliminado correctamente, false en caso contrario.
+     * @throws IOException Si ocurre un error de entrada/salida durante la operación.
+     */
+    public static boolean eliminarFotoDelServidor(String fileName, HttpServletResponse response) throws IOException {
+        try {
+            File file = new File(PATH_FILES, fileName);
+
+            if (!file.exists()) {
+                ControlErrores.mostrarErrorGenerico("El archivo no existe.", response);
+                return false;
+            }
+
+            if (file.delete()) {
+                return true;
+            } else {
+                ControlErrores.mostrarErrorGenerico("No se pudo eliminar el archivo. Intente de nuevo.", response);
+                return false;
+            }
+        } catch (Exception e) {
+            ControlErrores.mostrarErrorGenerico("Error al eliminar el archivo. Intente de nuevo.", response);
+            return false;
+        }
+    }
 }

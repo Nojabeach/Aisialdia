@@ -113,7 +113,7 @@ function eliminarEvento(idEvento) {
 function editarEvento(idEvento, tabId) {
     mostrarTab(tabId);
     let servlet = "GestorEvento";
-    let action = "obtenerEventoporID";
+    let action = "obtenerEventosConActividad";
     let op = idEvento;
     let metodo = "GET";
     let formularioId = "EDITeventosForm";

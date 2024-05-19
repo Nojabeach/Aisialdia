@@ -98,7 +98,7 @@ function asignarEventosAprobarRechazar() {
 
 function aprobarEvento(idEvento){
     console.log('Aprobando evento', idEvento);
-    fetch('GestorEventos', {
+    fetch('GestorEvento', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -117,12 +117,12 @@ function aprobarEvento(idEvento){
 
 function rechazarEvento(idEvento){
     console.log('Rechazando evento', idEvento);
-    fetch('GestorEventos', {
+    fetch('GestorEvento', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: `action=rechazarPublicacionEvento&idEvento=${idEvento}`
+        body: `action=rechazarEvento&idEvento=${idEvento}`
     })
         .then(response => {
             if (response.ok) {

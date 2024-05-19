@@ -269,7 +269,7 @@ public class DaoUsuario {
 				usuario.setRoles(Rol.valueOf(rs.getString("rol"))); // Rol del usuario
 				usuario.setConsentimiento_datos(rs.getDate("consentimiento_datos")); // Fecha de consentimiento de datos
 				usuario.setAceptacionTerminosWeb(rs.getDate("aceptacionTerminosWeb")); // Fecha de aceptación de
-																						// términos web
+					System.out.println(usuario);																// términos web
 				usuarios.add(usuario);
 			}
 		}

@@ -84,7 +84,7 @@ function asignarEventoPublicar() {
 
 function publicarEvento(idEvento){
     console.log('Publicando evento', idEvento);
-    fetch('GestorEventos', {
+    fetch('GestorEvento', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'

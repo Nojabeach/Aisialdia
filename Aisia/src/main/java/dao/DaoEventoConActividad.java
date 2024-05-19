@@ -58,7 +58,7 @@ public class DaoEventoConActividad {
 
 	public EventoConActividad obtenerEventoConActividad(int idEvento) throws SQLException {
 		EventoConActividad eventoConActividad = null;
-		String sql = "SELECT e.idEvento, e.nombre, e.detalles, e.ubicacion, a.tipoActividad, a.fotoActividad "
+		String sql = "SELECT e.idEvento, e.nombre, e.detalles, e.ubicacion, a.tipoActividad, a.fotoActividad ,e.fechaEvento "
 				+ "FROM eventos e " + "INNER JOIN clasificacionEventos ce ON e.idEvento = ce.idEvento "
 				+ "INNER JOIN actividades a ON ce.idActividad = a.idActividad " + "WHERE e.idEvento = ?";
 		try (PreparedStatement ps = con.prepareStatement(sql)) {

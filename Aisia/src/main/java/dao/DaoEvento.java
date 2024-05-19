@@ -132,6 +132,8 @@ public class DaoEvento {
 
 	}
 
+
+	
 	/**
 	 * Publica un evento aprobado de publicacion
 	 * 

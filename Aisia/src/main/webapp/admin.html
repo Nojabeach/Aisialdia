@@ -24,6 +24,7 @@
 
     <script src="js/ev_CrearEv_listarActividades.js"></script>
     <script src="js/admin_ev_edit_listarActividades.js"></script>
+
     <script src="js/evento_pintarTablaByE.js"></script>
     <script src="js/ev_finalizar.js"></script>
     <script src="js/pintarTablaAprobar.js"></script>
@@ -54,7 +55,7 @@
                     </ul>
                 </div>
                 <div id="divUsuario">
-                    <p>Administrador</p>
+                    <i id="userIcon" class="fa-solid fa-user"></i>
                     <p id="nombreUsuario"></p>
                     <button id="botonCerrarSesion">Cerrar sesión</button>
                 </div>
@@ -101,7 +102,6 @@
                         method="POST" enctype="multipart/form-data">
                         <fieldset>
                             <legend>Datos de la Actividad</legend>
-
                             <div class="form-group">
                                 <label for="tipoActividad">Tipo de Actividad:</label>
                                 <input type="text" id="tipoActividad" name="tipoActividad" required>
@@ -110,41 +110,35 @@
                                 <label for="photo">Foto:</label>
                                 <input type="file" id="fotoActividad" name="fotoActividad">
                                 <div id="photo-preview">
-                                    <img src="#" alt="Preview" id="img-photo" style="display: none;">
-                                    <button type="button" id="delete-photo" style="display: none;">Eliminar
-                                        Foto</button>
+                                    <img src="#" alt="Preview" id="img-photo">
+                                    <button type="button" id="delete-photo">Eliminar Foto</button>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <button type="submit" id="crear-actividad-button">Crear Actividad</button>
-
                             </div>
                         </fieldset>
                     </form>
                 </div>
-
-                <div id="actividades-editar" class="actividades-tab">
-                    <form class="form-admin" id="EDITactividadesForm" action="GestorActividad?action=editarActividad"
-                        method="POST" enctype="multipart/form-data">
+                <div id="editar-actividades" class="actividades-tab">
+                    <form class="form-admin" id="editarActividadesForm" action="GestorActividad?action=editarActividad"
+                          method="POST" enctype="multipart/form-data">
                         <fieldset>
-                            <legend>Datos de la Actividad</legend>
-
+                            <legend>Editar Actividad</legend>
                             <div class="form-group">
-                                <label for="tipoActividad">Tipo de Actividad:</label>
+                                <label for="EDITtipoActividad">Tipo de Actividad:</label>
                                 <input type="text" id="EDITtipoActividad" name="tipoActividad" required>
                             </div>
                             <div class="form-group">
-                                <label for="photo">Foto:</label>
+                                <label for="EDITfotoActividad">Foto:</label>
                                 <input type="file" id="EDITfotoActividad" name="fotoActividad">
-                                <div id="EDITphoto-preview">
-                                    <img src="#" alt="Preview" id="EDITimg-photo" style="display: none;">
-                                    <button type="button" id="EDITdelete-photo" style="display: none;">Eliminar
-                                        Foto</button>
+                                <div id="photo-preview">
+                                    <img src="#" alt="Preview" id="EDITimg-photo">
+                                    <button type="button" id="EDITdelete-photo">Eliminar Foto</button>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <button type="submit" id="editar-actividad-button">Editar Actividad</button>
-
                             </div>
                         </fieldset>
                     </form>
@@ -262,7 +256,8 @@
                 </div>
                 <div id="eventos-activos" class="evento-tab">
                     <h3>Eventos Activos</h3>
-                    <form id="finalizarEventosForm">
+                    <form id="finalizarEventosForm" action="GestorEvento?action=finalizarPublicacionEvento"
+                        method="POST">
                         <label for="motivoFinalizacion">Motivo:</label>
                         <select id="motivos" name="motivoFinalizacion" required>
                             <option value="">Seleccione un motivo</option>
