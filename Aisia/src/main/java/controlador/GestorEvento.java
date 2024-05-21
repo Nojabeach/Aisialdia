@@ -385,7 +385,8 @@ public class GestorEvento extends HttpServlet {
 	private void finalizarPublicacionEvento(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException {
 		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
-		int idModerador = Integer.parseInt(request.getParameter("idModerador"));
+		HttpSession session = request.getSession();
+		int idModerador =  (int) session.getAttribute("idUsuario");
 		try {
 			DaoEvento.getInstance().finalizarPublicacionEvento(idEvento, idModerador);
 			// System.out.println("Evento finalizado exitosamente!" );

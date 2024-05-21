@@ -31,6 +31,7 @@
 
     <script src="js/evento_pintarTablaByE.js"></script><!-- Script para pintar la tabla de eventos -->
     <script src="js/ev_finalizar.js"></script><!-- Script para finalizar eventos -->
+    <script src="js/admin_ev_rechazados.js"></script><!-- Script para buscar eventos rechazados -->
     <script src="js/pintarTablaAprobar.js"></script>
     <!-- Script para pintar la tabla de eventos pendientes de aprobar -->
     <script src="js/pintarTablaPublicar.js"></script>
@@ -103,8 +104,7 @@
                 </nav>
 
                 <div id="actividades-crear" class="actividades-tab">
-                    <form class="form-admin" id="actividadesForm" action="GestorActividad?action=crearActividad"
-                        method="POST" enctype="multipart/form-data">
+                    <form class="form-admin" id="actividadesForm" enctype="multipart/form-data">
                         <fieldset>
                             <legend>Datos de la Actividad</legend>
                             <div class="form-group">
@@ -127,8 +127,7 @@
                     </form>
                 </div>
                 <div id="actividades-editar" class="actividades-tab" style="display: none;">
-                    <form class="form-admin" id="EDITactividadesForm" action="GestorActividad?action=editarActividad"
-                        method="POST" enctype="multipart/form-data">
+                    <form class="form-admin" id="EDITactividadesForm" enctype="multipart/form-data">
                         <fieldset>
                             <legend>Editar Actividad</legend>
                             <div class="form-group">
@@ -276,7 +275,7 @@
                             <option value="ReporteNegativo">Reporte Negativo</option>
                             <option value="Otros">Otros</option>
                         </select>
-                        <button id="botonFinalizar">Finalizar</button>
+                        <button type="submit" id="botonFinalizar">Finalizar</button>
                         <div id="eventIDDisplay">ID del Evento Seleccionado: Ninguno</div>
                     </form>
                     <div id="Publicados-tabla">
@@ -303,7 +302,7 @@
                         <input type="date" id="fechaInicio" name="fechaInicio">
                         <label for="fechaFin">Fecha fin:</label>
                         <input type="date" id="fechaFin" name="fechaFin">
-                        <button type="submit">Buscar</button>
+                        <button type="submit" id="botonBuscarRechazados">Buscar</button>
                     </form>
                     <div id="Rechazados-tabla">
                         <!-- Aquí va la tabla de eventos rechazados -->

@@ -210,6 +210,7 @@ public class DaoEvento {
 	 *                      datos.
 	 */
 	public void finalizarPublicacionEvento(int idEvento, int idModerador) throws SQLException {
+		
 		String sql = "UPDATE eventos SET motivoFinalizacion = 'FinVisibilidad', fechaFinalizacion = current_date, "
 				+ "fechaUltimaModificacion = current_date, idModeradorFinalizacion = ? WHERE idEvento = ?";
 		PreparedStatement ps = con.prepareStatement(sql);
