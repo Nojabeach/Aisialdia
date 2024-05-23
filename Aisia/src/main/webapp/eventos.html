@@ -14,16 +14,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Enlace de scripts -->
     <script src="js/checkLogin.js"></script><!-- Script para comprobar si el usuario está logueado -->
-    
+
     <script src="js/ev_inputBuscar.js"></script> <!-- Script para manejar los inputs de búsqueda -->
     <script src="js/ev_CrearEv_listarActividades.js"></script> <!-- Script para listar las actividades -->
 
- 
-    
+
+
     <script src="js/pintarTabla.js"></script> <!-- Script para pintar la tabla -->
     <script src="js/pintarTablaB.js"></script> <!-- Script para pintar la tabla de 1 boton -->
     <script src="js/pintarTablaFavoritos.js"></script> <!-- Script para pintar la tabla de eventos favoritos -->
-    
+
     <script src="js/ev_cargarObjetos.js"></script> <!-- Script para cargar los objetos de los eventos-->
 
 
@@ -33,21 +33,29 @@
 
     <div id="contenedor">
         <header id="cabecera">
-            <img src="img/Logos/LogoRecortado_noText.png" alt="Logo de AisiAldia" id="logo">
-            <div id="divTitulo">
-                <h1>AisiAldia</h1>
-                <p>Ocio para todos</p>
+            <div class="header-content">
+                <div id="divTitulo">
+                    <ul>
+                        <li><img src="img/Logos/LogoRecortado_noText.png" alt="Logo de AisiAldia" id="logo"></li>
+                        <li>
+                            <h1>AisiAldia</h1>
+                        </li>
+                    </ul>
+                </div>
+                <div id="divUsuario">
+                    <i id="userIcon" class="fa-solid fa-user"></i>
+                    <p id="nombreUsuario"></p>
+                    <button id="botonCerrarSesion">Cerrar sesión</button>
+                </div>
             </div>
-            <div id="loginFormContainer">
-
-                <!-- Contenedor para el nombre del usuario y botón de cerrar sesión -->
-                <i id="userIcon" class="fa-solid fa-user"></i>
-                <p id="nombreUsuario"></p>
-                <button id="botonCerrarSesion">Cerrar sesión</button>
-
+            <div class="header-menu">
+                <fieldset class="header-menu-fieldset">
+                    <legend>Visualización tipo</legend>
+                    <button id="adminBtn"><a href="admin.html">Admin</a></button>
+                </fieldset>
             </div>
+        
         </header>
-
         <nav id="navbar">
             <ul>
                 <li><a href="index.html">Inicio</a></li>
@@ -57,7 +65,7 @@
             </ul>
         </nav>
 
-        <main id="seccionCuerpo">
+        <main id="seccionCuerpo" role="main">
 
             <section>
                 <h2>Mis Eventos Favoritos</h2>
@@ -83,7 +91,7 @@
                             <label for="search">Buscar:</label>
                             <!-- Input dinámico -->
                             <input type="text" id="search" name="search">
-                           
+
                         </div>
                         <button type="submit" id="search-button">Buscar</button>
                     </fieldset>
@@ -107,7 +115,7 @@
                 <form id="new-event-form" action="GestorEvento?action=crearEvento" method="POST">
                     <fieldset>
                         <legend>Datos del Evento</legend>
-                       
+
                         <div class="form-group">
                             <label for="nombre">Nombre:</label>
                             <input type="text" id="nombre" name="nombre" required>
@@ -140,8 +148,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <p>Después de crear el evento, nuestro equipo de AisiAldia revisará tu contribución y la publicará si es aceptada.</p>
-                        </div>                        
+                            <p>Después de crear el evento, nuestro equipo de AisiAldia revisará tu contribución y la
+                                publicará si es aceptada.</p>
+                        </div>
                         <div class="form-group">
                             <button type="submit" id="create-event-button">Crear Evento</button>
                         </div>
@@ -152,19 +161,22 @@
 
         </main>
 
-        <footer>
+        <footer id="footer" role="contentinfo">
             <ul>
                 <li><a href="ayuda.html">Ayuda</a></li>
                 <li><a href="politicadeprivacidad.html">Política de privacidad</a></li>
                 <li><a href="condicionesdeuso.html">Condiciones de uso</a></li>
                 <li><a href="accesibilidad.html">Accesibilidad</a></li>
+                <li><a href="acercade.html">Acerca de</a></li>
                 <li><a href="contacto.html">Contacto</a></li>
             </ul>
             <div class="social-links">
-                <a href="https://discord.com/users/maitane_82" target="_blank"><i class="fab fa-discord"></i></a>
-                <a href="https://www.linkedin.com/in/maitane-ibanez-irazabal" target="_blank"><i
-                        class="fab fa-linkedin-in"></i></a>
-                <a href="https://github.com/Nojabeach" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://discord.com/users/maitane_82" target="_blank" aria-label="Discord"><i
+                        class="fab fa-discord" aria-hidden="true"></i></a>
+                <a href="https://www.linkedin.com/in/maitane-ibanez-irazabal" target="_blank" aria-label="LinkedIn"><i
+                        class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+                <a href="https://github.com/Nojabeach" target="_blank" aria-label="GitHub"><i class="fab fa-github"
+                        aria-hidden="true"></i></a>
             </div>
             <p>&copy; 2024 AisiAldia. Todos los derechos reservados.</p>
         </footer>

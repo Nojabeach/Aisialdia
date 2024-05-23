@@ -39,7 +39,7 @@ a {
 }
 
 #cabecera img {
-  max-height: 150px;
+  max-height: 110px;
   margin: 10px;
 }
 
@@ -56,7 +56,8 @@ a {
 
 /* Menú de navegación */
 #navbar {
-  background-color: var(--color-secundario);
+  background-color: var(--fondo-principal);
+  color: var(--texto-principal);
   padding: 20px;
   text-align: right;
 }
@@ -70,15 +71,25 @@ a {
   margin-right: 10px;
 }
 
-#navbar ul li a {
-  color: var(--texto-principal);
-  text-decoration: none;
-}
 
 /* Estilo para el enlace activo en la navbar */
 #navbar ul li a.active {
   background-color: var(--web-activa);
   color: var(--texto-principal);
+}
+
+/* Estilo para el enlace "Inicio" */
+#navbar ul li a {
+  background-color: var(--color-terciario);
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase; /* Convierte el texto del enlace a mayúsculas */
+  font-weight: bold; /* Hace que el texto del enlace sea más grueso */
+}
+
+#navbar ul li a:hover {
+  color: var(--texto-blanco);
 }
 
 /* Subnavbar */
@@ -154,6 +165,9 @@ section ul li {
   border-radius: 5px;
   margin-bottom: 10px;
   position: relative;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  padding: 10px;
 }
 
 section ul li:last-child {
@@ -171,7 +185,11 @@ section ul li:before {
   background-color: var(--amarillo-naranja);
   border-radius: 50%;
 }
-
+section ul li h3 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
 section ul li h4 {
   font-size: 18px;
   font-weight: bold;
@@ -186,6 +204,25 @@ section ul li p {
   color: var(--texto-principal);
   margin-bottom: 0;
   margin-left: 15px;
+}
+
+/* Estilos para las preguntas y respuestas */
+.pregunta {
+  border: 1px solid var(--amarillo-naranja-);
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.pregunta-titulo {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.pregunta-respuesta {
+  font-size: 14px;
+  font-style: italic;
+  color: #666;
 }
 /* Formularios */
 form {
@@ -256,7 +293,7 @@ form button:hover {
 /* Estilos para el campo de mensaje */
 .formulario-comun textarea {
   width: 100%;
-  height: 150px;
+  height: 100px;
   padding: 10px;
   border: 1px solid var(--form-borde);
   border-radius: 5px;
@@ -444,8 +481,42 @@ form button:hover {
 .boton-secundario:hover {
   background-color: var(--boton-secundario-hover); /* Color de fondo del botón secundario al pasar el mouse */
 }
-main {
-  margin-bottom: 100px; /* adjust the value to match the height of your footer */
+#main,#main-content {
+  margin-bottom: 100px;
+}
+/* Estilo para el enlace dentro del párrafo */
+#main-content p a {
+  text-decoration: underline; /* Agrega subrayado al enlace */
+  font-weight: bold; /* Hace que el texto del enlace sea más grueso */
+}
+
+#main-content p a:hover {
+  color: var(--amarillo-naranja); /* Cambia el color del enlace a rojo */
+  text-decoration: underline; /* Agrega subrayado al enlace */
+  font-weight: bold; /* Hace que el texto del enlace sea más grueso */
+}
+
+/* Estilo para el texto dentro del párrafo */
+#main-content p {
+  color:var(--color-primario) ;
+  font-size: 16px; /* Cambia el tamaño de la fuente a 16px */
+  line-height: 1.5; /* Agrega un poco de espacio entre líneas */
+}
+
+/* Estilo para el enlace "Ir al pie de página" */
+.skip-link {
+  background-color:var(--color-primario) ; /* Color de fondo del enlace */
+  color: #fff; /* Color del texto del enlace */
+  text-decoration: none; /* Quita el subrayado del enlace */
+  padding: 5px 10px; /* Agrega un poco de padding al enlace */
+  border-radius: 5px; /* Agrega un borde redondeado al enlace */
+  font-weight: bold; /* Hace que el texto del enlace sea más grueso */
+  text-transform: uppercase; /* Convierte el texto del enlace a mayúsculas */
+}
+
+
+  #search-inputs {
+    margin-left: 30px; 
 }
 /* Pie de página */
 footer {
@@ -528,8 +599,11 @@ footer ul li a:hover {
 .social-links a:hover {
   color: var(--texto-blanco); /* Cambiar color al pasar el mouse */
 }
-
-/* Media queries para dispositivos móviles */
+/*****************************************************************************************************************************************************************************
+/*****************************************************************************************************************************************************************************
+/*****************************************************************************************************************************************************************************
+/*****************************************************************************************************************************************************************************
+/* Media queries para TABLETS */
 @media screen and (max-width: 768px) {
   /* Hacer que los elementos del menú de navegación se apilen verticalmente */
   #navbar ul {
@@ -556,7 +630,6 @@ footer ul li a:hover {
     width: 100%;
   }
 
-
   /* Reducir el tamaño del texto del pie de página */
   footer p {
     font-size: 0.7rem;
@@ -575,7 +648,6 @@ footer ul li a:hover {
   }
 
   /* Ajustar el tamaño de los iconos de las redes sociales */
-
   .social-links {
     margin: 10px 0;
   }
@@ -587,6 +659,10 @@ footer ul li a:hover {
   footer p {
     width: 100%;
     text-align: center;
+  }
+
+  #main,#main-content {
+    margin-bottom: 200px;
   }
 }
 /* Media queries para dispositivos móviles */
@@ -629,8 +705,7 @@ footer ul li a:hover {
   }
 
   /* Hacer que el texto del pie de página esté debajo de la lista de enlaces */
-  footer ul {
-    margin-bottom: 10px;
+  footer ul { margin-bottom: 10px;
   }
   .social-links {
     margin: 10px 0;

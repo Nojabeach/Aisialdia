@@ -1,64 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accesibilidad | AisiAldia</title>
-    <!-- Icono de la pestaña -->
-    <link rel="shortcut icon" href="img/Logos/logo_transparent-noText.png" type="image/x-icon" />
+  <!-- Icono de la pestaña -->
+  <link rel="shortcut icon" href="img/Logos/logo_transparent - noText.png" type="image/x-icon" />
     <!-- Enlace de estilos -->
     <link rel="stylesheet" href="styles/estilocomun.css">
-    <!-- Enlace de fonts,iconos -->
+    <!-- Enlace de fonts, iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
 </head>
 
 <body>
     <header id="cabecera" role="banner">
+        <img src="img/Logos/LogoRecortado_noText.png" alt="Logo de AisiAldia" id="logo">
         <div id="divTitulo">
             <h1>AisiAldia</h1>
-            <p lang="es">¡Bienvenido! - Ongi Etorri! - Benvido! - Benvingut! - Bienvenío! - Bienveníu!</p>
+            <p>¡Bienvenido! - Ongi Etorri! - Benvido! - Benvingut! - Bienvenío! - Bienveníu!</p>
         </div>
-        <nav id="navbar" role="navigation">
-            <ul>
-                <li><a href="index.html">Inicio</a></li>
-            </ul>
-        </nav>
+       
     </header>
-    <main role="main">
+    <nav id="navbar" role="navigation">
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+        </ul>
+    </nav>
+    <main id="main-content" role="main">
+        
         <section>
             <div class="icon-title">
                 <i class="fas fa-wheelchair fa-2x" aria-hidden="true"></i>
                 <span class="sr-only">Accesibilidad</span>
                 <h1 class="title">Accesibilidad</h1>
             </div>
-            <p>Estamos comprometidos a garantizar que nuestro sitio web sea accesible para todas las personas, incluidas
-                aquellas con discapacidades.</p>
+            <p>Estamos comprometidos a garantizar que nuestro sitio web sea accesible para todas las personas, incluidas aquellas con discapacidades.</p>
             <h2>Accesibilidad del sitio web</h2>
-            <p>Este sitio web ha sido diseñado con principios de accesibilidad en mente, incluyendo el uso de marcado
-                semántico, etiquetas adecuadas y un diseño adaptable.</p>
+            <p>Este sitio web ha sido diseñado con principios de accesibilidad en mente, incluyendo el uso de marcado semántico, etiquetas adecuadas y un diseño adaptable.</p>
             <h2>Comunicación</h2>
-            <p>Si encuentra alguna barrera de accesibilidad en nuestro sitio web o tiene alguna sugerencia para
-                mejorarlo, no dude en <a href="contacto.html">ponerse en contacto con nosotros</a>.</p>
+            <p>Si encuentra alguna barrera de accesibilidad en nuestro sitio web o tiene alguna sugerencia para mejorarlo, no dude en <a href="contacto.html">ponerse en contacto con nosotros</a>.</p>
             <h2>Compatibilidad con tecnologías de asistencia</h2>
-            <p>Nuestro sitio web es compatible con tecnologías de asistencia como lectores de pantalla y navegadores de
-                voz, para garantizar una experiencia de usuario óptima para todos.</p>
+            <p>Nuestro sitio web es compatible con tecnologías de asistencia como lectores de pantalla y navegadores de voz, para garantizar una experiencia de usuario óptima para todos.</p>
         </section>
     </main>
-    <footer role="contentinfo">
-
+    <footer id="footer" role="contentinfo">
         <ul>
             <li><a href="ayuda.html">Ayuda</a></li>
             <li><a href="politicadeprivacidad.html">Política de privacidad</a></li>
             <li><a href="condicionesdeuso.html">Condiciones de uso</a></li>
             <li><a href="accesibilidad.html">Accesibilidad</a></li>
+            <li><a href="acercade.html">Acerca de</a></li>
             <li><a href="contacto.html">Contacto</a></li>
         </ul>
         <div class="social-links">
-            <a href="https://discord.com/users/maitane_82" target="_blank"><i class="fab fa-discord"></i></a>
-            <a href="https://www.linkedin.com/in/maitane-ibanez-irazabal" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-            <a href="https://github.com/Nojabeach" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://discord.com/users/maitane_82" target="_blank" aria-label="Discord"><i class="fab fa-discord" aria-hidden="true"></i></a>
+            <a href="https://www.linkedin.com/in/maitane-ibanez-irazabal" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+            <a href="https://github.com/Nojabeach" target="_blank" aria-label="GitHub"><i class="fab fa-github" aria-hidden="true"></i></a>
         </div>
         <p>&copy; 2024 AisiAldia. Todos los derechos reservados.</p>
     </footer>

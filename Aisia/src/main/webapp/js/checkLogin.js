@@ -11,6 +11,15 @@ document.addEventListener("DOMContentLoaded", function () {
           document.getElementById("nombreUsuario").innerText = data.nombreUsuario;
           // Mostrar el botón de cerrar sesión
           document.getElementById("botonCerrarSesion").style.display = "block";
+          
+          // Verificar si el usuario tiene permisos de administrador
+          if (data.permiso === "administrador") {
+            // Mostrar el menú de administrador
+            const headerMenu = document.getElementById("header-menu");
+            if (headerMenu) {
+              headerMenu.hidden = false;
+            }
+          }
         } else {
           // Si no hay sesión activa, redirigir al usuario a la página de inicio de sesión
           window.location.href = "index.html";
