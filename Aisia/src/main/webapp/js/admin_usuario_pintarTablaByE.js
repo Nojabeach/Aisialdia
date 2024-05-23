@@ -47,13 +47,13 @@ function usuario_pintarTablaEditarYBorrar(data, container) {
 
         let botonBorrar = document.createElement('button');
         botonBorrar.textContent = 'Borrar';
-        botonBorrar.dataset.idUsuario = item.idUsuario; // Cambiado a idUsuario
+        botonBorrar.dataset.idUsuario = item.idUsuario; 
         botonBorrar.classList.add('boton-primario');
         celdaBoton.appendChild(botonBorrar);
 
         let botonEditar = document.createElement('button');
         botonEditar.textContent = 'Editar';
-        botonEditar.dataset.idUsuario = item.idUsuario; // Cambiado a idUsuario
+        botonEditar.dataset.idUsuario = item.idUsuario; 
         botonEditar.classList.add('boton-secundario');
         celdaBoton.appendChild(botonEditar);
 
@@ -70,7 +70,7 @@ function usuario_pintarTablaEditarYBorrar(data, container) {
 function asignarUsuarioABorrar() {
     document.querySelectorAll('.boton-primario, .boton-secundario').forEach(boton => {
         boton.addEventListener('click', function() {
-            let idUsuario = this.dataset.idUsuario; // Cambiado a idUsuario
+            let idUsuario = this.dataset.idUsuario; 
             let action = this.textContent.toLowerCase();
 
             if (action === 'borrar') {
@@ -89,7 +89,7 @@ function eliminarUsuario(idUsuario) { // Cambiado el nombre de la función
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: `action=eliminarUsuario&idUsuario=${idUsuario}` // Cambiado a idUsuario
+        body: `action=eliminarUsuario&idUsuario=${idUsuario}` 
     })
     .then(response => {
         if (response.ok) {

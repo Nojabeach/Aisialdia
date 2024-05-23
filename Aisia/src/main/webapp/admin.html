@@ -17,20 +17,17 @@
     <!-- Enlace de scripts -->
     <script src="js/checkLogin.js"></script><!-- Script para comprobar si el usuario está logueado -->
 
-    <script src="js/ev_CrearEv_listarActividades.js"></script>
-    <!-- Script para cargar las actividades en el formulario de creación de eventos -->
+    <script src="js/admin_ev_crear_listarActividades.js"></script>
     <script src="js/admin_ev_edit_listarActividades.js"></script>
     <!-- Script para cargar las actividades en el formulario de edición de eventos -->
 
     <script src="js/formularios.js"></script> <!-- Script para controlar los formularios -->
-    <script src="js/actividad_actualizarTabla.js"></script>
-    <!-- Script para actualizar los datos de la tabla de actividaes-->
+
     <script src="js/actividad_pintarTablaByE.js"></script><!-- Script para pintar la tabla de actividades -->
     <script src="js/actividad_verIMG.js"></script>
     <!-- Script para ver la imagen de la actividad tanto en crear como en editar -->
 
     <script src="js/evento_pintarTablaByE.js"></script><!-- Script para pintar la tabla de eventos -->
-    <script src="js/ev_finalizar.js"></script><!-- Script para finalizar eventos -->
     <script src="js/pintarTabla.js"></script><!--Script para pintar eventos rechazados-->
     <script src="js/admin_ev_rechazados.js"></script><!-- Script para buscar eventos rechazados -->
     <script src="js/pintarTablaAprobar.js"></script>
@@ -38,13 +35,15 @@
     <script src="js/pintarTablaPublicar.js"></script>
     <!-- Script para pintar la tabla de eventos pendientes de publicar -->
 
-    <script src="js/usuario_pintarTablaByE.js"></script><!-- Script para pintar la tabla de usuarios -->
+    <script src="js/admin_usuario_pintarTablaByE.js"></script><!-- Script para pintar la tabla de usuarios -->
 
 
     <script src="js/admin_navbar.js"></script> <!-- Script para cargar las navbar de admin o user -->
     <script src="js/admin_controlTabs.js"></script> <!-- Script para controlar la funcionalidad de las TABS-->
 
     <script src="js/admin_cargarObjetos.js"></script>
+    <script src="js/actividad_actualizarTabla.js"></script>
+    <!-- Script para actualizar los datos de la tabla de actividaes-->
 
 
 </head>
@@ -203,11 +202,11 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="activity">Actividad:</label>
-                                <div id="activity-container">
-                                    <img id="activity-image" src="img/Varios/default_ACT.png" alt="Icono de actividad"
+                                <label for="EVactivity">Actividad:</label>
+                                <div id="EVactivity-container">
+                                    <img id="EVactivity-image" src="img/Varios/default_ACT.png" alt="Icono de actividad"
                                         style="width: 48px; height: 48px;display: none; ">
-                                    <select id="activity" name="activity" required>
+                                    <select id="EVactivity" name="EVactivity" required>
                                         <!-- Las opciones se cargarán dinámicamente con JS -->
                                     </select>
 
@@ -252,7 +251,7 @@
                                 <div id="EDITactivity-container">
                                     <img id="EDITactivity-image" src="img/Varios/default_ACT.png"
                                         alt="Icono de actividad" style="width: 48px; height: 48px;display: none; ">
-                                    <select id="activity" name="EDITactivity" required>
+                                    <select id="EDITactivity" name="EDITactivity" required>
                                         <!-- Las opciones se cargarán dinámicamente con JS -->
                                     </select>
 
@@ -267,18 +266,21 @@
                 </div>
                 <div id="eventos-activos" class="evento-tab">
                     <h3>Eventos Activos</h3>
-                    <form id="finalizarEventosForm" action="GestorEvento?action=finalizarPublicacionEvento"
+                    <form id="finalizarEventosForm"
                         method="POST">
-                        <label for="motivoFinalizacion">Motivo:</label>
-                        <select id="motivos" name="motivoFinalizacion" required>
-                            <option value="">Seleccione un motivo</option>
-                            <option value="FinVisibilidad">Fin de Visibilidad</option>
-                            <option value="Rechazado">Rechazado</option>
-                            <option value="ReporteNegativo">Reporte Negativo</option>
-                            <option value="Otros">Otros</option>
-                        </select>
-                        <button type="submit" id="botonFinalizar">Finalizar</button>
-                        <div id="eventIDDisplay">ID del Evento Seleccionado: Ninguno</div>
+                        <fieldset>
+                            <legend>Finalizar Evento</legend>
+                            <label for="motivoFinalizacion">Motivo:</label>
+                            <select id="motivos" name="motivoFinalizacion" required>
+                                <option value="">Seleccione un motivo</option>
+                                <option value="FinVisibilidad">Fin de Visibilidad</option>
+                                <option value="Rechazado">Rechazado</option>
+                                <option value="ReporteNegativo">Reporte Negativo</option>
+                                <option value="Otros">Otros</option>
+                            </select>
+                            <button type="submit" id="botonFinalizar">Finalizar</button>
+                            <div id="eventIDDisplay">ID del Evento Seleccionado: Ninguno</div>
+                        </fieldset>
                     </form>
                     <div id="Publicados-tabla">
                         <!-- La tabla de EVENTOS PUBLICADOS Y ACTIVOS se generará dinámicamente aquí -->
@@ -317,7 +319,7 @@
                 <p>Haga click sobre la opción deseada:</p>
                 <nav id="usuarios-navbar">
                     <a href="#usuarios-crear">Crear Usuario</a>
-                    <a href="#usuarios-editar" hidden>Editar Usuario</a>
+                    <a href="#usuarios-editar" >Editar Usuario</a>
                     <a href="#usuarios-activos">Visualizar Usuarios</a>
                 </nav>
 
@@ -410,9 +412,9 @@
                             <div class="form-group">
                                 <label for="roles" aria-label="Rol">Rol:</label>
                                 <select id="roles" name="EDITroles" required>
-                                    <option value="USUARIO">Usuario</option>
-                                    <option value="MODERADOR">Moderador</option>
-                                    <option value="ADMINISTRADOR">Administrador</option>
+                                    <option value="usuario">Usuario</option>
+                                    <option value="moderador">Moderador</option>
+                                    <option value="administrador">Administrador</option>
                                 </select>
                             </div>
                             <div class="form-group">

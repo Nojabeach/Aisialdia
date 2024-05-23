@@ -69,7 +69,7 @@ public class DaoUsuario {
 		ps.setDate(4, usuario.getFechaNacimiento());
 		ps.setBoolean(5, usuario.isRecibeNotificaciones());
 		ps.setString(6, usuario.getIntereses());
-		ps.setString(7, (usuario.getRoles() != null) ? usuario.getRoles().toString() : Rol.USUARIO.toString());
+		ps.setString(7, (usuario.getRoles() != null) ? usuario.getRoles().toString() : Rol.usuario.toString());
 		ps.setInt(8, (usuario.getPermiso() != 0) ? usuario.getPermiso() : 1);
 		ps.setDate(9, usuario.getConsentimiento_datos());
 		ps.setDate(10, usuario.getAceptacionTerminosWeb());
@@ -252,31 +252,34 @@ public class DaoUsuario {
 	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
 	 */
 	public List<Usuario> obtenerUsuarios() throws SQLException {
-		String sql = "SELECT * FROM usuarios ORDER BY idUsuario";
-		List<Usuario> usuarios = new ArrayList<>();
+	    
+	    String sql = "SELECT * FROM usuarios ORDER BY idUsuario";
+	    List<Usuario> usuarios = new ArrayList<>();
 
-		try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-			while (rs.next()) {
-				Usuario usuario = new Usuario();
-				usuario.setIdUsuario(rs.getInt("IdUsuario")); // ID del usuario
-				usuario.setNombre(rs.getString("nombre")); // Nombre del usuario
-				usuario.setEmail(rs.getString("email")); // Email del usuario
-				usuario.setContrasena(rs.getString("contrasena")); // Contraseña del usuario
-				usuario.setFechaNacimiento(rs.getDate("fechaNacimiento")); // Fecha de nacimiento del usuario
-				usuario.setRecibeNotificaciones(rs.getBoolean("recibeNotificaciones")); // Si recibe notificaciones
-				usuario.setIntereses(rs.getString("intereses")); // Intereses del usuario
-				usuario.setPermiso(rs.getInt("permiso")); // Permiso del usuario
-				usuario.setRoles(Rol.valueOf(rs.getString("rol"))); // Rol del usuario
-				usuario.setConsentimiento_datos(rs.getDate("consentimiento_datos")); // Fecha de consentimiento de datos
-				usuario.setAceptacionTerminosWeb(rs.getDate("aceptacionTerminosWeb")); // Fecha de aceptación de
-																						// términos web
+	    try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+	        while (rs.next()) {
+	            Usuario usuario = new Usuario();
+	            usuario.setIdUsuario(rs.getInt("idUsuario")); // ID del usuario
+	            usuario.setNombre(rs.getString("nombre")); // Nombre del usuario
+	            usuario.setEmail(rs.getString("email")); // Email del usuario
+	            usuario.setContrasena(rs.getString("contrasena")); // Contraseña del usuario
+	            usuario.setFechaNacimiento(rs.getDate("fechaNacimiento")); // Fecha de nacimiento del usuario
+	            usuario.setRecibeNotificaciones(rs.getBoolean("recibeNotificaciones")); // Si recibe notificaciones
+	            usuario.setIntereses(rs.getString("intereses")); // Intereses del usuario
+	            usuario.setPermiso(rs.getInt("permiso")); // Permiso del usuario
+	            usuario.setRoles(Rol.valueOf(rs.getString("roles"))); // Rol del usuario
+	            usuario.setConsentimiento_datos(rs.getDate("consentimientoDatos")); // Fecha de consentimiento de datos
+	            usuario.setAceptacionTerminosWeb(rs.getDate("aceptacionTerminosWeb")); // Fecha de aceptación de términos web
 
-				System.out.println(usuario);
-				usuarios.add(usuario);
-			}
-		}
+	            System.out.println(usuario);
+	            usuarios.add(usuario);
+	        }
+	    } catch (SQLException e) {
+	        // Manejar la excepción aquí
+	        e.printStackTrace();
+	    }
 
-		return usuarios;
+	    return usuarios;
 	}
 
 	/**

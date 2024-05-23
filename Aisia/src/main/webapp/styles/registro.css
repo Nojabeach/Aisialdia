@@ -1,6 +1,7 @@
 
 
 /* Header */
+
 header {
   background-color: #f0f0f0; /* Agregamos un fondo gris claro */
   padding: 20px;
@@ -13,18 +14,7 @@ header h1 {
   color: var(--titulo-principal);
 }
 
-/* Main */
-main {
-  flex-grow: 1; /* Hacemos que main ocupe el espacio restante */
-  padding: 20px;
-}
 
-main section {
-  background-color: #fff; /* Agregamos un fondo blanco */
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
 
 /* Formulario */
 form {

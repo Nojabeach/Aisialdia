@@ -631,8 +631,8 @@ footer ul li a:hover {
   }
 
   /* Reducir el tamaño del texto del pie de página */
-  footer p {
-    font-size: 0.7rem;
+  footer  {
+    font-size: 0.9rem;
   }
 
   /* Centrar el contenido del pie de página */
@@ -693,9 +693,10 @@ footer ul li a:hover {
   }
 
   /* Reducir el tamaño del texto del pie de página */
-  footer p {
+  footer{ 
     font-size: 0.7rem;
   }
+
 
   /* Centrar el contenido del pie de página */
   footer .footer-container {

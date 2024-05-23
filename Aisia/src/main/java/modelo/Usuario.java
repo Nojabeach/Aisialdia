@@ -69,17 +69,17 @@ public class Usuario {
 		/**
 		 * Rol de usuario básico del sistema.
 		 */
-		USUARIO,
+		usuario,
 
 		/**
 		 * Rol de usuario con permisos moderadores.
 		 */
-		MODERADOR,
+		moderador,
 
 		/**
 		 * Rol de usuario con permisos administrativos.
 		 */
-		ADMINISTRADOR
+		administrador
 	}
 
 	/**

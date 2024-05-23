@@ -63,7 +63,6 @@ public class GestorUsuario extends HttpServlet {
 		try {
 			switch (action) {
 			case "obtenerUsuarios":
-				//System.out.println("entro en obtenerUsuarios");
 				obtenerUsuarios(request, response, out);
 				break;
 			case "obtenerUsuariosSegunPermiso":
@@ -178,6 +177,7 @@ public class GestorUsuario extends HttpServlet {
 	private void obtenerUsuarios(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
 			throws IOException {
 		try {
+			
 			DaoUsuario usuario = new DaoUsuario();
 			out.print(usuario.listarUsuariosJson());
 		} catch (SQLException e) {
@@ -344,7 +344,7 @@ public class GestorUsuario extends HttpServlet {
 		boolean recibeNotificaciones = "on".equalsIgnoreCase(request.getParameter("recibeNotificaciones"));
 		String intereses = request.getParameter("intereses");
 		String rolesStr = request.getParameter("roles");
-		Rol roles = (rolesStr != null && !rolesStr.isEmpty()) ? Rol.valueOf(rolesStr) : Rol.USUARIO;
+		Rol roles = (rolesStr != null && !rolesStr.isEmpty()) ? Rol.valueOf(rolesStr) : Rol.usuario;
 		int permiso = (request.getParameter("permiso") != null) ? Integer.parseInt(request.getParameter("permiso")) : 1;
 		boolean consentimientoDatos = "on".equalsIgnoreCase(request.getParameter("consentimiento_datos"));
 		Date fechaConsentimientoDatos = consentimientoDatos ? new Date(System.currentTimeMillis()) : null;
@@ -412,7 +412,7 @@ public class GestorUsuario extends HttpServlet {
 		boolean recibeNotificaciones = "on".equalsIgnoreCase(request.getParameter("recibeNotificaciones"));
 		String intereses = request.getParameter("intereses");
 		String rolesStr = request.getParameter("roles");
-		Rol roles = (rolesStr != null && !rolesStr.isEmpty()) ? Rol.valueOf(rolesStr) : Rol.USUARIO;
+		Rol roles = (rolesStr != null && !rolesStr.isEmpty()) ? Rol.valueOf(rolesStr) : Rol.usuario;
 		int permiso = (request.getParameter("permiso") != null) ? Integer.parseInt(request.getParameter("permiso")) : 1;
 		boolean consentimientoDatos = "on".equalsIgnoreCase(request.getParameter("consentimiento_datos"));
 		Date fechaConsentimientoDatos = consentimientoDatos ? new Date(System.currentTimeMillis()) : null;

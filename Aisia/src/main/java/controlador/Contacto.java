@@ -90,9 +90,7 @@ public class Contacto extends HttpServlet {
 		try {
 			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(username));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress("Aisialdia@gmail.com")); // Cambiar por
-																										// tu dirección
-																										// de correo
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress("ProyectoAisialdia@gmail.com")); 
 			message.setSubject(subject);
 			message.setText("Mensaje de: " + email_from + "\n\n" + messageBody);
 
@@ -107,9 +105,13 @@ public class Contacto extends HttpServlet {
 			out.println("<p>Gracias por contactarnos. Te responderemos pronto.</p>");
 			out.println("</body></html>");
 		} catch (MessagingException mex) {
-			// Error al enviar el correo
-			ControlErrores.mostrarErrorGenerico("Error al enviar el correo. Intente de nuevo más tarde.", response);
 			mex.printStackTrace();
+			response.setContentType("text/html");
+			PrintWriter out = response.getWriter();
+			out.println("<html><body>");
+			out.println("<h2>Error al enviar el correo</h2>");
+			out.println("<p>Error: " + mex.getMessage() + "</p>");
+			out.println("</body></html>");
 		} catch (Exception e) {
 			// Otro tipo de error
 			ControlErrores.mostrarErrorGenerico("Se ha producido un error. Intente de nuevo más tarde.", response);

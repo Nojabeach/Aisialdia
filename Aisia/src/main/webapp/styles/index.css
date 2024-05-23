@@ -314,5 +314,60 @@ section p {
     text-align: center;
   }
 }
+@media (max-width: 480px) {
+  /* Agrega aquí tus reglas CSS para dispositivos móviles con ancho máximo de 480px */
+  #cabecera {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #cabecera img {
+    margin: 0;
+  }
+
+  #loginFormContainer {
+    flex-direction: column;
+  }
+
+  #formulario-comun input[type="text"],
+  #formulario-comun input[type="password"] {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  #botonIniciarSesion {
+    width: 100%;
+  }
+
+  #seccionCuerpo {
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 300px;
+  }
+
+  #main {
+    width: 100%;
+  }
+
+  #aside {
+    width: 100%;
+    max-width: 100%;
+    min-height: 50%;
+    overflow: scroll;
+    margin-bottom: 20px;
+    background-color: var(--fondo-secundario);
+  }
+
+  #footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--footer);
+    color: var(--texto-blanco);
+    padding: 20px;
+    text-align: center;
+  }
+}
+
 
 

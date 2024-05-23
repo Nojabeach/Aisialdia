@@ -13,11 +13,12 @@ document.addEventListener("DOMContentLoaded", function () {
           document.getElementById("botonCerrarSesion").style.display = "block";
           
           // Verificar si el usuario tiene permisos de administrador
-          if (data.permiso === "administrador") {
-            // Mostrar el menú de administrador
-            const headerMenu = document.getElementById("header-menu");
-            if (headerMenu) {
-              headerMenu.hidden = false;
+          const headerMenu = document.getElementById("header-menu");
+          console.log("Permiso del usuario:", data.permiso);
+          if (headerMenu) {
+            if (data.permiso === 99) {
+              console.log("Es administrador");
+              headerMenu.style.display = "block"; // Cambia none a display
             }
           }
         } else {
