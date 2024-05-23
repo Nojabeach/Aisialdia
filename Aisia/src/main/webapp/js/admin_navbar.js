@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     userBtn.addEventListener("click", function() {
-        navbarUsuario.style.display = navbarUsuario.style.display === "block" ? "none" : "block";
-        navbarAdmin.style.display = "none";
+        // Redirigir a eventos.html
+        window.location.href = "eventos.html";
     });
 });

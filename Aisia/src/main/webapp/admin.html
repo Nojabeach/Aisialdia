@@ -17,17 +17,17 @@
     <!-- Enlace de scripts -->
     <script src="js/checkLogin.js"></script><!-- Script para comprobar si el usuario está logueado -->
 
+    <script src="js/ev_CrearEv_listarActividades.js"></script>
+    <!-- Script para cargar las actividades en el formulario de creación de eventos -->
+    <script src="js/admin_ev_edit_listarActividades.js"></script>
+    <!-- Script para cargar las actividades en el formulario de edición de eventos -->
+
     <script src="js/formularios.js"></script> <!-- Script para controlar los formularios -->
     <script src="js/actividad_actualizarTabla.js"></script>
     <!-- Script para actualizar los datos de la tabla de actividaes-->
     <script src="js/actividad_pintarTablaByE.js"></script><!-- Script para pintar la tabla de actividades -->
     <script src="js/actividad_verIMG.js"></script>
     <!-- Script para ver la imagen de la actividad tanto en crear como en editar -->
-
-    <script src="js/ev_CrearEv_listarActividades.js"></script>
-    <!-- Script para cargar las actividades en el formulario de creación de eventos -->
-    <script src="js/admin_ev_edit_listarActividades.js"></script>
-    <!-- Script para cargar las actividades en el formulario de edición de eventos -->
 
     <script src="js/evento_pintarTablaByE.js"></script><!-- Script para pintar la tabla de eventos -->
     <script src="js/ev_finalizar.js"></script><!-- Script para finalizar eventos -->
@@ -74,6 +74,7 @@
                     <button id="userBtn">User</button>
                 </fieldset>
             </div>
+
         </header>
 
         <!-- Navbar para administrador -->
@@ -94,7 +95,7 @@
             </ul>
         </nav>
 
-        <main id="seccionCuerpo">
+        <main id="seccionCuerpo" role="main">
             <section id="actividades">
                 <h2>Actividades</h2>
                 <p>Haga click sobre la opción deseada:</p>
@@ -430,20 +431,22 @@
         </main>
 
 
-        <footer role="contentinfo">
-
+        <footer id="footer" role="contentinfo">
             <ul>
                 <li><a href="ayuda.html">Ayuda</a></li>
                 <li><a href="politicadeprivacidad.html">Política de privacidad</a></li>
                 <li><a href="condicionesdeuso.html">Condiciones de uso</a></li>
                 <li><a href="accesibilidad.html">Accesibilidad</a></li>
+                <li><a href="acercade.html">Acerca de</a></li>
                 <li><a href="contacto.html">Contacto</a></li>
             </ul>
             <div class="social-links">
-                <a href="https://discord.com/users/maitane_82" target="_blank"><i class="fab fa-discord"></i></a>
-                <a href="https://www.linkedin.com/in/maitane-ibanez-irazabal" target="_blank"><i
-                        class="fab fa-linkedin-in"></i></a>
-                <a href="https://github.com/Nojabeach" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://discord.com/users/maitane_82" target="_blank" aria-label="Discord"><i
+                        class="fab fa-discord" aria-hidden="true"></i></a>
+                <a href="https://www.linkedin.com/in/maitane-ibanez-irazabal" target="_blank" aria-label="LinkedIn"><i
+                        class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+                <a href="https://github.com/Nojabeach" target="_blank" aria-label="GitHub"><i class="fab fa-github"
+                        aria-hidden="true"></i></a>
             </div>
             <p>&copy; 2024 AisiAldia. Todos los derechos reservados.</p>
         </footer>

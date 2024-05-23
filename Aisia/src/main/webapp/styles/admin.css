@@ -22,6 +22,9 @@ body {
   align-items: center;
   justify-content: flex-end; /* Alineación a la derecha */
   margin-right: 20px; /* Margen derecho para separar del menú */
+  background: linear-gradient(to right, var(--color-terciario), var(--color-primario));
+  border-radius: 0 0 10px 10px;
+  padding: 20px;
 }
 
 .header-content ul {
@@ -30,6 +33,7 @@ body {
   list-style: none; /* Elimina los puntos de la lista */
   padding: 0; /* Elimina el relleno predeterminado */
 }
+
 
 .header-menu {
   background: var(--color-secundario);
