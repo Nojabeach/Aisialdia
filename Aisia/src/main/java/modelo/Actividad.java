@@ -178,16 +178,5 @@ public class Actividad {
 		return DaoActividad.getInstance().obtenerTodasLasActividades();
 	}
 
-	/**
-	 * Genera un objeto JSON que representa todas las actividades.
-	 *
-	 * @return Una cadena JSON que representa todas las actividades.
-	 * @throws SQLException Si ocurre un error al obtener las actividades de la base
-	 *                      de datos.
-	 */
-	public String listarJsonTodasActividades() throws SQLException {
-		return DaoActividad.getInstance().listarJsonTodasActividades();
-
-	}
 
 }

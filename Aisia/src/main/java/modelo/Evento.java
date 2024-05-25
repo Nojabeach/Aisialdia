@@ -660,26 +660,6 @@ public class Evento {
 		DaoEvento.getInstance().publicarEvento(idEvento, request);
 	}
 
-	/**
-	 * Genera un objeto JSON que representa los eventos pendientes de aprobación.
-	 *
-	 * @return Una cadena JSON que contiene la información de los eventos pendientes
-	 *         de aprobación.
-	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
-	 */
-	public String listarJsonPendientesAprobacion() throws SQLException {
-		return DaoEvento.getInstance().listarJsonPendientesAprobacion();
-	}
 
-	/**
-	 * Genera un objeto JSON que representa los eventos pendientes de publicación.
-	 *
-	 * @return Una cadena JSON que contiene la información de los eventos pendientes
-	 *         de publicación.
-	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
-	 */
-	public String listarJsonPendientesPublicacion() throws SQLException {
-		return DaoEvento.getInstance().listarJsonPendientesPublicacion();
-	}
 
 }

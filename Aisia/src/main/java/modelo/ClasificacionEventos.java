@@ -174,29 +174,4 @@ public class ClasificacionEventos {
 		return DaoClasificacionEventos.getInstance().obtenerActividadesPorEventoID(idEvento);
 	}
 
-	/**
-	 * Genera un objeto JSON que representa las actividades asociadas a un evento
-	 * específico.
-	 *
-	 * @param IdEvento El ID del evento del que se desean obtener las actividades.
-	 * @return Una cadena JSON que contiene las actividades asociadas al evento.
-	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
-	 */
-	public String listarJsonActividadesPorEventoID(int IdEvento) throws SQLException {
-		return DaoClasificacionEventos.getInstance().listarJsonActividadesPorEventoID(IdEvento);
-	}
-
-	/**
-	 * Genera un objeto JSON que representa los eventos asociados a una actividad
-	 * específica.
-	 *
-	 * @param IdActividad El ID de la actividad de la que se desean obtener los
-	 *                    eventos.
-	 * @return Una cadena JSON que contiene los eventos asociados a la actividad.
-	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
-	 */
-	public String listarJsonEventosporActividadID(int IdActividad) throws SQLException {
-		return DaoClasificacionEventos.getInstance().listarJsonEventosporActividadID(IdActividad);
-	}
-
 }

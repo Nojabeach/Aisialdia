@@ -38,7 +38,7 @@ function rellenarFormularioPerfil(idUsuario) {
   infoUsuario();
   // Llamada a servlet para obtener los datos del usuario y rellenar formularios
   let servlet = "GestorUsuario";
-  let action = "obtenerInfoUsuario";
+  let action = "obtenerINFOUsuarioSesion";
   let op = "idUsuario";
   let formularioId = "perfil-form";
   let metodo = "GET";

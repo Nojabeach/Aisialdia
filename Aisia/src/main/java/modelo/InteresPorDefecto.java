@@ -115,13 +115,5 @@ public class InteresPorDefecto {
 		return DaoInteresPorDefecto.getInstance().listarNombresInteresesPorDefecto();
 	}
 
-	/**
-	 * Genera un objeto JSON que representa la lista de intereses por defecto.
-	 *
-	 * @return Una cadena JSON que contiene la lista de intereses por defecto.
-	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
-	 */
-	public String listarJsonIntereses() throws SQLException {
-		return DaoInteresPorDefecto.getInstance().listarJsonIntereses();
-	}
+
 }

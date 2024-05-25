@@ -25,7 +25,7 @@ CREATE TABLE usuarios (
     intereses TEXT, -- Intereses del usuario (texto)
     roles ENUM('usuario','moderador','administrador') DEFAULT 'usuario', -- Rol del usuario (enumeración con opciones: usuario, moderador, administrador, por defecto 'usuario')
     permiso int,-- Indice el nivel de permiso que va a tener el usuario
-    consentimiento_datos DATETIME DEFAULT NULL, -- Fecha y hora del consentimiento del usuario para el tratamiento de sus datos (fecha y hora)
+    consentimientoDatos DATETIME DEFAULT NULL, -- Fecha y hora del consentimiento del usuario para el tratamiento de sus datos (fecha y hora)
     aceptacionTerminosWebusuarios datetime default null -- Fecha y hora del consentimiento del usuario para el tratamiento de sus datos (fecha y hora)
 ) ;
 

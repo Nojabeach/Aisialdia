@@ -17,6 +17,8 @@
     <!-- Enlace de scripts -->
     <script src="js/checkLogin.js"></script><!-- Script para comprobar si el usuario está logueado -->
 
+    <script src="js/cargarIntereses.js"></script>
+    <!-- Script para cargar los intereses en el formulario de creación de usuario -->
     <script src="js/admin_ev_crear_listarActividades.js"></script>
     <script src="js/admin_ev_edit_listarActividades.js"></script>
     <!-- Script para cargar las actividades en el formulario de edición de eventos -->
@@ -27,12 +29,12 @@
     <script src="js/actividad_verIMG.js"></script>
     <!-- Script para ver la imagen de la actividad tanto en crear como en editar -->
 
-    <script src="js/evento_pintarTablaByE.js"></script><!-- Script para pintar la tabla de eventos -->
+    <script src="js/admin_ev_pintarTablaActivos.js"></script><!-- Script para pintar la tabla de eventos -->
     <script src="js/pintarTabla.js"></script><!--Script para pintar eventos rechazados-->
     <script src="js/admin_ev_rechazados.js"></script><!-- Script para buscar eventos rechazados -->
-    <script src="js/pintarTablaAprobar.js"></script>
+    <script src="js/admin_ev_pintarTablaAprobar.js"></script>
     <!-- Script para pintar la tabla de eventos pendientes de aprobar -->
-    <script src="js/pintarTablaPublicar.js"></script>
+    <script src="js/admin_ev_pintarTablaPublicar.js"></script>
     <!-- Script para pintar la tabla de eventos pendientes de publicar -->
 
     <script src="js/admin_usuario_pintarTablaByE.js"></script><!-- Script para pintar la tabla de usuarios -->
@@ -266,10 +268,9 @@
                 </div>
                 <div id="eventos-activos" class="evento-tab">
                     <h3>Eventos Activos</h3>
-                    <form id="finalizarEventosForm"
-                        method="POST">
+                    <form id="finalizarEventosForm" method="POST">
                         <fieldset>
-                            <legend>Finalizar Evento</legend>
+                            <legend>Finalizar Evento (clicke sobre la línea del evento a finalizar)</legend>
                             <label for="motivoFinalizacion">Motivo:</label>
                             <select id="motivos" name="motivoFinalizacion" required>
                                 <option value="">Seleccione un motivo</option>
@@ -319,7 +320,7 @@
                 <p>Haga click sobre la opción deseada:</p>
                 <nav id="usuarios-navbar">
                     <a href="#usuarios-crear">Crear Usuario</a>
-                    <a href="#usuarios-editar" >Editar Usuario</a>
+                    <a href="#usuarios-editar">Editar Usuario</a>
                     <a href="#usuarios-activos">Visualizar Usuarios</a>
                 </nav>
 
@@ -353,8 +354,8 @@
                                 </label>
                             </div>
                             <div class="form-group">
-                                <label for="intereses" aria-label="Intereses">Intereses:</label>
-                                <select id="intereses" name="intereses" required>
+                                <label for="intereses-crear" aria-label="Intereses">Intereses:</label>
+                                <select id="intereses-crear" name="intereses" required>
                                     <option value="">Seleccione un interés</option>
                                 </select>
                             </div>
@@ -404,8 +405,8 @@
                                 </label>
                             </div>
                             <div class="form-group">
-                                <label for="intereses" aria-label="Intereses">Intereses:</label>
-                                <select id="intereses" name="EDITintereses" required>
+                                <label for="intereses-editar" aria-label="Intereses">Intereses:</label>
+                                <select id="intereses-editar" name="intereses" required>
                                     <option value="">Seleccione un interés</option>
                                 </select>
                             </div>

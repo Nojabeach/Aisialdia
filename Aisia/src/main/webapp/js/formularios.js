@@ -89,10 +89,14 @@ function usuario_cargarFormularioDesdeServlet(servlet,
   method
 ) {
   console.log("Realizando llamada a:", servlet);
+  
+  console.log("fetch", fetch(`${servlet}?action=${action}&idUsuario=${op}`));
+
   fetch(`${servlet}?action=${action}&idUsuario=${op}`, {
     method: method, // Pasar el método de solicitud como atributo
   })
     .then((response) => {
+  
       if (!response.ok) {
         throw new Error("Error al cargar los datos");
       }
@@ -110,11 +114,14 @@ function usuario_cargarFormularioDesdeServlet(servlet,
     .catch((error) => {
       console.error("Error:", error);
     });
-}function llenarFormulario(data, formularioId) {
+}
+
+function llenarFormulario(data, formularioId) {
   console.log("Llenando formulario con datos:", data);
   let form = document.getElementById(formularioId);
   Object.keys(data).forEach((key) => {
-    let element = form.elements[key];
+    let element = form.elements[key]; // Obtener el elemento del formulario
+    console.log("Tipo element", element);
     if (element) {
       if (element.type === "date") {
         console.log("campo fecha", data[key]);

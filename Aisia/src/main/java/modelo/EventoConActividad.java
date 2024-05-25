@@ -284,41 +284,5 @@ public class EventoConActividad {
 		return DaoEventoConActividad.getInstance().obtenerEventoConActividad(idEvento);
 	}
 
-	/**
-	 * Genera un objeto JSON que representa los últimos eventos registrados en el
-	 * sistema.
-	 *
-	 * @param numEventos Número de eventos a listar. Si es negativo, se listan todos
-	 *                   los eventos.
-	 * @param actividad  El tipo de actividad de los eventos a filtrar. Puede ser
-	 *                   null para no aplicar filtro.
-	 * @param nombre     El nombre de los eventos a filtrar. Puede ser null para no
-	 *                   aplicar filtro.
-	 * @param ubicacion  La ubicación de los eventos a filtrar. Puede ser null para
-	 *                   no aplicar filtro.
-	 * @param fecha      La fecha de los eventos a filtrar. Puede ser null para no
-	 *                   aplicar filtro.
-	 * @return Una cadena JSON que contiene la información de los últimos eventos
-	 *         registrados.
-	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
-	 */
-	public String listarJsonUltimosEventos(int numEventos, String actividad, String nombre, String ubicacion,
-			Date fecha) throws SQLException {
-		return DaoEventoConActividad.getInstance().listarJsonUltimosEventos(numEventos, actividad, nombre, ubicacion,
-				fecha);
-	}
-
-	/**
-	 * Genera un objeto JSON que representa un evento específico con su información
-	 * detallada, incluyendo la actividad asociada.
-	 *
-	 * @param idEvento ID del evento.
-	 * @return Una cadena JSON que contiene la información del evento y su actividad
-	 *         asociada.
-	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
-	 */
-	public String listarJsonEventosConActividad(int idEvento) throws SQLException {
-		return DaoEventoConActividad.getInstance().listarJsonEventosConActividad(idEvento);
-	}
 
 }

@@ -71,7 +71,7 @@ public class DaoUsuario {
 		ps.setString(6, usuario.getIntereses());
 		ps.setString(7, (usuario.getRoles() != null) ? usuario.getRoles().toString() : Rol.usuario.toString());
 		ps.setInt(8, (usuario.getPermiso() != 0) ? usuario.getPermiso() : 1);
-		ps.setDate(9, usuario.getConsentimiento_datos());
+		ps.setDate(9, usuario.getConsentimientoDatos());
 		ps.setDate(10, usuario.getAceptacionTerminosWeb());
 		ps.executeUpdate();
 	}
@@ -262,16 +262,16 @@ public class DaoUsuario {
 	            usuario.setIdUsuario(rs.getInt("idUsuario")); // ID del usuario
 	            usuario.setNombre(rs.getString("nombre")); // Nombre del usuario
 	            usuario.setEmail(rs.getString("email")); // Email del usuario
-	            usuario.setContrasena(rs.getString("contrasena")); // Contraseña del usuario
+	            //usuario.setContrasena(rs.getString("contrasena")); // Contraseña del usuario
 	            usuario.setFechaNacimiento(rs.getDate("fechaNacimiento")); // Fecha de nacimiento del usuario
 	            usuario.setRecibeNotificaciones(rs.getBoolean("recibeNotificaciones")); // Si recibe notificaciones
 	            usuario.setIntereses(rs.getString("intereses")); // Intereses del usuario
 	            usuario.setPermiso(rs.getInt("permiso")); // Permiso del usuario
 	            usuario.setRoles(Rol.valueOf(rs.getString("roles"))); // Rol del usuario
-	            usuario.setConsentimiento_datos(rs.getDate("consentimientoDatos")); // Fecha de consentimiento de datos
-	            usuario.setAceptacionTerminosWeb(rs.getDate("aceptacionTerminosWeb")); // Fecha de aceptación de términos web
+	           // usuario.setConsentimientoDatos(rs.getDate("consentimientoDatos")); // Fecha de consentimiento de datos
+	           // usuario.setAceptacionTerminosWeb(rs.getDate("aceptacionTerminosWeb")); // Fecha de aceptación de términos web
 
-	            System.out.println(usuario);
+	            //System.out.println(usuario);
 	            usuarios.add(usuario);
 	        }
 	    } catch (SQLException e) {

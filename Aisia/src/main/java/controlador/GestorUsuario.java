@@ -68,10 +68,14 @@ public class GestorUsuario extends HttpServlet {
 			case "obtenerUsuariosSegunPermiso":
 				obtenerUsuariosPermiso(request, response, out);
 				break;
-			case "obtenerInfoUsuario":
+			case "obtenerINFOUsuarioSesion":
+				// System.out.println("entro en info user");
+				obtenerINFOUsuarioSesion(request, response, out);
+				break;
+			case "obtenerINFOUsuario":
 				// System.out.println("entro en info user");
 				obtenerINFOUsuario(request, response, out);
-				break;
+				break;	
 			case "obtenerContrasena":
 				obtenerContrasena(request, response, out);
 				break;
@@ -220,7 +224,7 @@ public class GestorUsuario extends HttpServlet {
 	 * @throws IOException Si ocurre un error de entrada/salida al escribir en el
 	 *                     PrintWriter.
 	 */
-	private void obtenerINFOUsuario(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
+	private void obtenerINFOUsuarioSesion(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
 			throws IOException {
 		try {
 			HttpSession session = request.getSession();
@@ -233,7 +237,30 @@ public class GestorUsuario extends HttpServlet {
 					response);
 		}
 	}
-
+	
+	/**
+	 * Obtiene la información de un usuario y la devuelve en formato JSON.
+	 * 
+	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
+	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
+	 *                 respuesta HTTP.
+	 * @param out      El escritor de salida para escribir la información del
+	 *                 usuario en formato JSON en la respuesta.
+	 * @throws IOException Si ocurre un error de entrada/salida al escribir en el
+	 *                     PrintWriter.
+	 */
+	private void obtenerINFOUsuario(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
+			throws IOException {
+		try {
+			
+			int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+			DaoUsuario usuario = new DaoUsuario();
+			out.print(usuario.listariNFOUsuarioJson(idUsuario));
+		} catch (SQLException e) {
+			ControlErrores.mostrarErrorGenerico("Error al obtener la información del usuario. Intente de nuevo.",
+					response);
+		}
+	}
 	/**
 	 * Obtiene la contraseña de un usuario y la devuelve en formato JSON.
 	 * 
@@ -372,7 +399,7 @@ public class GestorUsuario extends HttpServlet {
 		usuario.setIntereses(intereses);
 		usuario.setRoles(roles);
 		usuario.setPermiso(permiso);
-		usuario.setConsentimiento_datos(fechaConsentimientoDatos);
+		usuario.setConsentimientoDatos(fechaConsentimientoDatos);
 		usuario.setAceptacionTerminosWeb(fechaAceptacionTerminosWeb);
 
 		// Registrar el usuario en la base de datos
@@ -440,7 +467,7 @@ public class GestorUsuario extends HttpServlet {
 		usuario.setIntereses(intereses);
 		usuario.setRoles(roles);
 		usuario.setPermiso(permiso);
-		usuario.setConsentimiento_datos(fechaConsentimientoDatos);
+		usuario.setConsentimientoDatos(fechaConsentimientoDatos);
 		usuario.setAceptacionTerminosWeb(fechaAceptacionTerminosWeb);
 
 		// Asignar el rol específico si se proporciona

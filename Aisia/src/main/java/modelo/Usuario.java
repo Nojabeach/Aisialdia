@@ -85,7 +85,7 @@ public class Usuario {
 	/**
 	 * Fecha en la que el usuario dio su consentimiento para el uso de sus datos.
 	 */
-	private Date consentimiento_datos;
+	private Date consentimientoDatos;
 	/**
 	 * Fecha en la que el usuario acepto terminos y condiciones tras su lectura en
 	 * la web
@@ -115,14 +115,14 @@ public class Usuario {
 	 * @param permiso               Control de permisos de los usuarios en la web.
 	 * @param roles                 Rol del usuario en el sistema (USUARIO,
 	 *                              MODERADOR, ADMINISTRADOR).
-	 * @param consentimiento_datos  Fecha en la que el usuario dio su consentimiento
+	 * @param consentimientoDatos  Fecha en la que el usuario dio su consentimiento
 	 *                              para el uso de sus datos.
 	 * @param aceptacionTerminosWeb Fecha en la que el usuario acepto terminos y
 	 *                              condiciones tras su lectura en la web
 	 */
 
 	public Usuario(int idUsuario, String nombre, String email, String contrasena, Date fechaNacimiento,
-			boolean recibeNotificaciones, String intereses, int permiso, Rol roles, Date consentimiento_datos,
+			boolean recibeNotificaciones, String intereses, int permiso, Rol roles, Date consentimientoDatos,
 			Date aceptacionTerminosWeb) {
 
 		this.idUsuario = idUsuario;
@@ -134,7 +134,7 @@ public class Usuario {
 		this.intereses = intereses;
 		this.permiso = permiso;
 		this.roles = roles;
-		this.consentimiento_datos = consentimiento_datos;
+		this.consentimientoDatos = consentimientoDatos;
 		this.aceptacionTerminosWeb = aceptacionTerminosWeb;
 	}
 
@@ -403,18 +403,18 @@ public class Usuario {
 	 *
 	 * @return La fecha de consentimiento de datos del usuario.
 	 */
-	public Date getConsentimiento_datos() {
-		return consentimiento_datos;
+	public Date getConsentimientoDatos() {
+		return consentimientoDatos;
 	}
 
 	/**
 	 * Establece la fecha de consentimiento de datos del usuario.
 	 *
-	 * @param consentimiento_datos La nueva fecha de consentimiento de datos del
+	 * @param consentimientoDatos La nueva fecha de consentimiento de datos del
 	 *                             usuario.
 	 */
-	public void setConsentimiento_datos(Date consentimiento_datos) {
-		this.consentimiento_datos = consentimiento_datos;
+	public void setConsentimientoDatos(Date consentimientoDatos) {
+		this.consentimientoDatos = consentimientoDatos;
 	}
 
 	/**
@@ -466,8 +466,8 @@ public class Usuario {
 	public String toString() {
 		return "Usuario [idUsuario=" + idUsuario + ", nombre=" + nombre + ", email=" + email + ", contrasena="
 				+ contrasena + ", fechaNacimiento=" + fechaNacimiento + ", recibeNotificaciones=" + recibeNotificaciones
-				+ ", intereses=" + intereses + ", permiso=" + permiso + ", roles=" + roles + ", consentimiento_datos="
-				+ consentimiento_datos + "]";
+				+ ", intereses=" + intereses + ", permiso=" + permiso + ", roles=" + roles + ", consentimientoDatos="
+				+ consentimientoDatos + "]";
 	}
 
 	// MÉTODOS DE NEGOCIO
@@ -699,28 +699,7 @@ public class Usuario {
 		return DaoUsuario.getInstance().obtenerContrasena(idUsuario);
 	}
 
-	/**
-	 * Genera una representación JSON de la lista de usuarios.
-	 * 
-	 * @return Una cadena JSON que representa la lista de usuarios.
-	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
-	 */
-	public String listarUsuariosJson() throws SQLException {
-		return DaoUsuario.getInstance().listarUsuariosJson();
-	}
-
-	/**
-	 * Genera una representación JSON de la lista de usuarios filtrada por tipo de
-	 * permiso.
-	 * 
-	 * @param tipo El tipo de permiso por el que se desea filtrar los usuarios.
-	 * @return Una cadena JSON que representa la lista de usuarios filtrada por tipo
-	 *         de permiso.
-	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
-	 */
-	public String listarUsuariosJson(int tipo) throws SQLException {
-		return DaoUsuario.getInstance().listarUsuariosJson(tipo);
-	}
+	
 
 	/**
 	 * Busca el permiso de un usuario en la base de datos.

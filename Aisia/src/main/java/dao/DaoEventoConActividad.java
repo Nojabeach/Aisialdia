@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
+import dao.DaoUsuario.GsonHelper;
 import modelo.Evento;
 import modelo.EventoConActividad;
 
@@ -207,9 +208,9 @@ public class DaoEventoConActividad {
 	 *                      la base de datos.
 	 */
 	public String listarJsonEventosConActividad(int idEvento) throws SQLException {
-		String json = "";
-		Gson gson = new Gson();
-		json = gson.toJson(this.obtenerEventoConActividad(idEvento));
-		return json;
-	}
+		Gson gson = GsonHelper.getGson();
+		return gson.toJson(this.obtenerEventoConActividad(idEvento));
+		}
+
+	
 }

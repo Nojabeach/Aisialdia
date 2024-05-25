@@ -55,6 +55,7 @@ function usuario_pintarTablaEditarYBorrar(data, container) {
         botonEditar.textContent = 'Editar';
         botonEditar.dataset.idUsuario = item.idUsuario; 
         botonEditar.classList.add('boton-secundario');
+        botonEditar.dataset.tabId = 'usuarios-editar'; // ID del tab a mostrar
         celdaBoton.appendChild(botonEditar);
 
         fila.appendChild(celdaBoton);
@@ -76,7 +77,8 @@ function asignarUsuarioABorrar() {
             if (action === 'borrar') {
                 eliminarUsuario(idUsuario); // Cambiado a eliminarUsuario
             } else if (action === 'editar') {
-                editarUsuario(idUsuario); // Cambiado a editarUsuario
+                let tabId = this.dataset.tabId;
+                editarUsuario(idUsuario, tabId); // Cambiado a editarUsuario
             }
         });
     });

@@ -160,17 +160,6 @@ public class Favorito {
 		return DaoFavorito.getInstance().obtenerEventosFavoritosUsuario(idUsuario);
 	}
 
-	/**
-	 * Genera un objeto JSON que representa la lista de eventos marcados como
-	 * favoritos por un usuario.
-	 *
-	 * @param idUsuario ID del usuario.
-	 * @return Una cadena JSON que contiene la información de los eventos marcados
-	 *         como favoritos por el usuario.
-	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
-	 */
-	public String listarJsonFavoritosUsuario(int idUsuario) throws SQLException {
-		return DaoFavorito.getInstance().listarJsonFavoritosUsuario(idUsuario);
-	}
+
 
 }
