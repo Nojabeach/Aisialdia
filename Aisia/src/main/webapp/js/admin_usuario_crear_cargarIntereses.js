@@ -1,6 +1,6 @@
 window.onload = function () {
     // Obtener los select de intereses en el formulario de creación de usuario
-    const interesesCrearSelect = document.getElementById("intereses-crear");
+    const interesesCrearSelect = document.getElementById("intereses");
     const interesesEditarSelect = document.getElementById("intereses-editar");
 
     // Realizar una solicitud Fetch al servidor para obtener los datos de intereses
@@ -14,12 +14,12 @@ window.onload = function () {
 
                 if (interesesCrearSelect) {
                     interesesCrearSelect.add(option1);
-                    console.log(`Agregado opción "${nombreInteres}" a interesesCrearSelect`);
+                  //  console.log(`Agregado opción "${nombreInteres}" a interesesCrearSelect`);
                 }
 
                 if (interesesEditarSelect) {
                     interesesEditarSelect.add(option2);
-                    console.log(`Agregado opción "${nombreInteres}" a interesesEditarSelect`);
+                  //  console.log(`Agregado opción "${nombreInteres}" a interesesEditarSelect`);
                 }
             });
         })

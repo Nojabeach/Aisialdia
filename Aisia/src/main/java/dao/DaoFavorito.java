@@ -12,7 +12,6 @@ import com.google.gson.Gson;
 
 import jakarta.servlet.http.HttpServletRequest;
 import modelo.Evento;
-import modelo.Evento.MotivoFinalizacion;
 
 public class DaoFavorito {
 

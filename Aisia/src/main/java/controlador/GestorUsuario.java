@@ -5,7 +5,8 @@ import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 import dao.DaoUsuario;
 import jakarta.servlet.ServletException;
@@ -138,6 +139,7 @@ public class GestorUsuario extends HttpServlet {
 			case "crearUsuario":
 				crearUsuario(request, response);
 				break;
+
 			case "editarUsuario":
 				editarUsuario(request, response);
 				break;
@@ -439,10 +441,20 @@ public class GestorUsuario extends HttpServlet {
 	 */
 	private void crearUsuario(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
-		
+
+		System.out.println(request.getHeader("Referer"));
 		String HtmlOrigen = request.getHeader("Referer");
+
 		if (HtmlOrigen == null) {
 			HtmlOrigen = "Desconocido";
+		} else {
+			try {
+				URL url = new URL(HtmlOrigen);
+				HtmlOrigen = url.getPath();
+				HtmlOrigen = HtmlOrigen.substring(HtmlOrigen.lastIndexOf('/') + 1);
+			} catch (MalformedURLException e) {
+				HtmlOrigen = "Desconocido";
+			}
 		}
 		// Obtener parámetros del formulario
 		String nombre = request.getParameter("nombre");
@@ -453,11 +465,15 @@ public class GestorUsuario extends HttpServlet {
 		String rolesStr = request.getParameter("roles");
 		Rol roles = (rolesStr != null && !rolesStr.isEmpty()) ? Rol.valueOf(rolesStr) : Rol.usuario;
 		int permiso = (request.getParameter("permiso") != null) ? Integer.parseInt(request.getParameter("permiso")) : 1;
-		
-		boolean consentimientoDatos = request.getParameter("consentimientoDatos") != null ? "on".equalsIgnoreCase(request.getParameter("consentimientoDatos")) : true;
+
+		boolean consentimientoDatos = request.getParameter("consentimientoDatos") != null
+				? "on".equalsIgnoreCase(request.getParameter("consentimientoDatos"))
+				: true;
 		Date fechaConsentimientoDatos = consentimientoDatos ? new Date(System.currentTimeMillis()) : null;
 
-		boolean aceptacionTerminosWeb = request.getParameter("aceptacionTerminosWeb") != null ? "on".equalsIgnoreCase(request.getParameter("aceptacionTerminosWeb")) : true;
+		boolean aceptacionTerminosWeb = request.getParameter("aceptacionTerminosWeb") != null
+				? "on".equalsIgnoreCase(request.getParameter("aceptacionTerminosWeb"))
+				: true;
 		Date fechaAceptacionTerminosWeb = aceptacionTerminosWeb ? new Date(System.currentTimeMillis()) : null;
 
 		// Verificar si se proporcionaron todos los datos necesarios
@@ -494,9 +510,9 @@ public class GestorUsuario extends HttpServlet {
 		// Registrar el usuario en la base de datos
 		try {
 			DaoUsuario.getInstance().registrarUsuario(usuario);
-			
+
 			if (HtmlOrigen.equals("admin.html")) {
-			    response.sendRedirect("admin.html");
+				response.sendRedirect("admin.html");
 			}
 		} catch (SQLException e) {
 			// Mostrar mensaje de error detallado
@@ -513,66 +529,66 @@ public class GestorUsuario extends HttpServlet {
 	 * @param response Objeto HttpServletResponse utilizado para enviar la respuesta
 	 *                 al cliente.
 	 * 
-	 * @throws IOException  Si ocurre un error de entrada/salida al escribir la
-	 *                      respuesta.
-	 * @throws SQLException Si ocurre un error de base de datos al editar el
-	 *                      usuario.
-	 * @throws ParseException Si ocurre un error a la hora de parsear las fechas de nacimiento
+	 * @throws IOException    Si ocurre un error de entrada/salida al escribir la
+	 *                        respuesta.
+	 * @throws SQLException   Si ocurre un error de base de datos al editar el
+	 *                        usuario.
+	 * @throws ParseException Si ocurre un error a la hora de parsear las fechas de
+	 *                        nacimiento
 	 */
 	private void editarUsuarioAdmin(HttpServletRequest request, HttpServletResponse response)
-	        throws IOException, SQLException, ParseException {
-	    // Obtener parámetros del formulario
-	    int idUsuarioActual = Integer.parseInt(request.getParameter("idUsuario"));
-	    
-	    String nombre = request.getParameter("EDITnombre");
-	    String email = request.getParameter("EDITemail");
+			throws IOException, SQLException, ParseException {
+		// Obtener parámetros del formulario
+		int idUsuarioActual = Integer.parseInt(request.getParameter("idUsuario"));
 
-	    boolean recibeNotificaciones = request.getParameter("EDITrecibeNotificaciones") != null;
-	    String intereses = request.getParameter("EDITintereses");
+		String nombre = request.getParameter("EDITnombre");
+		String email = request.getParameter("EDITemail");
 
-	    String rolesStr = request.getParameter("EDITroles");
-	    Rol roles = (rolesStr != null && !rolesStr.isEmpty()) ? Rol.valueOf(rolesStr) : Rol.usuario;
+		boolean recibeNotificaciones = request.getParameter("EDITrecibeNotificaciones") != null;
+		String intereses = request.getParameter("intereses");
 
-	    int permiso;
-	    switch (roles) {
-	    case administrador:
-	        permiso = 99;
-	        break;
-	    case moderador:
-	        permiso = 2;
-	        break;
-	    case usuario:
-	    default:
-	        permiso = 1;
-	        break;
-	    }
+		String rolesStr = request.getParameter("EDITroles");
+		Rol roles = (rolesStr != null && !rolesStr.isEmpty()) ? Rol.valueOf(rolesStr) : Rol.usuario;
 
-	    // Verificar si el nuevo nombre ya existe en la base de datos
-	    if (DaoUsuario.getInstance().existeUsuarioConNombre(nombre, idUsuarioActual)) {
-	        ControlErrores.mostrarErrorGenerico(
-	                "{\"error\": \"Ya existe un usuario con ese nombre, inténtelo de nuevo con otro nombre.\"}",
-	                response);
-	        return;
-	    }
-	    Date fechaNacimiento = Date.valueOf(request.getParameter("EDITfechaNacimiento"));
-	  
+		int permiso;
+		switch (roles) {
+		case administrador:
+			permiso = 99;
+			break;
+		case moderador:
+			permiso = 2;
+			break;
+		case usuario:
+		default:
+			permiso = 1;
+			break;
+		}
 
-	    // Crear un objeto Usuario con la información actualizada
-	    Usuario usuario = new Usuario(idUsuarioActual, nombre, email, recibeNotificaciones, intereses, permiso, roles,
-	            fechaNacimiento);
-	    //System.out.println("Objeto Usuario creado: " + usuario);
+		// Verificar si el nuevo nombre ya existe en la base de datos
+		if (DaoUsuario.getInstance().existeUsuarioConNombre(nombre, idUsuarioActual)) {
+			ControlErrores.mostrarErrorGenerico(
+					"{\"error\": \"Ya existe un usuario con ese nombre, inténtelo de nuevo con otro nombre.\"}",
+					response);
+			return;
+		}
+		Date fechaNacimiento = Date.valueOf(request.getParameter("EDITfechaNacimiento"));
 
-	    // Editar el usuario en la base de datos
-	    try {
-	        DaoUsuario.getInstance().editarUsuarioAdmin(usuario);
-	        response.setStatus(HttpServletResponse.SC_OK);
-	        response.sendRedirect("admin.html");
-	    } catch (Exception e) {
-	        // Manejar el error al editar el usuario en la base de datos
-	        System.out.println("Error al editar el usuario: " + e.getMessage());
-	        ControlErrores.mostrarErrorGenerico("{\"error\": \"Error al editar el usuario. Intente de nuevo.\"}",
-	                response);
-	    }
+		// Crear un objeto Usuario con la información actualizada
+		Usuario usuario = new Usuario(idUsuarioActual, nombre, email, recibeNotificaciones, intereses, permiso, roles,
+				fechaNacimiento);
+		// System.out.println("Objeto Usuario creado: " + usuario);
+
+		// Editar el usuario en la base de datos
+		try {
+			DaoUsuario.getInstance().editarUsuarioAdmin(usuario);
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.sendRedirect("admin.html");
+		} catch (Exception e) {
+			// Manejar el error al editar el usuario en la base de datos
+			System.out.println("Error al editar el usuario: " + e.getMessage());
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"Error al editar el usuario. Intente de nuevo.\"}",
+					response);
+		}
 	}
 
 	/**

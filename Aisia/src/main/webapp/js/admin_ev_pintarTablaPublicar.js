@@ -95,7 +95,7 @@ function publicarEvento(idEvento){
             if (response.ok) {
                 console.log('Evento publicado correctamente, actualizo la lista');
                 // Actualizar la lista después de publicar: tanto en eventos como en perfil
-                AD_obtenerPendientesPublicar();
+                window.location.reload();
             } else {
                 console.error('Error al publicar el evento');
             }

@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 
 import modelo.Actividad;
 import modelo.Evento;
-import modelo.Evento.MotivoFinalizacion;
+import modelo.Evento.motivoFinalizacion;
 import modelo.EventoConActividad;
 
 public class DaoClasificacionEventos {
@@ -138,7 +138,7 @@ public class DaoClasificacionEventos {
 			evento.setIdModeradorPublicacion(rs.getInt("idModeradorPublicacion"));
 			evento.setFechaFinalizacion(rs.getDate("fechaFinalizacion"));
 			evento.setIdModeradorFinalizacion(rs.getInt("idModeradorFinalizacion"));
-			evento.setMotivoFinalizacion(MotivoFinalizacion.valueOf(rs.getString("motivoFinalizacion")));
+			evento.setmotivoFinalizacion(motivoFinalizacion.valueOf(rs.getString("motivoFinalizacion")));
 			evento.setUbicacion(rs.getString("ubicacion"));
 
 			eventos.add(evento);

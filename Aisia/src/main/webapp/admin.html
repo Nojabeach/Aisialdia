@@ -21,6 +21,11 @@
 
     <script src="js/admin_ev_crear_listarActividades.js"></script>
     <script src="js/admin_ev_edit_listarActividades.js"></script>
+
+
+    <!-- Script para cargar los intereses en el formulario de creación de usuario -->
+    <script src="js/admin_usuario_crear_cargarIntereses.js"></script>
+
     <!-- Script para cargar las actividades en el formulario de edición de eventos -->
 
     <script src="js/formularios.js"></script> <!-- Script para controlar los formularios -->
@@ -36,6 +41,8 @@
     <!-- Script para pintar la tabla de eventos pendientes de aprobar -->
     <script src="js/admin_ev_pintarTablaPublicar.js"></script>
     <!-- Script para pintar la tabla de eventos pendientes de publicar -->
+    <script src="js/admin_ev_pintarTablaRechazados.js"></script>
+    <!-- Script para pintar la tabla de eventos rechazados -->
 
     <script src="js/admin_usuario_pintarTablaByE.js"></script><!-- Script para pintar la tabla de usuarios -->
 
@@ -47,8 +54,6 @@
     <script src="js/actividad_actualizarTabla.js"></script>
     <!-- Script para actualizar los datos de la tabla de actividaes-->
 
-    <!-- Script para cargar los intereses en el formulario de creación de usuario -->
-    <script src="js/admin_usuario_crear_cargarIntereses.js"></script>
 
 </head>
 
@@ -408,8 +413,8 @@
                                 </label>
                             </div>
                             <div class="form-group">
-                                <label for="intereses-editar" aria-label="EDITintereses">Intereses:</label>
-                                <select id="intereses-editar" id="EDITintereses" required>
+                                <label for="intereses" aria-label="intereses">Intereses:</label>
+                                <select id="intereses" name="intereses" required>
                                     <option value="">Seleccione un interés</option>
                                     <!-- INTERESES EDITAR:Las opciones se cargarán dinámicamente con JS -->
                                 </select>

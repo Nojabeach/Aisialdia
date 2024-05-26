@@ -77,7 +77,7 @@ public class Evento {
 	/**
 	 * Motivo de finalización del evento (si ha finalizado).
 	 */
-	private MotivoFinalizacion motivoFinalizacion;
+	private motivoFinalizacion motivoFinalizacion;
 
 	/**
 	 * Ubicación del evento.
@@ -92,7 +92,7 @@ public class Evento {
 	 * Enumeración que define los posibles motivos de finalización de un evento.
 	 */
 
-	public enum MotivoFinalizacion {
+	public enum motivoFinalizacion {
 		/**
 		 * El evento ha finalizado por falta de visibilidad.
 		 */
@@ -151,7 +151,7 @@ public class Evento {
 	public Evento(int idEvento, String nombre, String detalles, int idUsuarioCreador, Date fechaCreacion,
 			Date fechaAprobacion, Date fechaUltimaModificacion, int idModeradorAprobacion, Date fechaPublicacion,
 			int idModeradorPublicacion, Date fechaFinalizacion, int idModeradorFinalizacion,
-			MotivoFinalizacion motivoFinalizacion, String ubicacion, Date fechaEvento) {
+			motivoFinalizacion motivoFinalizacion, String ubicacion, Date fechaEvento) {
 		super();
 		this.idEvento = idEvento;
 		this.nombre = nombre;
@@ -251,6 +251,24 @@ public class Evento {
 		this.idUsuarioCreador = idUsuarioCreador;
 		this.ubicacion = ubicacion;
 		this.fechaCreacion = fechaCreacion;
+	}
+
+	/**
+	 * Constructor para la clase Evento.
+	 *
+	 * @param idEvento                El identificador del evento.
+	 * @param fechaFinalizacion       La fecha de finalización del evento.
+	 * @param idModeradorFinalizacion El identificador del moderador que finaliza el
+	 *                                evento.
+	 * @param motivoFinalizacion      El motivo de la finalización del evento.
+	 */
+	public Evento(int idEvento, Date fechaFinalizacion, int idModeradorFinalizacion,
+			modelo.Evento.motivoFinalizacion motivoFinalizacion) {
+		super();
+		this.idEvento = idEvento;
+		this.fechaFinalizacion = fechaFinalizacion;
+		this.idModeradorFinalizacion = idModeradorFinalizacion;
+		this.motivoFinalizacion = motivoFinalizacion;
 	}
 
 	// GETTERS Y SETTERS
@@ -486,7 +504,7 @@ public class Evento {
 	 * @return Motivo de finalización del evento (si ha finalizado). Si el evento no
 	 *         ha finalizado, se devuelve `null`.
 	 */
-	public MotivoFinalizacion getMotivoFinalizacion() {
+	public motivoFinalizacion getmotivoFinalizacion() {
 		return motivoFinalizacion;
 	}
 
@@ -497,7 +515,7 @@ public class Evento {
 	 *                           finalizado). Si el evento no ha finalizado, se debe
 	 *                           pasar `null`.
 	 */
-	public void setMotivoFinalizacion(MotivoFinalizacion motivoFinalizacion) {
+	public void setmotivoFinalizacion(motivoFinalizacion motivoFinalizacion) {
 		this.motivoFinalizacion = motivoFinalizacion;
 	}
 
@@ -567,7 +585,6 @@ public class Evento {
 		DaoEvento.getInstance().crearEvento(evento, actividades, timestamp);
 	}
 
-
 	/**
 	 * Elimina un evento de la base de datos.
 	 * 
@@ -621,8 +638,8 @@ public class Evento {
 	 * @throws SQLException Si ocurre un error al finalizar la publicación del
 	 *                      evento.
 	 */
-	public void finalizarPublicacionEvento(int idEvento, int idModerador) throws SQLException {
-		DaoEvento.getInstance().finalizarPublicacionEvento(idEvento, idModerador);
+	public void finalizarPublicacionEvento(Evento evento, int idModerador) throws SQLException {
+		DaoEvento.getInstance().finalizarPublicacionEvento(evento);
 	}
 
 	/**
@@ -650,7 +667,5 @@ public class Evento {
 	public void publicarEvento(int idEvento, HttpServletRequest request) throws SQLException {
 		DaoEvento.getInstance().publicarEvento(idEvento, request);
 	}
-
-
 
 }

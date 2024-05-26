@@ -30,7 +30,7 @@ function AD_obtenerEventos() {
   fetch("GestorEvento?action=obtenerTodosLosEventosActivos")
     .then((response) => response.json())
     .then((data) => {
-      console.log("Admin Eventos obtenidos:", data);
+      console.log("Admin Eventos activos:", data);
       if (data && data.length > 0) {
         const contenedorAPintar = document.getElementById("Publicados-tabla");
         contenedorAPintar.innerHTML = ""; // Limpiar el contenedor antes de agregar nuevos elementos
@@ -119,11 +119,14 @@ function addRowClickListeners() {
   const finalizarButton = document.getElementById('botonFinalizar');
   finalizarButton.addEventListener('click', function (event) {
     const eventIDDisplay = document.getElementById('eventIDDisplay');
+    const motivoFinalizacion=document.getElementById('motivos');
     if (eventIDDisplay && eventIDDisplay.textContent.includes('ID del Evento Seleccionado: ')) {
       const selectedEventID = eventIDDisplay.textContent.split(': ')[1].trim();
       if (selectedEventID && selectedEventID !== 'Ninguno') {
         const finalizarEventosForm = document.getElementById('finalizarEventosForm');
-        finalizarEventosForm.action = `GestorEvento?action=finalizarPublicacionEvento&idEvento=${selectedEventID}`;
+        finalizarEventosForm.action = `GestorEvento?action=finalizarPublicacionEvento&idEvento=${selectedEventID}&motivoFinalizacion=${motivoFinalizacion.value}`;
+        finalizarEventosForm.submit();
+        window.location.reload();
       } else {
         event.preventDefault();
         alert('Por favor, seleccione un evento antes de finalizar.');

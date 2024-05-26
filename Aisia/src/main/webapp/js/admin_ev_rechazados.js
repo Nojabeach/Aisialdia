@@ -24,6 +24,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const fechaInicioSeleccionada = fechaInicioInput.value;
             const fechaFinSeleccionada = fechaFinInput.value;
 
+            console.log("Fecha inicio:", fechaInicioSeleccionada);
+            console.log("Fecha fin:", fechaFinSeleccionada);
+
             // Realizar la llamada al servlet para obtener los eventos rechazados
             fetch(`GestorEvento?action=obtenerEventosRechazados&fechaInicio=${fechaInicioSeleccionada}&fechaFin=${fechaFinSeleccionada}`)
                 .then(response => response.json())
@@ -31,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log("Eventos rechazados obtenidos:", data);
 
                     const contenedorTablaRechazados = document.getElementById("Rechazados-tabla");
-                    pintarTabla(data, contenedorTablaRechazados);
+                    pintarTablaRechazados(data, contenedorTablaRechazados);
                 })
                 .catch(error => {
                     console.error('Error al obtener eventos rechazados:', error);

@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import modelo.Actividad;
 import modelo.Evento;
+import modelo.Evento.motivoFinalizacion;
 import modelo.EventoConActividad;
 
 /**
@@ -264,41 +265,41 @@ public class GestorEvento extends HttpServlet {
 	 * @param request  Objeto HttpServletRequest que contiene la solicitud HTTP.
 	 * @param response Objeto HttpServletResponse que se utilizará para enviar la
 	 *                 respuesta HTTP.
-	 * @throws SQLException Si se produce un error en la base de datos.
-	 * @throws IOException  Si se produce un error de entrada/salida.
-	 * @throws ParseException Si se prodcue un error a la hora de parsear las fechas de nacimiento
+	 * @throws SQLException   Si se produce un error en la base de datos.
+	 * @throws IOException    Si se produce un error de entrada/salida.
+	 * @throws ParseException Si se prodcue un error a la hora de parsear las fechas
+	 *                        de nacimiento
 	 */
 	private void editarEvento(HttpServletRequest request, HttpServletResponse response)
-	        throws SQLException, IOException, ParseException {
-	    int idEvento = Integer.parseInt(request.getParameter("idEvento"));
-	    String nombre = request.getParameter("nombre");
-	    String detalles = request.getParameter("detalles");
-	    String fechaEventoStr = request.getParameter("EDITfechaEvento");
-	    String tipoActividad = request.getParameter("tipoActividad");
-	    String ubicacion = request.getParameter("ubicacion");
-	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	    Date fechaEvento = null;
-	    try {
-	        fechaEvento = new Date(dateFormat.parse(fechaEventoStr).getTime());
-	    } catch (ParseException e) {
-	        // Manejar el error de formato de fecha
-	        ControlErrores.mostrarErrorGenerico("{\"error\": \"Formato de fecha de evento inválido\"}", response);
-	        return;
-	    }
+			throws SQLException, IOException, ParseException {
+		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
+		String nombre = request.getParameter("nombre");
+		String detalles = request.getParameter("detalles");
+		String fechaEventoStr = request.getParameter("EDITfechaEvento");
+		String tipoActividad = request.getParameter("tipoActividad");
+		String ubicacion = request.getParameter("ubicacion");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date fechaEvento = null;
+		try {
+			fechaEvento = new Date(dateFormat.parse(fechaEventoStr).getTime());
+		} catch (ParseException e) {
+			// Manejar el error de formato de fecha
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"Formato de fecha de evento inválido\"}", response);
+			return;
+		}
 
-	    EventoConActividad evento = new EventoConActividad(idEvento, nombre, detalles, ubicacion, tipoActividad, fechaEvento);
+		EventoConActividad evento = new EventoConActividad(idEvento, nombre, detalles, ubicacion, tipoActividad,
+				fechaEvento);
 
-	    try {
-	        DaoEventoConActividad.getInstance().editarEvento(evento, tipoActividad);
-	        // Evento editado exitosamente
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-	        ControlErrores.mostrarErrorGenerico("Error al editar el evento. Intente de nuevo.", response);
-	    }
+		try {
+			DaoEventoConActividad.getInstance().editarEvento(evento, tipoActividad);
+			// Evento editado exitosamente
+		} catch (SQLException e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			ControlErrores.mostrarErrorGenerico("Error al editar el evento. Intente de nuevo.", response);
+		}
 	}
-
-
 
 	/**
 	 * Elimina un evento existente en la base de datos.
@@ -402,11 +403,21 @@ public class GestorEvento extends HttpServlet {
 	 */
 	private void finalizarPublicacionEvento(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException {
+
 		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
 		HttpSession session = request.getSession();
-		int idModerador =  (int) session.getAttribute("idUsuario");
+		int idModerador = (int) session.getAttribute("idUsuario");
+		// Obtener el motivo finalización desde el parámetro de la solicitud
+		String motivoFinalizacionStr = request.getParameter("motivoFinalizacion");
+
+		// Convertir el valor del motivo finalización a un enum
+		motivoFinalizacion motivo = motivoFinalizacion.valueOf(motivoFinalizacionStr);
+
+		Date fechaFinalizacion = new Date(System.currentTimeMillis());
+		Evento evento = new Evento(idEvento, fechaFinalizacion, idModerador, motivo);
+
 		try {
-			DaoEvento.getInstance().finalizarPublicacionEvento(idEvento, idModerador);
+			DaoEvento.getInstance().finalizarPublicacionEvento(evento);
 			// System.out.println("Evento finalizado exitosamente!" );
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -610,9 +621,13 @@ public class GestorEvento extends HttpServlet {
 	public void obtenerEventosRechazados(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
 			throws SQLException, IOException {
 
+		// System.out.println("Entró en obtenerEventosRechazados");
+
 		// Obtener fechas de la solicitud, si están presentes
 		String fechaInicioParam = request.getParameter("fechaInicio");
 		String fechaFinParam = request.getParameter("fechaFin");
+		// System.out.println("Parámetro fechaInicio: " + fechaInicioParam);
+		// System.out.println("Parámetro fechaFin: " + fechaFinParam);
 
 		// Convertir fechas a objetos Date
 		Date fechaInicio = null;
@@ -622,8 +637,11 @@ public class GestorEvento extends HttpServlet {
 			try {
 				fechaInicio = Date.valueOf(fechaInicioParam);
 				fechaFin = Date.valueOf(fechaFinParam);
+				// System.out.println("Fecha de inicio convertida: " + fechaInicio);
+				// System.out.println("Fecha de fin convertida: " + fechaFin);
 			} catch (IllegalArgumentException e) {
 				// Manejar error de formato de fecha
+				// System.out.println("Error en el formato de las fechas: " + e.getMessage());
 				ControlErrores.mostrarErrorGenerico("{\"error\": \"Formato de fecha incorrecto\"}", response);
 				return;
 			}
@@ -632,13 +650,17 @@ public class GestorEvento extends HttpServlet {
 		try {
 			// Crear un objeto DaoEvento para manejar la obtención de eventos
 			DaoEvento daoEvento = new DaoEvento();
+			// System.out.println("DaoEvento creado");
 
 			// Obtener eventos rechazados en formato JSON y enviarlos al PrintWriter
-			out.print(daoEvento.listarJsonRechazados(fechaInicio, fechaFin));
+			String eventosJson = daoEvento.listarJsonRechazados(fechaInicio, fechaFin);
+			// System.out.println("Eventos rechazados obtenidos: " + eventosJson);
+			out.print(eventosJson);
 
 		} catch (SQLException e) {
 			// En caso de error, mostrar un mensaje de error genérico y enviarlo en formato
 			// JSON a la respuesta
+			// System.out.println("Error en la consulta SQL: " + e.getMessage());
 			e.printStackTrace();
 			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
 		}

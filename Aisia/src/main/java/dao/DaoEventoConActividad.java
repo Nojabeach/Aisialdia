@@ -129,7 +129,7 @@ public class DaoEventoConActividad {
 		if (numEventos != -1) {
 			sql += " LIMIT ?";
 		}
-		// System.out.println(sql);
+		//System.out.println(sql);
 		PreparedStatement ps = con.prepareStatement(sql);
 
 		int paramIndex = 1;
