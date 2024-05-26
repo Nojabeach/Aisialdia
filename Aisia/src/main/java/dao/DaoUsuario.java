@@ -133,17 +133,20 @@ public class DaoUsuario {
 			stmt.setInt(1, idUsuario);
 			ResultSet rs = stmt.executeQuery();
 			if (rs.next()) {
-				// Obtener los campos necesarios
-				int id = rs.getInt("idUsuario");
-				String nombre = rs.getString("nombre");
-				String email = rs.getString("email");
-				boolean recibeNotificaciones = rs.getBoolean("recibeNotificaciones");
-				String intereses = rs.getString("intereses");
+				 // Obtener los campos necesarios
+                int id = rs.getInt("idUsuario");
+                String nombre = rs.getString("nombre");
+                String email = rs.getString("email");
+                boolean recibeNotificaciones = rs.getBoolean("recibeNotificaciones");
+                String intereses = rs.getString("intereses");
+                int permiso = rs.getInt("permiso");
+                String rolStr = rs.getString("roles"); 
+                Rol rol = Rol.valueOf(rolStr); 
+                Date fechaNacimiento = rs.getDate("fechaNacimiento");
 
-				Date fechaNacimiento = rs.getDate("fechaNacimiento");
 
 				// Crear y retornar el objeto Usuario con los campos obtenidos
-				return new Usuario(id, nombre, email, recibeNotificaciones, intereses, fechaNacimiento);
+				return new Usuario(id, nombre, email, recibeNotificaciones, intereses, permiso,rol,fechaNacimiento);
 
 			}
 		}
@@ -172,6 +175,36 @@ public class DaoUsuario {
 			ps.setString(4, usuario.getIntereses());
 			ps.setBoolean(5, usuario.isRecibeNotificaciones());
 			ps.setInt(6, usuario.getIdUsuario());
+			ps.executeUpdate();
+		}
+	}
+
+	
+	/**
+	 * Actualiza la información de un usuario en la base de datos.
+	 * 
+	 * @param usuario Objeto Usuario con la información actualizada del usuario.
+	 * @throws Exception Si ocurre un error al editar el usuario.
+	 */
+	
+	/**
+	 * Edita un usuario en la base de datos con los nuevos datos proporcionados por el perfil de Administrador.
+	 * 
+	 * @param usuario El objeto Usuario con los datos actualizados.
+	 * @throws SQLException Si ocurre algún error de SQL al intentar editar el
+	 *                      usuario.
+	 */
+	public void editarUsuarioAdmin(Usuario usuario) throws SQLException {
+		String sql = "UPDATE usuarios SET nombre = ?,  email = ?, fechaNacimiento = ?, intereses = ?, recibeNotificaciones = ?, roles=?,permiso=? WHERE idUsuario = ?";
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, usuario.getNombre());
+			ps.setString(2, usuario.getEmail());
+			ps.setDate(3, usuario.getFechaNacimiento());
+			ps.setString(4, usuario.getIntereses());
+			ps.setBoolean(5, usuario.isRecibeNotificaciones());
+			ps.setString(6,usuario.getRoles().name());
+			ps.setInt(7,usuario.getPermiso());
+			ps.setInt(8, usuario.getIdUsuario());
 			ps.executeUpdate();
 		}
 	}
@@ -299,8 +332,8 @@ public class DaoUsuario {
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
 					Usuario usuario = new Usuario(rs.getInt("idUsuario"), rs.getString("nombre"), rs.getString("email"),
-							rs.getDate("fechaNacimiento"), rs.getBoolean("recibeNotificaciones"),
-							rs.getString("intereses"), rs.getInt("permiso"), Rol.valueOf(rs.getString("rol"))
+							 rs.getBoolean("recibeNotificaciones"),rs.getString("intereses"), rs.getInt("permiso"), 
+							 Rol.valueOf(rs.getString("rol")),rs.getDate("fechaNacimiento")
 
 					);
 					usuarios.add(usuario);

@@ -108,7 +108,6 @@ function usuario_cargarFormularioDesdeServlet(servlet,
 
       // Mostrar el formulario y activar el botón de "Editar"
       document.getElementById(formularioId).style.display = 'block';
-      document.getElementById('crear-usuario-button').style.display = 'none';
       document.getElementById('editar-usuario-button').style.display = 'block';
     })
     .catch((error) => {

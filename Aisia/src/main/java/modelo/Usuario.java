@@ -219,17 +219,17 @@ public class Usuario {
 	 * @param permiso              El permiso del usuario.
 	 * @param roles                Los roles del usuario.
 	 */
-	public Usuario(int idUsuario, String nombre, String email, Date fechaNacimiento, boolean recibeNotificaciones,
-			String intereses, int permiso, Rol roles) {
+	public Usuario(int idUsuario, String nombre, String email, boolean recibeNotificaciones,
+			String intereses, int permiso, Rol roles, Date fechaNacimiento) {
 
 		this.idUsuario = idUsuario;
 		this.nombre = nombre;
 		this.email = email;
-		this.fechaNacimiento = fechaNacimiento;
 		this.recibeNotificaciones = recibeNotificaciones;
 		this.intereses = intereses;
 		this.permiso = permiso;
 		this.roles = roles;
+		this.fechaNacimiento = fechaNacimiento;
 	}
 
 	// GETTERS Y SETTERS PARA TODOS LOS ATRIBUTOS

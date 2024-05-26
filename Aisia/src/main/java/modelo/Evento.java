@@ -567,15 +567,6 @@ public class Evento {
 		DaoEvento.getInstance().crearEvento(evento, actividades, timestamp);
 	}
 
-	/**
-	 * Edita un evento existente en la base de datos.
-	 * 
-	 * @param evento El evento a editar.
-	 * @throws SQLException Si ocurre un error al editar el evento.
-	 */
-	public void editarEvento(Evento evento, int idUsuario) throws SQLException {
-		DaoEvento.getInstance().editarEvento(this);
-	}
 
 	/**
 	 * Elimina un evento de la base de datos.

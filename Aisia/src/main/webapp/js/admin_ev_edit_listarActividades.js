@@ -4,7 +4,7 @@ window.onload = function () {
   };
   
   function EDITobtenerActividades() {
-    console.log("Obteniendo Actividades");
+    console.log("Obteniendo Actividades para el select de Editar Actividad");
     fetch("GestorActividad?action=visualizarActividades")
       .then((response) => {
         if (!response.ok) {

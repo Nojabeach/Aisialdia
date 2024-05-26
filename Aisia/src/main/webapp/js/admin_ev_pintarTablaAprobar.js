@@ -79,7 +79,8 @@ function pintarTablaAprobarRechazar(data, container) {
 
 // Asignar eventos de aprobación y rechazo a los botones
 function asignarEventosAprobarRechazar() {
-    document.querySelectorAll('.boton-primario').forEach(boton => {
+
+    document.querySelectorAll('#PendientesAprobar-tabla tbody .boton-primario').forEach(boton => {
         boton.addEventListener('click', function () {
             let idEvento = this.dataset.eventoId;
             console.log('Asignar evento a aprobar', idEvento);
@@ -87,7 +88,7 @@ function asignarEventosAprobarRechazar() {
         });
     });
 
-    document.querySelectorAll('.boton-secundario').forEach(boton => {
+    document.querySelectorAll('#PendientesAprobar-tabla tbody .boton-secundario').forEach(boton => {
         boton.addEventListener('click', function () {
             let idEvento = this.dataset.eventoId;
             console.log('Asignar evento a rechazar', idEvento);

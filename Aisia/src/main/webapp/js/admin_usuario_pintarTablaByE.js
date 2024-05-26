@@ -69,7 +69,7 @@ function usuario_pintarTablaEditarYBorrar(data, container) {
 }
 
 function asignarUsuarioABorrar() {
-    document.querySelectorAll('.boton-primario, .boton-secundario').forEach(boton => {
+    document.querySelectorAll('#usuarios-tabla tbody .boton-primario, #usuarios-tabla tbody .boton-secundario').forEach(boton => {
         boton.addEventListener('click', function() {
             let idUsuario = this.dataset.idUsuario; 
             let action = this.textContent.toLowerCase();
@@ -107,9 +107,9 @@ function eliminarUsuario(idUsuario) { // Cambiado el nombre de la función
 
 
 function editarUsuario(idUsuario, tabId) {
-    mostrarTab(tabId);
+    USmostrarTab(tabId);
     let servlet = "GestorUsuario";
-    let action = "obtenerInfoUsuario";
+    let action = "obtenerINFOUsuario";
     let op = idUsuario;
     let metodo = "GET";
     let formularioId = "EDITusuariosForm";
@@ -117,7 +117,7 @@ function editarUsuario(idUsuario, tabId) {
     usuario_cargarFormularioDesdeServlet(servlet, action, op, formularioId, metodo);
 }
 
-function mostrarTab(tabId) {
+function USmostrarTab(tabId) {
     const tab = document.getElementById(tabId);
     const allTabs = document.querySelectorAll('.usuarios-tab');
 

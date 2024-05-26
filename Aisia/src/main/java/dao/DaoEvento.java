@@ -88,33 +88,6 @@ public class DaoEvento {
 		}
 	}
 
-	/**
-	 * Edita un evento existente en la base de datos.
-	 *
-	 * @param evento El evento a editar.
-	 * @throws SQLException
-	 * 
-	 */
-	public void editarEvento(Evento evento) throws SQLException {
-
-		String sql = "UPDATE eventos SET nombre = ?, detalles = ?, fechaUltimaModificacion = ?, fechaPublicacion = ?, "
-				+ "idModeradorPublicacion = ?, fechaFinalizacion = ?, idModeradorFinalizacion = ?, motivoFinalizacion = ?,"
-				+ " ubicacion = ? WHERE idEvento = ?";
-		PreparedStatement ps = con.prepareStatement(sql);
-
-		ps.setString(1, evento.getNombre());
-		ps.setString(2, evento.getDetalles());
-		ps.setTimestamp(3, new Timestamp(System.currentTimeMillis())); // Actualizar la fecha de última modificación
-		ps.setDate(4, evento.getFechaPublicacion());
-		ps.setInt(5, evento.getIdModeradorPublicacion());
-		ps.setDate(6, evento.getFechaFinalizacion());
-		ps.setInt(7, evento.getIdModeradorFinalizacion());
-		ps.setString(8, evento.getMotivoFinalizacion().toString());
-		ps.setString(9, evento.getUbicacion());
-		ps.setInt(10, evento.getIdEvento());
-		ps.executeUpdate();
-		ps.close();
-	}
 
 	/**
 	 * Elimina un evento de la base de datos.

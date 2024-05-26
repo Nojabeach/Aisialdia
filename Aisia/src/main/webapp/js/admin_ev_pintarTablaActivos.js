@@ -71,7 +71,8 @@ function EVAdmin_pintarTablaEditarYBorrar(data, container) {
 }
 
 function EVAdmin_asignarEventoABorrar() {
-    document.querySelectorAll('.boton-primario').forEach(boton => {
+
+    document.querySelectorAll('#Publicados-tabla tbody .boton-primario').forEach(boton => {
         boton.addEventListener('click', function() {
             let idEvento = this.dataset.idEvento;
             EVAdmin_eliminarEvento(idEvento);
@@ -80,7 +81,7 @@ function EVAdmin_asignarEventoABorrar() {
 }
 
 function EVAdmin_asignarEventoAEditar() {
-    document.querySelectorAll('.boton-secundario').forEach(boton => {
+    document.querySelectorAll('#Publicados-tabla tbody .boton-secundario').forEach(boton => {
         boton.addEventListener('click', function() {
             let idEvento = this.dataset.idEvento;
             let tabId = this.dataset.tabId;

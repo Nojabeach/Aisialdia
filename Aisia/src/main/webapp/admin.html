@@ -17,8 +17,8 @@
     <!-- Enlace de scripts -->
     <script src="js/checkLogin.js"></script><!-- Script para comprobar si el usuario está logueado -->
 
-    <script src="js/cargarIntereses.js"></script>
-    <!-- Script para cargar los intereses en el formulario de creación de usuario -->
+
+
     <script src="js/admin_ev_crear_listarActividades.js"></script>
     <script src="js/admin_ev_edit_listarActividades.js"></script>
     <!-- Script para cargar las actividades en el formulario de edición de eventos -->
@@ -47,6 +47,8 @@
     <script src="js/actividad_actualizarTabla.js"></script>
     <!-- Script para actualizar los datos de la tabla de actividaes-->
 
+    <!-- Script para cargar los intereses en el formulario de creación de usuario -->
+    <script src="js/admin_usuario_crear_cargarIntereses.js"></script>
 
 </head>
 
@@ -227,7 +229,9 @@
                         method="POST">
                         <fieldset>
                             <legend>Datos del Evento</legend>
-
+                            <div class="form-group">
+                                <input type="text" id="EDITidEvento" name="idEvento" hidden>
+                            </div>
                             <div class="form-group">
                                 <label for="nombre">Nombre:</label>
                                 <input type="text" id="nombre" name="EDITnombre" required>
@@ -320,7 +324,7 @@
                 <p>Haga click sobre la opción deseada:</p>
                 <nav id="usuarios-navbar">
                     <a href="#usuarios-crear">Crear Usuario</a>
-                    <a href="#usuarios-editar">Editar Usuario</a>
+                    <a href="#usuarios-editar" hidden>Editar Usuario</a>
                     <a href="#usuarios-activos">Visualizar Usuarios</a>
                 </nav>
 
@@ -354,9 +358,10 @@
                                 </label>
                             </div>
                             <div class="form-group">
-                                <label for="intereses-crear" aria-label="Intereses">Intereses:</label>
-                                <select id="intereses-crear" name="intereses" required>
+                                <label for="intereses-crear" aria-label="intereses-crear">Intereses:</label>
+                                <select id="intereses-crear" name="intereses-crear" required>
                                     <option value="">Seleccione un interés</option>
+                                    <!-- INTERESES CREAR:Las opciones se cargarán dinámicamente con JS -->
                                 </select>
                             </div>
                             <div class="form-group">
@@ -374,10 +379,13 @@
                     </form>
                 </div>
                 <div id="usuarios-editar" class="usuarios-tab">
-                    <form id="EDITusuariosForm" class="form-admin" action="GestorUsuario?action=editarUsuario"
+                    <form id="EDITusuariosForm" class="form-admin" action="GestorUsuario?action=editarUsuarioAdmin"
                         method="post">
                         <fieldset>
                             <legend>Datos del Usuario</legend>
+                            <div class="form-group">
+                                <input type="text" id="EDITidUsuario" name="idUsuario" hidden>
+                            </div>
                             <div class="form-group">
                                 <label for="nombre" aria-label="Nombre">Nombre:</label>
                                 <input type="text" id="nombre" name="EDITnombre" placeholder="Escribe tu nombre"
@@ -387,11 +395,6 @@
                                 <label for="email" aria-label="Correo electrónico">Correo electrónico:</label>
                                 <input type="email" id="email" name="EDITemail"
                                     placeholder="Escribe tu correo electrónico" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="contrasena" aria-label="Contraseña">Contraseña:</label>
-                                <input type="password" id="contrasena" name="EDITcontrasena"
-                                    placeholder="Escribe tu contraseña" required>
                             </div>
                             <div class="form-group">
                                 <label for="fechaNacimiento" aria-label="Fecha de nacimiento">Fecha de
@@ -405,9 +408,10 @@
                                 </label>
                             </div>
                             <div class="form-group">
-                                <label for="intereses-editar" aria-label="Intereses">Intereses:</label>
-                                <select id="intereses-editar" name="intereses" required>
+                                <label for="intereses-editar" aria-label="EDITintereses">Intereses:</label>
+                                <select id="intereses-editar" id="EDITintereses" required>
                                     <option value="">Seleccione un interés</option>
+                                    <!-- INTERESES EDITAR:Las opciones se cargarán dinámicamente con JS -->
                                 </select>
                             </div>
                             <div class="form-group">

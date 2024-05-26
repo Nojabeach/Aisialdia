@@ -73,7 +73,7 @@ function pintarTablaPublicar(data, container) {
 
 // Asignar evento de publicacion a los botones
 function asignarEventoPublicar() {
-    document.querySelectorAll('.boton-primario').forEach(boton => {
+    document.querySelectorAll('#PendientesPublicar-tabla tbody .boton-primario').forEach(boton => {
         boton.addEventListener('click', function () {
             let idEvento = this.dataset.eventoId;
             console.log('Asignar evento a publicar', idEvento);

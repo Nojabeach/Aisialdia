@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import modelo.Actividad;
 import modelo.Evento;
+import modelo.EventoConActividad;
 
 /**
  * Servlet implementation class GestorEvento
@@ -263,24 +266,39 @@ public class GestorEvento extends HttpServlet {
 	 *                 respuesta HTTP.
 	 * @throws SQLException Si se produce un error en la base de datos.
 	 * @throws IOException  Si se produce un error de entrada/salida.
+	 * @throws ParseException Si se prodcue un error a la hora de parsear las fechas de nacimiento
 	 */
 	private void editarEvento(HttpServletRequest request, HttpServletResponse response)
-			throws SQLException, IOException {
-		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
-		String nombre = request.getParameter("nombre");
-		String detalles = request.getParameter("detalles");
-		String fechaEventoStr = request.getParameter("fechaEvento");
-		Date fechaEvento = Date.valueOf(fechaEventoStr); // Convertir la cadena a Date
-		Evento evento = new Evento(idEvento, nombre, detalles, fechaEvento);
-		try {
-			DaoEvento.getInstance().editarEvento(evento);
-			// System.out.println("Evento editado exitosamente!");
-		} catch (SQLException e) {
-			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			ControlErrores.mostrarErrorGenerico("Error al editar el evento. Intente de nuevo.", response);
-		}
+	        throws SQLException, IOException, ParseException {
+	    int idEvento = Integer.parseInt(request.getParameter("idEvento"));
+	    String nombre = request.getParameter("nombre");
+	    String detalles = request.getParameter("detalles");
+	    String fechaEventoStr = request.getParameter("EDITfechaEvento");
+	    String tipoActividad = request.getParameter("tipoActividad");
+	    String ubicacion = request.getParameter("ubicacion");
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	    Date fechaEvento = null;
+	    try {
+	        fechaEvento = new Date(dateFormat.parse(fechaEventoStr).getTime());
+	    } catch (ParseException e) {
+	        // Manejar el error de formato de fecha
+	        ControlErrores.mostrarErrorGenerico("{\"error\": \"Formato de fecha de evento inválido\"}", response);
+	        return;
+	    }
+
+	    EventoConActividad evento = new EventoConActividad(idEvento, nombre, detalles, ubicacion, tipoActividad, fechaEvento);
+
+	    try {
+	        DaoEventoConActividad.getInstance().editarEvento(evento, tipoActividad);
+	        // Evento editado exitosamente
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	        ControlErrores.mostrarErrorGenerico("Error al editar el evento. Intente de nuevo.", response);
+	    }
 	}
+
+
 
 	/**
 	 * Elimina un evento existente en la base de datos.

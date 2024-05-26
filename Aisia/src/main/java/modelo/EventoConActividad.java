@@ -98,6 +98,28 @@ public class EventoConActividad {
 		this.fotoActividad = fotoActividad;
 	}
 
+	/**
+	 * Constructor que inicializa un objeto EventoConActividad con todos los
+	 * atributos.
+	 *
+	 * @param idEvento      El identificador del evento.
+	 * @param nombre        El nombre del evento.
+	 * @param detalles      Los detalles del evento.
+	 * @param ubicacion     La ubicación del evento.
+	 * @param tipoActividad El tipo de actividad asociada al evento.
+	 * @param fechaEvento   La fecha en la que tiene lugar el evento.
+	 */
+
+	public EventoConActividad(int idEvento, String nombre, String detalles, String ubicacion, String tipoActividad,
+			Date fechaEvento) {
+		super();
+		this.idEvento = idEvento;
+		this.nombre = nombre;
+		this.detalles = detalles;
+		this.ubicacion = ubicacion;
+		this.tipoActividad = tipoActividad;
+		this.fechaEvento = fechaEvento;
+	}
 	// GETTERS Y SETTERS PARA TODOS LOS ATRIBUTOS
 	// --------------------------------------------------------------------------------------------
 
@@ -284,5 +306,15 @@ public class EventoConActividad {
 		return DaoEventoConActividad.getInstance().obtenerEventoConActividad(idEvento);
 	}
 
+	
+	/**
+	 * Edita un evento existente en la base de datos.
+	 * 
+	 * @param evento El evento a editar.
+	 * @throws SQLException Si ocurre un error al editar el evento.
+	 */
+	public void editarEvento(EventoConActividad evento, String tipoActividad) throws SQLException {
+		DaoEventoConActividad.getInstance().editarEvento(evento, tipoActividad);
+	}
 
 }
