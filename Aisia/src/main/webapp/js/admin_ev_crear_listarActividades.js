@@ -1,7 +1,7 @@
-window.onload = function () {
+document.addEventListener('DOMContentLoaded', function() {
   console.log('Script admin_ev_crear_listarActividades cargado');
   EVcrearobtenerActividades();
-};
+});
 
 function EVcrearobtenerActividades() {
   console.log("Obteniendo Actividades para el select de Crear Actividad");
@@ -13,8 +13,13 @@ function EVcrearobtenerActividades() {
       console.log("Actividades obtenidas correctamente");
       return response.json();
     })
-    .then((datos) => EVcrearpintarSelect(datos))
-    .catch((error) => console.error("Error al obtener las actividades:", error));
+    .then((datos) => {
+      console.log("Datos obtenidos:", datos);
+      EVcrearpintarSelect(datos);
+    })
+    .catch((error) => {
+      console.error("Error al obtener las actividades:", error);
+    });
 }
 
 function EVcrearpintarSelect(datos) {
@@ -24,6 +29,7 @@ function EVcrearpintarSelect(datos) {
   select.innerHTML = ""; // Limpiar el select antes de agregar nuevas opciones
 
   datos.forEach(actividad => {
+    console.log("Actividad:", actividad);
     let option = document.createElement("option");
     option.value = actividad.idActividad;
     option.textContent = actividad.tipoActividad;
@@ -50,6 +56,10 @@ function EVcrearMostrarImagen(image, option) {
   let fotoActividad = option.getAttribute("data-foto");
   let tipoActividad = option.getAttribute("data-tipo").toLowerCase();
   let actividadText = option.textContent;
+
+  console.log("Foto Actividad:", fotoActividad);
+  console.log("Tipo Actividad:", tipoActividad);
+  console.log("Actividad Text:", actividadText);
 
   // Cargar la imagen correspondiente cuando se selecciona una opción
   let img = new Image();

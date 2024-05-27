@@ -109,7 +109,7 @@ function aprobarEvento(idEvento){
         .then(response => {
             if (response.ok) {
                 console.log('Evento aprobado correctamente, actualizo la lista');
-                window.location.reload();
+                window.location.href = 'admin.html'
             } else {
                 console.error('Error al aprobar el evento');
             }
@@ -128,7 +128,7 @@ function rechazarEvento(idEvento){
         .then(response => {
             if (response.ok) {
                 console.log('Evento rechazado correctamente, actualizo la lista');
-                window.location.reload();
+                window.location.href = 'admin.html'
             } else {
                 console.error('Error al rechazar el evento');
             }

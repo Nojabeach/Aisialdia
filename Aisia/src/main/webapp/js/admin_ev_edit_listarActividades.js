@@ -1,8 +1,8 @@
-window.onload = function () {
+
+  document.addEventListener('DOMContentLoaded', function() {
     console.log("Cargando Actividades");
     EDITobtenerActividades();
-  };
-  
+  });
   function EDITobtenerActividades() {
     console.log("Obteniendo Actividades para el select de Editar Actividad");
     fetch("GestorActividad?action=visualizarActividades")

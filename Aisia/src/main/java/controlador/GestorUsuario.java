@@ -442,7 +442,7 @@ public class GestorUsuario extends HttpServlet {
 	private void crearUsuario(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 
-		System.out.println(request.getHeader("Referer"));
+		//System.out.println(request.getHeader("Referer"));
 		String HtmlOrigen = request.getHeader("Referer");
 
 		if (HtmlOrigen == null) {

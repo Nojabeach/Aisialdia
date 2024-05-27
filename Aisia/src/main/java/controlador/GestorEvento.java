@@ -338,6 +338,7 @@ public class GestorEvento extends HttpServlet {
 		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
 		try {
 			DaoEvento.getInstance().publicarEvento(idEvento, request);
+			response.sendRedirect("admin.html");
 			// System.out.println("Evento publicado exitosamente!");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -383,6 +384,7 @@ public class GestorEvento extends HttpServlet {
 		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
 		try {
 			DaoEvento.getInstance().aprobarPublicacionEvento(idEvento, request);
+			response.sendRedirect("admin.html");
 			// System.out.println("Evento aprobado para su publicación!");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -418,6 +420,7 @@ public class GestorEvento extends HttpServlet {
 
 		try {
 			DaoEvento.getInstance().finalizarPublicacionEvento(evento);
+			response.sendRedirect("admin.html");
 			// System.out.println("Evento finalizado exitosamente!" );
 		} catch (SQLException e) {
 			e.printStackTrace();

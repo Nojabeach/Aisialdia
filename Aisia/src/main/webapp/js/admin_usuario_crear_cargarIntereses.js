@@ -1,7 +1,7 @@
 window.onload = function () {
     // Obtener los select de intereses en el formulario de creación de usuario
-    const interesesCrearSelect = document.getElementById("intereses");
-    const interesesEditarSelect = document.getElementById("intereses-editar");
+    const interesesCrearSelect = document.getElementById("intereses-crear");
+    const interesesEditarSelect = document.getElementById("intereses");
 
     // Realizar una solicitud Fetch al servidor para obtener los datos de intereses
     fetch("GestorIntereses?accion=listar")

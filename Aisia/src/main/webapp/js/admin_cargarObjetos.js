@@ -126,7 +126,7 @@ function addRowClickListeners() {
         const finalizarEventosForm = document.getElementById('finalizarEventosForm');
         finalizarEventosForm.action = `GestorEvento?action=finalizarPublicacionEvento&idEvento=${selectedEventID}&motivoFinalizacion=${motivoFinalizacion.value}`;
         finalizarEventosForm.submit();
-        window.location.reload();
+        window.location.href = 'admin.html'
       } else {
         event.preventDefault();
         alert('Por favor, seleccione un evento antes de finalizar.');

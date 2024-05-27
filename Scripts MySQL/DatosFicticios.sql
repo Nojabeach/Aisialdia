@@ -4,7 +4,7 @@ INSERT INTO actividades (tipoActividad, fotoActividad) VALUES
 ('adolescentes', 'adolescentes.png'),
 ('bebe', 'bebe.png'),
 ('cultura', 'cultura.png'),
-('ciclismo', 'bici.png'),
+('ciclismo', 'ciclismo.png'),
 ('deportiva', 'deportiva.png'),
 ('indoor', 'indoor.png'),
 ('carrera', 'carrera.png'),
