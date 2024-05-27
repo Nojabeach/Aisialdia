@@ -168,9 +168,9 @@ public class GestorActividad extends HttpServlet {
 		try {
 			System.out.println("crearActividad");
 			DaoActividad.getInstance().crearActividad(actividad);
-			System.out.println("actividad creada");
-			response.setStatus(HttpServletResponse.SC_OK);
-			
+			//System.out.println("actividad creada");
+			//response.setStatus(HttpServletResponse.SC_OK);
+			response.sendRedirect("admin.html");
 
 			// response.getWriter().println("Actividad creada exitosamente!");
 		} catch (SQLException e) {
