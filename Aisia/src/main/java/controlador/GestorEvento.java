@@ -276,7 +276,7 @@ public class GestorEvento extends HttpServlet {
 		String nombre = request.getParameter("nombre");
 		String detalles = request.getParameter("detalles");
 		String fechaEventoStr = request.getParameter("EDITfechaEvento");
-		String tipoActividad = request.getParameter("tipoActividad");
+		String tipoActividad = request.getParameter("EDITactivity");
 		String ubicacion = request.getParameter("ubicacion");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date fechaEvento = null;

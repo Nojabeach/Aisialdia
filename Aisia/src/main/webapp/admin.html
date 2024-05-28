@@ -26,15 +26,17 @@
     <!-- Script para cargar los intereses en el formulario de creación de usuario -->
     <script src="js/admin_usuario_crear_cargarIntereses.js"></script>
 
-    <!-- Script para cargar las actividades en el formulario de edición de eventos -->
+
 
     <script src="js/formularios.js"></script> <!-- Script para controlar los formularios -->
 
+    <!-- Script para cargar los datos de la actividad en el formulario de edición -->
     <script src="js/actividad_pintarTablaByE.js"></script><!-- Script para pintar la tabla de actividades -->
-    <script src="js/actividad_verIMG.js"></script>
-    <!-- Script para ver la imagen de la actividad tanto en crear como en editar -->
+
 
     <script src="js/admin_ev_pintarTablaActivos.js"></script><!-- Script para pintar la tabla de eventos -->
+    <script src="js/admin_ev_pintarIMG.js"></script>
+    <!-- Script para pintar la imagen de las actividades en los eventos-->
     <script src="js/pintarTabla.js"></script><!--Script para pintar eventos rechazados-->
     <script src="js/admin_ev_rechazados.js"></script><!-- Script para buscar eventos rechazados -->
     <script src="js/admin_ev_pintarTablaAprobar.js"></script>
@@ -51,6 +53,8 @@
     <script src="js/admin_controlTabs.js"></script> <!-- Script para controlar la funcionalidad de las TABS-->
 
     <script src="js/admin_cargarObjetos.js"></script>
+
+    <script src="js/admin_actividad_datos.js"></script>     <!-- Script para cargar las actividades en el formulario de edición de eventos -->
 
 
 
@@ -113,16 +117,16 @@
                 </nav>
 
                 <div id="actividades-crear" class="actividades-tab">
-                    <form class="form-admin" id="actividadesForm" enctype="multipart/form-data">
+                    <form class="form-admin" id="actividadesForm" enctype="multipart/form-data" action="GestorActividad?action=crearActividad">
                         <fieldset>
                             <legend>Datos de la Actividad</legend>
                             <div class="form-group">
                                 <label for="tipoActividad">Tipo de Actividad:</label>
-                                <input type="text" id="tipoActividad" name="tipoActividad" required>
+                                <input type="text" id="crearACtipoActividad" name="tipoActividad" required>
                             </div>
                             <div class="form-group">
                                 <label for="photo">Foto:</label>
-                                <input type="file" id="fotoActividad" name="fotoActividad">
+                                <input type="file" id="crearACfotoActividad" name="fotoActividad">
                                 <div id="photo-preview">
                                     <img src="#" alt="Preview" id="img-photo" style="display: none;">
                                     <button type="button" id="delete-photo" style="display: none;">Eliminar
@@ -135,8 +139,8 @@
                         </fieldset>
                     </form>
                 </div>
-                <div id="actividades-editar" class="actividades-tab" style="display: none;">
-                    <form class="form-admin" id="EDITactividadesForm" enctype="multipart/form-data">
+                <div id="actividades-editar" class="actividades-tab" style="display: none;" >
+                    <form class="form-admin" id="EDITactividadesForm" enctype="multipart/form-data" action="GestorActividad?action=editarActividad">
                         <fieldset>
                             <legend>Editar Actividad</legend>
                             <div class="form-group">
@@ -257,13 +261,14 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="EDITactivity">Actividad:</label>
-                                <div id="EDITactivity-container">
-                                    <img id="EDITactivity-image" src="img/Varios/default_ACT.png"
-                                        alt="Icono de actividad" style="width: 48px; height: 48px;display: none; ">
-                                    <select id="EDITactivity" name="EDITactivity" required>
-                                        <!-- Las opciones se cargarán dinámicamente con JS -->
-                                    </select>
+
+                                <label for="tipoActividad" aria-label="tipoActividad">Actividad:</label>
+                                <select id="tipoActividad" name="tipoActividad" required>
+                                    <!-- INTERESES CREAR:Las opciones se cargarán dinámicamente con JS -->
+                                </select>
+
+                                <div id="imagen-actividad">
+                                    <!-- La imagen se cargará aquí -->
 
                                 </div>
                             </div>

@@ -89,14 +89,14 @@ function usuario_cargarFormularioDesdeServlet(servlet,
   method
 ) {
   console.log("Realizando llamada a:", servlet);
-  
+
   console.log("fetch", fetch(`${servlet}?action=${action}&idUsuario=${op}`));
 
   fetch(`${servlet}?action=${action}&idUsuario=${op}`, {
     method: method, // Pasar el método de solicitud como atributo
   })
     .then((response) => {
-  
+
       if (!response.ok) {
         throw new Error("Error al cargar los datos");
       }
@@ -148,8 +148,8 @@ function llenarFormulario(data, formularioId) {
         let file = new File([blob], imgName, { type: "image/png" }); // Crear un objeto File
         let fileList = new DataTransfer(); // Crear un objeto DataTransfer
         fileList.items.add(file); // Agregar el archivo al objeto DataTransfer
-      
-        let imgPhoto  = document.getElementById('EDITimg-photo'); // Obtener el elemento de imagen
+
+        let imgPhoto = document.getElementById('EDITimg-photo'); // Obtener el elemento de imagen
         imgPhoto.src = imgPath + imgName; // Asignar la ruta de la imagen cargada
         imgPhoto.width = 100;
         imgPhoto.height = 100;

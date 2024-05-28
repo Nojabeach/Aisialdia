@@ -81,7 +81,7 @@ function actividad_pintarTablaEditarYBorrar(data, container) {
 }
 
 function asignarActividadABorrar() {
-    document.querySelectorAll('.boton-primario, .boton-secundario').forEach(boton => {
+    document.querySelectorAll('actividades-tabla tbody .boton-primario, actividades-tabla tbody .boton-secundario').forEach(boton => {
         boton.addEventListener('click', function() {
             let idActividad = this.dataset.idActividad;
             let action = this.textContent.toLowerCase();
