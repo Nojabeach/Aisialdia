@@ -1,7 +1,7 @@
 // Llamar a la función al cargar la página
 document.addEventListener("DOMContentLoaded", function () {
   console.log("Cargando Favoritos");
-  obtenerFavoritos();
+  evento_obtenerFavoritos();
 
   console.log("Cargando eventos activos");
   obtenerTodosLosEventosActivos();
@@ -14,16 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-function obtenerFavoritos() {
-  fetch("GestorFavorito?action=obtenerEventosFavoritos")
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      const contenedorAPintar = document.getElementById("favoritos-tabla");
-      pintarTablaSoloBorrar_Favorito(data, contenedorAPintar);
-      console.log("Pintando favoritos");
-    });
-}
+
 
 function obtenerTodosLosEventosActivos() {
   fetch("GestorEvento?action=obtenerTodosLosEventosActivos")
@@ -62,5 +53,16 @@ function busquedaEventos() {
       pintarTablaAgregarFavorito(data, contenedorAPintar); // Pintar la tabla
       console.log("Pintando eventos buscados");
   });
+}
+
+function evento_obtenerFavoritos() {
+  fetch("GestorFavorito?action=obtenerEventosFavoritos")
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      const contenedorAPintar = document.getElementById("favoritos-tabla");
+      pintarTablaSoloBorrar_Favorito(data, contenedorAPintar);
+      console.log("Pintando favoritos: ev_cargarObjetos.js");
+    });
 }
 

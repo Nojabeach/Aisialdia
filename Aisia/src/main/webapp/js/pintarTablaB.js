@@ -95,11 +95,32 @@ function eliminarEventoFavorito(idEvento) {
         .then(response => {
             if (response.ok) {
                 console.log('Evento eliminado correctamente, actualizo la lista');
-                // Actualizar la lista después de eliminar : tanto en eventos como en perfil
-                obtenerFavoritos();
-                perfil_obtenerFavoritos();
+                // Obtener la URL actual
+                const currentUrl = new URL(window.location.href);
+                        console.log (currentUrl);
+                // Comparar la URL actual con la URL de perfil.html
+                if (currentUrl.pathname === '/Aisia/perfil.html') {
+                    // Si estás en perfil.html, ejecutar perfil_obtenerFavoritos
+                    perfil_obtenerFavoritos();
+                } else if (currentUrl.pathname === '/Aisia/eventos.html') {
+                    // Si estás en eventos.html, ejecutar eventos_obtenerFavoritos
+                    obtenerFavoritos();
+                } else {
+                    // Si no estás en ninguna de las dos páginas, no hacer nada
+                    console.warn('No se encontró la función correspondiente para actualizar la lista de favoritos');
+                }
             } else {
                 console.error('Error al eliminar el evento');
             }
         });
 }
+function obtenerFavoritos() {
+    fetch("GestorFavorito?action=obtenerEventosFavoritos")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        const contenedorAPintar = document.getElementById("favoritos-tabla");
+        pintarTablaSoloBorrar_Favorito(data, contenedorAPintar);
+        console.log("Pintando favoritos : pintarTablaB.js");
+      });
+  }

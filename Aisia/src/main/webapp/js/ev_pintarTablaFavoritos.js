@@ -87,12 +87,9 @@ function agregarEventoFavorito(idEvento) {
     console.log('Agregando evento', idEvento);
     fetch('GestorFavorito', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
         body: `action=agregarFavorito&idEvento=${idEvento}`
     })
-        .then(response => {
+       .then(response => {
             if (response.ok) {
                 console.log('Evento agregado correctamente, actualizo la lista');
                 // Actualizar la lista después de agregar
@@ -100,5 +97,18 @@ function agregarEventoFavorito(idEvento) {
             } else {
                 console.error('Error al agregar el evento');
             }
+        })
+       .catch(error => {
+            console.error('Error en la solicitud:', error);
         });
 }
+function obtenerFavoritos() {
+    fetch("GestorFavorito?action=obtenerEventosFavoritos")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        const contenedorAPintar = document.getElementById("favoritos-tabla");
+        pintarTablaSoloBorrar_Favorito(data, contenedorAPintar);
+        console.log("Pintando favoritos:pintaTablaFavoritos.js");
+      });
+  }
