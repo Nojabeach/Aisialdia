@@ -133,20 +133,19 @@ public class DaoUsuario {
 			stmt.setInt(1, idUsuario);
 			ResultSet rs = stmt.executeQuery();
 			if (rs.next()) {
-				 // Obtener los campos necesarios
-                int id = rs.getInt("idUsuario");
-                String nombre = rs.getString("nombre");
-                String email = rs.getString("email");
-                boolean recibeNotificaciones = rs.getBoolean("recibeNotificaciones");
-                String intereses = rs.getString("intereses");
-                int permiso = rs.getInt("permiso");
-                String rolStr = rs.getString("roles"); 
-                Rol rol = Rol.valueOf(rolStr); 
-                Date fechaNacimiento = rs.getDate("fechaNacimiento");
-
+				// Obtener los campos necesarios
+				int id = rs.getInt("idUsuario");
+				String nombre = rs.getString("nombre");
+				String email = rs.getString("email");
+				boolean recibeNotificaciones = rs.getBoolean("recibeNotificaciones");
+				String intereses = rs.getString("intereses");
+				int permiso = rs.getInt("permiso");
+				String rolStr = rs.getString("roles");
+				Rol rol = Rol.valueOf(rolStr);
+				Date fechaNacimiento = rs.getDate("fechaNacimiento");
 
 				// Crear y retornar el objeto Usuario con los campos obtenidos
-				return new Usuario(id, nombre, email, recibeNotificaciones, intereses, permiso,rol,fechaNacimiento);
+				return new Usuario(id, nombre, email, recibeNotificaciones, intereses, permiso, rol, fechaNacimiento);
 
 			}
 		}
@@ -179,16 +178,16 @@ public class DaoUsuario {
 		}
 	}
 
-	
 	/**
 	 * Actualiza la información de un usuario en la base de datos.
 	 * 
 	 * @param usuario Objeto Usuario con la información actualizada del usuario.
 	 * @throws Exception Si ocurre un error al editar el usuario.
 	 */
-	
+
 	/**
-	 * Edita un usuario en la base de datos con los nuevos datos proporcionados por el perfil de Administrador.
+	 * Edita un usuario en la base de datos con los nuevos datos proporcionados por
+	 * el perfil de Administrador.
 	 * 
 	 * @param usuario El objeto Usuario con los datos actualizados.
 	 * @throws SQLException Si ocurre algún error de SQL al intentar editar el
@@ -202,10 +201,26 @@ public class DaoUsuario {
 			ps.setDate(3, usuario.getFechaNacimiento());
 			ps.setString(4, usuario.getIntereses());
 			ps.setBoolean(5, usuario.isRecibeNotificaciones());
-			ps.setString(6,usuario.getRoles().name());
-			ps.setInt(7,usuario.getPermiso());
+			ps.setString(6, usuario.getRoles().name());
+			ps.setInt(7, usuario.getPermiso());
 			ps.setInt(8, usuario.getIdUsuario());
 			ps.executeUpdate();
+		}
+	}
+
+	/**
+	 * Elimina todos los accesos asociados a un usuario.
+	 *
+	 * @param idUsuario El ID del usuario para el que se quieren eliminar los
+	 *                  accesos.
+	 * @throws Exception Si ocurre algún error al eliminar los accesos.
+	 */
+	public void eliminarAccesos(int idUsuario) throws Exception {
+		// Preparar la consulta SQL para eliminar los accesos del usuario
+		String sql = "DELETE FROM accesos WHERE idUsuario = ?";
+		try (PreparedStatement stmt = con.prepareStatement(sql)) {
+			stmt.setInt(1, idUsuario);
+			stmt.executeUpdate();
 		}
 	}
 
@@ -216,6 +231,12 @@ public class DaoUsuario {
 	 * @throws Exception Si ocurre un error al eliminar el usuario.
 	 */
 	public void eliminarUsuario(int idUsuario) throws Exception {
+		// Eliminar los favoritos del usuario
+		DaoFavorito.getInstance().eliminarFavoritosUsuario(idUsuario);
+
+		// Eliminar los accesos del usuario
+		eliminarAccesos(idUsuario);
+
 		// Preparar la consulta SQL para eliminar el usuario
 		String sql = "DELETE FROM usuarios WHERE idUsuario = ?";
 		try (PreparedStatement stmt = con.prepareStatement(sql)) {
@@ -285,34 +306,36 @@ public class DaoUsuario {
 	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
 	 */
 	public List<Usuario> obtenerUsuarios() throws SQLException {
-	    
-	    String sql = "SELECT * FROM usuarios ORDER BY idUsuario";
-	    List<Usuario> usuarios = new ArrayList<>();
 
-	    try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-	        while (rs.next()) {
-	            Usuario usuario = new Usuario();
-	            usuario.setIdUsuario(rs.getInt("idUsuario")); // ID del usuario
-	            usuario.setNombre(rs.getString("nombre")); // Nombre del usuario
-	            usuario.setEmail(rs.getString("email")); // Email del usuario
-	            //usuario.setContrasena(rs.getString("contrasena")); // Contraseña del usuario
-	            usuario.setFechaNacimiento(rs.getDate("fechaNacimiento")); // Fecha de nacimiento del usuario
-	            usuario.setRecibeNotificaciones(rs.getBoolean("recibeNotificaciones")); // Si recibe notificaciones
-	            usuario.setIntereses(rs.getString("intereses")); // Intereses del usuario
-	            usuario.setPermiso(rs.getInt("permiso")); // Permiso del usuario
-	            usuario.setRoles(Rol.valueOf(rs.getString("roles"))); // Rol del usuario
-	           // usuario.setConsentimientoDatos(rs.getDate("consentimientoDatos")); // Fecha de consentimiento de datos
-	           // usuario.setAceptacionTerminosWeb(rs.getDate("aceptacionTerminosWeb")); // Fecha de aceptación de términos web
+		String sql = "SELECT * FROM usuarios ORDER BY idUsuario";
+		List<Usuario> usuarios = new ArrayList<>();
 
-	            //System.out.println(usuario);
-	            usuarios.add(usuario);
-	        }
-	    } catch (SQLException e) {
-	        // Manejar la excepción aquí
-	        e.printStackTrace();
-	    }
+		try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) {
+				Usuario usuario = new Usuario();
+				usuario.setIdUsuario(rs.getInt("idUsuario")); // ID del usuario
+				usuario.setNombre(rs.getString("nombre")); // Nombre del usuario
+				usuario.setEmail(rs.getString("email")); // Email del usuario
+				// usuario.setContrasena(rs.getString("contrasena")); // Contraseña del usuario
+				usuario.setFechaNacimiento(rs.getDate("fechaNacimiento")); // Fecha de nacimiento del usuario
+				usuario.setRecibeNotificaciones(rs.getBoolean("recibeNotificaciones")); // Si recibe notificaciones
+				usuario.setIntereses(rs.getString("intereses")); // Intereses del usuario
+				usuario.setPermiso(rs.getInt("permiso")); // Permiso del usuario
+				usuario.setRoles(Rol.valueOf(rs.getString("roles"))); // Rol del usuario
+				// usuario.setConsentimientoDatos(rs.getDate("consentimientoDatos")); // Fecha
+				// de consentimiento de datos
+				// usuario.setAceptacionTerminosWeb(rs.getDate("aceptacionTerminosWeb")); //
+				// Fecha de aceptación de términos web
 
-	    return usuarios;
+				// System.out.println(usuario);
+				usuarios.add(usuario);
+			}
+		} catch (SQLException e) {
+			// Manejar la excepción aquí
+			e.printStackTrace();
+		}
+
+		return usuarios;
 	}
 
 	/**
@@ -332,8 +355,8 @@ public class DaoUsuario {
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
 					Usuario usuario = new Usuario(rs.getInt("idUsuario"), rs.getString("nombre"), rs.getString("email"),
-							 rs.getBoolean("recibeNotificaciones"),rs.getString("intereses"), rs.getInt("permiso"), 
-							 Rol.valueOf(rs.getString("rol")),rs.getDate("fechaNacimiento")
+							rs.getBoolean("recibeNotificaciones"), rs.getString("intereses"), rs.getInt("permiso"),
+							Rol.valueOf(rs.getString("rol")), rs.getDate("fechaNacimiento")
 
 					);
 					usuarios.add(usuario);

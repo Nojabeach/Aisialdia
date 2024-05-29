@@ -316,6 +316,7 @@ public class GestorEvento extends HttpServlet {
 		Evento evento = new Evento(idEvento);
 		try {
 			DaoEvento.getInstance().eliminarEvento(evento);
+			response.setStatus(HttpServletResponse.SC_OK);
 			// System.out.println("Evento eliminado exitosamente!");
 		} catch (SQLException e) {
 			e.printStackTrace();

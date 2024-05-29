@@ -84,9 +84,9 @@ function asignarUsuarioABorrar() {
     });
 }
 
-function eliminarUsuario(idUsuario) { // Cambiado el nombre de la función
+function eliminarUsuario(idUsuario) { 
     console.log('Eliminando usuario', idUsuario);
-    fetch('GestorUsuario', { // Cambiado a GestorUsuario
+    fetch('GestorUsuario', { 
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'

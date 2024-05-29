@@ -53,8 +53,9 @@
     <script src="js/admin_controlTabs.js"></script> <!-- Script para controlar la funcionalidad de las TABS-->
 
     <script src="js/admin_cargarObjetos.js"></script>
-
-    <script src="js/admin_actividad_datos.js"></script>     <!-- Script para cargar las actividades en el formulario de edición de eventos -->
+    <script src="js/admin_us_actualizarTabla.js"></script><!-- Script para actualizar la tabla de usuarios -->
+    <script src="js/admin_actividad_datos.js"></script>
+    <!-- Script para cargar las actividades en el formulario de edición de eventos -->
 
 
 
@@ -117,7 +118,8 @@
                 </nav>
 
                 <div id="actividades-crear" class="actividades-tab">
-                    <form class="form-admin" id="actividadesForm" enctype="multipart/form-data" action="GestorActividad?action=crearActividad">
+                    <form class="form-admin" id="actividadesForm" enctype="multipart/form-data"
+                        action="GestorActividad?action=crearActividad">
                         <fieldset>
                             <legend>Datos de la Actividad</legend>
                             <div class="form-group">
@@ -139,8 +141,9 @@
                         </fieldset>
                     </form>
                 </div>
-                <div id="actividades-editar" class="actividades-tab" style="display: none;" >
-                    <form class="form-admin" id="EDITactividadesForm" enctype="multipart/form-data" action="GestorActividad?action=editarActividad">
+                <div id="actividades-editar" class="actividades-tab" style="display: none;">
+                    <form class="form-admin" id="EDITactividadesForm" enctype="multipart/form-data"
+                        action="GestorActividad?action=editarActividad">
                         <fieldset>
                             <legend>Editar Actividad</legend>
                             <div class="form-group">
@@ -338,7 +341,7 @@
                 </nav>
 
                 <div id="usuarios-crear" class="usuarios-tab">
-                    <form id="usuariosForm" class="form-admin" action="GestorUsuario?action=crearUsuario" method="post">
+                    <form id="usuariosForm" class="form-admin" method="post">
                         <fieldset>
                             <legend>Datos del Usuario</legend>
                             <div class="form-group">
@@ -388,8 +391,7 @@
                     </form>
                 </div>
                 <div id="usuarios-editar" class="usuarios-tab">
-                    <form id="EDITusuariosForm" class="form-admin" action="GestorUsuario?action=editarUsuarioAdmin"
-                        method="post">
+                    <form id="EDITusuariosForm" class="form-admin" method="post">
                         <fieldset>
                             <legend>Datos del Usuario</legend>
                             <div class="form-group">

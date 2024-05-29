@@ -88,6 +88,23 @@ public class DaoFavorito {
 	}
 
 	/**
+	 * Elimina la lista de favoritos completa de un usuario
+	 *
+	 * @param idEvento  El identificador del evento a eliminar.
+	 * @param idUsuario El identificador del usuario al que se elimina el favorito.
+	 * @throws SQLException Si ocurre un error al eliminar el favorito.
+	 */
+	public void eliminarFavoritosUsuario(int idUsuario) throws SQLException {
+		String sql = "DELETE FROM gestionfavoritos WHERE  idUsuario = ?";
+		PreparedStatement ps = con.prepareStatement(sql);
+		// System.out.println(idUsuarioActual);
+		ps = con.prepareStatement(sql);
+		ps.setInt(1, idUsuario);
+		ps.executeUpdate();
+
+	}
+
+	/**
 	 * Obtiene una lista de eventos favoritos de un usuario específico.
 	 *
 	 * @param idUsuario El identificador del usuario del que se desean obtener los
