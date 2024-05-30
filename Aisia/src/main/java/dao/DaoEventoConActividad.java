@@ -14,18 +14,29 @@ import dao.DaoUsuario.GsonHelper;
 import modelo.Evento;
 import modelo.EventoConActividad;
 
+/**
+ * Clase de Acceso a Datos (DAO) para la gestión de actividades de eventos en el
+ * sistema. Implementa el patrón Singleton y utiliza controladores mediante
+ * Servlets para la interacción con la base de datos.
+ * 
+ * @author Maitane Ibañez Irazabal
+ * @version 1.0
+ */
 public class DaoEventoConActividad {
 
 	private Connection con = null;
 	private static DaoEventoConActividad instance = null;
 
 	/**
-	 * Clase de Acceso a Datos (DAO) para la gestión de actividades de eventos en el
-	 * sistema. Implementa el patrón Singleton y utiliza controladores mediante
-	 * Servlets para la interacción con la base de datos.
+	 * Constructor de la clase DaoEventoConActividad.
 	 * 
-	 * @author Maitane Ibañez Irazabal
-	 * @version 1.0
+	 * <p>
+	 * Este constructor inicializa una instancia de la clase DaoEventoConActividad.
+	 * Utiliza la clase DBConection para obtener una conexión a la base de datos.
+	 * </p>
+	 * 
+	 * @throws SQLException Si ocurre un error al establecer la conexión con la base
+	 *                      de datos.
 	 */
 	public DaoEventoConActividad() throws SQLException {
 		con = DBConection.getConection();
@@ -129,7 +140,7 @@ public class DaoEventoConActividad {
 		if (numEventos != -1) {
 			sql += " LIMIT ?";
 		}
-		//System.out.println(sql);
+		// System.out.println(sql);
 		PreparedStatement ps = con.prepareStatement(sql);
 
 		int paramIndex = 1;
@@ -181,10 +192,14 @@ public class DaoEventoConActividad {
 	// ---------------------------------------------------------------------------------
 
 	/**
-	 * Genera una representación JSON de Obtiene una lista de los últimos eventos
-	 * publicados no finalizados, ordenados por fecha de publicación descendente.
-	 * 
-	 * @param numEventos Filtra la cantidad de num eventos para listar
+	 * Genera una representación JSON de una lista de los últimos eventos publicados
+	 * no finalizados, ordenados por fecha de publicación descendente.
+	 *
+	 * @param numEventos La cantidad de eventos a listar.
+	 * @param actividad  El nombre de la actividad asociada a los eventos a listar.
+	 * @param nombre     El nombre del evento a listar.
+	 * @param ubicacion  La ubicación de los eventos a listar.
+	 * @param fecha      La fecha límite de los eventos a listar.
 	 * @return Una cadena JSON que representa los últimos eventos publicados no
 	 *         finalizados, ordenados por fecha de publicación descendente.
 	 * @throws SQLException Si ocurre un error al acceder a la base de datos.

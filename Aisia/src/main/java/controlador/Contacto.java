@@ -12,23 +12,22 @@ import javax.mail.*;
 import javax.mail.internet.*;
 
 /**
- * Servlet para gestionar el envío de correos electrónicos desde el formulario
- * de contacto.
- * 
- * Este servlet permite enviar correos electrónicos desde un formulario de
- * contacto en un sitio web. Los correos electrónicos se envían a través de un
- * servidor SMTP (en este caso, Gmail) utilizando las credenciales
- * proporcionadas.
- * 
+ * Servlet para gestionar el envío de correos electrónicos desde el formulario de contacto.
+ *
+ * Este servlet procesa las solicitudes HTTP enviadas desde un formulario de contacto en un sitio web y
+ * envía correos electrónicos utilizando las credenciales proporcionadas. Los correos electrónicos se envían
+ * a través de un servidor SMTP (en este caso, Gmail).
+ *
  * @author Maitane Ibañez Irazabal
  * @version 1.0
+ * @since 2024-05-30
  */
 public class Contacto extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
+	 /**
+     * Constructor predeterminado.
+     */
 	public Contacto() {
 		super();
 		// TODO Auto-generated constructor stub

@@ -17,28 +17,36 @@ import modelo.Actividad;
 import modelo.Evento;
 import modelo.Evento.motivoFinalizacion;
 
+/**
+ * Clase de Acceso a Datos (DAO) para la gestión de eventos en el sistema.
+ * Implementa el patrón Singleton y utiliza controladores mediante Servlets para
+ * la interacción con la base de datos.
+ * 
+ * <p>Esta clase proporciona métodos para acceder y manipular datos relacionados con eventos en la base de datos.</p>
+ * 
+ * @author Maitane Ibañez Irazabal
+ * @version 1.8
+ */
 public class DaoEvento {
 
-	private Connection con = null;
-	private static DaoEvento instance = null;
+    private Connection con = null;
+    private static DaoEvento instance = null;
 
-	/**
-	 * Clase de Acceso a Datos (DAO) para la gestión de eventos en el sistema.
-	 * Implementa el patrón Singleton y utiliza controladores mediante Servlets para
-	 * la interacción con la base de datos.
-	 * 
-	 * @author Maitane Ibañez Irazabal
-	 * @version 1.5
-	 */
-	public DaoEvento() throws SQLException {
-		con = DBConection.getConection();
-	}
+    /**
+     * Constructor privado para aplicar el patrón Singleton.
+     * 
+     * @throws SQLException Si ocurre un error al establecer la conexión con la base de datos.
+     */
+    public DaoEvento() throws SQLException {
+        con = DBConection.getConection();
+    }
+
 
 	/**
 	 * Este metodo es el que se utiliza para aplicar el patron SINGLETON  
 	 * 
-	 * @return
-	 * @throws SQLException
+	 * @return La instancia única de DaoEvento.
+	 * @throws SQLException Si ocurre un error al crear la instancia de DaoEvento.
 	 */
 	public static DaoEvento getInstance() throws SQLException {
 		if (instance == null) {
@@ -53,8 +61,10 @@ public class DaoEvento {
 	 *
 	 * @param evento      El evento a crear.
 	 * @param actividades Las actividades a vincular al evento.
+	 * @param fechaUltimaModificacion Fecha de la ultima modificación del evento
 	 * @throws SQLException Si ocurre un error al crear el evento o las
 	 *                      vinculaciones en la base de datos
+	 * @return El ID del evento creado.
 	 */
 	public int crearEvento(Evento evento, List<Actividad> actividades, Timestamp fechaUltimaModificacion)
 			throws SQLException {
@@ -93,7 +103,7 @@ public class DaoEvento {
 	 * Elimina un evento de la base de datos, junto con sus favoritos y
 	 * clasificaciones asociadas.
 	 *
-	 * @param idEvento El identificador del evento a eliminar.
+	 * @param evento El evento a eliminar.
 	 * @throws SQLException Si ocurre un error al eliminar el evento en la BD.
 	 */
 	public void eliminarEvento(Evento evento) throws SQLException {
@@ -117,12 +127,11 @@ public class DaoEvento {
 	}
 
 	/**
-	 * Publica un evento aprobado de publicacion
+	 * Publica un evento aprobado para su publicación.
 	 * 
-	 * @param idEvento        El identificador del evento a publicar.
-	 * @param idUsuarioActual El identificador del usuario que publica o planifica
-	 *                        la publicacion el evento.
-	 * @throws SQLException Si ocurre un error al publicar el evento en la BD
+	 * @param idEvento El identificador del evento a publicar.
+	 * @param request  La solicitud HTTP asociada a la publicación del evento.
+	 * @throws SQLException Si ocurre un error al publicar el evento en la base de datos.
 	 */
 	public void publicarEvento(int idEvento, HttpServletRequest request) throws SQLException {
 
@@ -140,7 +149,6 @@ public class DaoEvento {
 	 * Rechaza un evento pendiente de aprobación.
 	 * 
 	 * @param idEvento      El identificador del evento a rechazar.
-	 * @param motivoRechazo El motivo del rechazo.
 	 * @param request       Objeto HttpServletRequest para obtener el ID del usuario
 	 *                      actual.
 	 * @throws SQLException Si ocurre un error al rechazar el evento en la BD.
@@ -186,8 +194,7 @@ public class DaoEvento {
 	/**
 	 * Finaliza la publicación de un evento en la base de datos.
 	 *
-	 * @param idEvento    El ID del evento que se desea finalizar.
-	 * @param idModerador El ID del moderador que finaliza el evento.
+	 * @param evento    El objeto evento que se desea finalizar.
 	 * @throws SQLException si ocurre algún error al interactuar con la base de
 	 *                      datos.
 	 */
@@ -337,8 +344,8 @@ public class DaoEvento {
 	 * especificado. Si no se proporcionan fechas, se devuelven los últimos 10
 	 * eventos rechazados.
 	 *
-	 * @param fechaInicio Fecha de inicio del rango de búsqueda.
-	 * @param fechaFin    Fecha de fin del rango de búsqueda.
+	 * @param FechaD Fecha de inicio del rango de búsqueda.
+	 * @param FechaH    Fecha de fin del rango de búsqueda.
 	 * @return Una cadena JSON que contiene los eventos rechazados dentro del rango
 	 *         de fechas especificado o los últimos 10 eventos rechazados si no se
 	 *         proporcionan fechas.

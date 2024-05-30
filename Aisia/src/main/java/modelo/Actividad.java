@@ -45,7 +45,6 @@ public class Actividad {
 	 * @param idActividad   Identificador único de la actividad.
 	 * @param tipoActividad Tipo de actividad que se realiza.
 	 * @param fotoActividad Indica la ruta de la foto (en caso de tenerla)
-	 * @param evento        Objeto evento completo relacionado con la actividad
 	 */
 	public Actividad(int idActividad, String tipoActividad, String fotoActividad) {
 
@@ -58,7 +57,7 @@ public class Actividad {
 	 * Contructor de la actividad con tan solo el idActividad para una busqueda
 	 * simple de la actividad
 	 * 
-	 * @param idActividad
+	 * @param idActividad  Identificador único de la actividad.
 	 */
 	public Actividad(int idActividad) {
 		this.idActividad = idActividad;
@@ -115,11 +114,19 @@ public class Actividad {
 	public void setTipoActividad(String tipoActividad) {
 		this.tipoActividad = tipoActividad;
 	}
-
+	/**
+	 * Obtiene la URL o ruta de la foto asociada a la actividad.
+	 *
+	 * @return La URL o ruta de la foto de la actividad como cadena de texto (String).
+	 */
 	public String getFotoActividad() {
 		return fotoActividad;
 	}
-
+	/**
+	 * Establece la URL o ruta de la foto asociada a la actividad.
+	 *
+	 * @param fotoActividad La URL o ruta de la foto de la actividad como cadena de texto (String).
+	 */
 	public void setFotoActividad(String fotoActividad) {
 		this.fotoActividad = fotoActividad;
 	}
@@ -142,8 +149,9 @@ public class Actividad {
 	// --------------------------------------------------------------------------------------------
 	/**
 	 * Crea una nueva actividad en la base de datos.
-	 * 
-	 * @throws SQLException Si ocurre un error al crear la actividad.
+	 *
+	 * @param actividad Objeto `Actividad` que representa la actividad a crear.
+	 * @throws SQLException Si ocurre un error al crear la actividad en la base de datos.
 	 */
 	public void crearActividad(Actividad actividad) throws SQLException {
 		System.out.println(actividad);

@@ -10,28 +10,33 @@ import java.util.List;
 import com.google.gson.Gson;
 
 import modelo.InteresPorDefecto;
-
+/**
+ * Clase de Acceso a Datos (DAO) para la gestión de intereses por defecto en el sistema.
+ * Implementa el patrón Singleton y utiliza controladores mediante Servlets para la interacción con la base de datos.
+ *
+ * @author Maitane Ibañez Irazabal
+ * @version 1.0
+ */
 public class DaoInteresPorDefecto {
 
     private Connection con = null;
     private static DaoInteresPorDefecto instance = null;
 
     /**
-     * Clase de Acceso a Datos (DAO) para la gestión de intereses por defecto en el sistema.
-     * Implementa el patrón Singleton y utiliza controladores mediante Servlets para la interacción con la base de datos.
+     * Constructor de la clase DaoInteresPorDefecto. Establece una conexión con la base de datos al inicializar un objeto DaoInteresPorDefecto.
      *
-     * @author Maitane Ibañez Irazabal
-     * @version 1.0
+     * @throws SQLException Si ocurre un error al establecer la conexión con la base de datos.
      */
     public DaoInteresPorDefecto() throws SQLException {
         con = DBConection.getConection();
     }
 
     /**
-     * Este metodo es el que utilizo para implementar el patron singleton
+     * Método utilizado para implementar el patrón Singleton y obtener una instancia única de DaoInteresPorDefecto.
+     * Si no existe una instancia previamente creada, se crea una nueva; de lo contrario, se devuelve la instancia existente.
      *
-     * @return
-     * @throws SQLException
+     * @return La instancia única de DaoInteresPorDefecto.
+     * @throws SQLException Si ocurre un error al crear la instancia de DaoInteresPorDefecto.
      */
     public static DaoInteresPorDefecto getInstance() throws SQLException {
         if (instance == null) {

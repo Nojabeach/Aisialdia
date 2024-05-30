@@ -15,19 +15,31 @@ import jakarta.servlet.http.HttpServletRequest;
 import modelo.Usuario;
 import modelo.Usuario.Rol;
 
+/**
+ * Clase de Acceso a Datos (DAO) para la gestión de usuarios en el sistema.
+ * Implementa el patrón Singleton y utiliza controladores mediante Servlets para
+ * la interacción con la base de datos.
+ * 
+ * @author Maitane Ibañez Irazabal
+ * @version 1.0
+ */
 public class DaoUsuario {
 
 	private Connection con = null;
 	private static DaoUsuario instance = null;
 
 	/**
-	 * Clase de Acceso a Datos (DAO) para la gestión de usuarios en el sistema.
-	 * Implementa el patrón Singleton y utiliza controladores mediante Servlets para
-	 * la interacción con la base de datos.
+	 * Constructor de la clase DaoUsuario.
 	 * 
-	 * @author Maitane Ibañez Irazabal
-	 * @version 1.0
+	 * <p>
+	 * Establece una conexión con la base de datos al inicializar un objeto
+	 * DaoUsuario.
+	 * </p>
+	 * 
+	 * @throws SQLException Si ocurre un error al establecer la conexión con la base
+	 *                      de datos.
 	 */
+
 	public DaoUsuario() throws SQLException {
 
 		con = DBConection.getConection();
@@ -35,12 +47,17 @@ public class DaoUsuario {
 	}
 
 	/**
-	 * Este metodo es el que se utiliza para aplicar el patron SINGLETON
+	 * Retorna una instancia única de la clase DaoUsuario utilizando el patrón
+	 * Singleton.
 	 * 
-	 * @return
-	 * @throws SQLException
+	 * <p>
+	 * Si no existe una instancia previa de DaoUsuario, crea una nueva instancia y
+	 * la retorna. De lo contrario, retorna la instancia existente.
+	 * </p>
+	 * 
+	 * @return Una instancia única de la clase DaoUsuario.
+	 * @throws SQLException Si ocurre un error al crear la instancia de DaoUsuario.
 	 */
-
 	public static DaoUsuario getInstance() throws SQLException {
 		if (instance == null) {
 			instance = new DaoUsuario();
@@ -80,7 +97,7 @@ public class DaoUsuario {
 	 * Valida el usuario y contraseña, y devuelve un objeto Usuario si la
 	 * autenticación es correcta. Además, registra el acceso en la tabla de accesos.
 	 * 
-	 * @param email      Correo electrónico del usuario.
+	 * @param usuario    nombre del usuario.
 	 * @param contrasena Contraseña del usuario (no se almacena, solo se utiliza
 	 *                   para autenticar).
 	 * @return Objeto Usuario si la autenticación es correcta, null si no lo es.
@@ -124,7 +141,7 @@ public class DaoUsuario {
 	 * @param idUsuario Identificador del usuario.
 	 * @return Objeto Usuario con la información del usuario, o null si no se
 	 *         encuentra.
-	 * @throws Exception Si ocurre un error al obtener el usuario.
+	 * @throws SQLException Si ocurre un error al obtener el usuario.
 	 */
 	public Usuario obtenerINFOUsuarioPorID(int idUsuario) throws SQLException {
 		// Preparar la consulta SQL para obtener el usuario por ID
@@ -153,12 +170,6 @@ public class DaoUsuario {
 	}
 
 	/**
-	 * Actualiza la información de un usuario en la base de datos.
-	 * 
-	 * @param usuario Objeto Usuario con la información actualizada del usuario.
-	 * @throws Exception Si ocurre un error al editar el usuario.
-	 */
-	/**
 	 * Edita un usuario en la base de datos con los nuevos datos proporcionados.
 	 * 
 	 * @param usuario El objeto Usuario con los datos actualizados.
@@ -177,13 +188,6 @@ public class DaoUsuario {
 			ps.executeUpdate();
 		}
 	}
-
-	/**
-	 * Actualiza la información de un usuario en la base de datos.
-	 * 
-	 * @param usuario Objeto Usuario con la información actualizada del usuario.
-	 * @throws Exception Si ocurre un error al editar el usuario.
-	 */
 
 	/**
 	 * Edita un usuario en la base de datos con los nuevos datos proporcionados por
@@ -283,9 +287,8 @@ public class DaoUsuario {
 	/**
 	 * Permite a un usuario cambiar su contraseña.
 	 * 
-	 * @param idUsuario        Identificador del usuario.
-	 * @param contrasenaActual Contraseña actual del usuario.
-	 * @param contrasenaNueva  Nueva contraseña del usuario.
+	 * @param idUsuario       Identificador del usuario.
+	 * @param contrasenaNueva Nueva contraseña del usuario.
 	 * @throws Exception Si ocurre un error al cambiar la contraseña.
 	 */
 	public void cambiarContrasena(int idUsuario, String contrasenaNueva) throws Exception {
@@ -479,6 +482,10 @@ public class DaoUsuario {
 	public class GsonHelper {
 
 		private static Gson gson;
+
+		// Este constructor privado evita que se instancie la clase directamente.
+		private GsonHelper() {
+		}
 
 		/**
 		 * Obtiene una instancia de Gson con el formato de fecha deseado.

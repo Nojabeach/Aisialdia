@@ -12,29 +12,33 @@ import com.google.gson.Gson;
 
 import jakarta.servlet.http.HttpServletRequest;
 import modelo.Evento;
-
+/**
+ * Clase de Acceso a Datos (DAO) para la gestión de favoritos de eventos en el
+ * sistema. Implementa el patrón Singleton y utiliza controladores mediante
+ * Servlets para la interacción con la base de datos.
+ * 
+ * @author Maitane Ibañez Irazabal
+ * @version 1.0
+ */
 public class DaoFavorito {
 
 	private Connection con = null;
 	private static DaoFavorito instance = null;
 
 	/**
-	 * Clase de Acceso a Datos (DAO) para la gestión de favoritos de eventos en el
-	 * sistema. Implementa el patrón Singleton y utiliza controladores mediante
-	 * Servlets para la interacción con la base de datos.
-	 * 
-	 * @author Maitane Ibañez Irazabal
-	 * @version 1.0
+	 * Crea una nueva instancia de DaoFavorito, estableciendo la conexión con la base de datos.
+	 *
+	 * @throws SQLException Si ocurre un error al establecer la conexión con la base de datos.
 	 */
 	public DaoFavorito() throws SQLException {
 		con = DBConection.getConection();
 	}
 
 	/**
-	 * Este metodo es el que se utiliza para aplicar el patron SINGLETON  
+	 * Este método es el que se utiliza para aplicar el patrón SINGLETON.
 	 * 
-	 * @return
-	 * @throws SQLException
+	 * @return La única instancia de DaoFavorito.
+	 * @throws SQLException Si ocurre un error al crear la instancia de DaoFavorito.
 	 */
 	public static DaoFavorito getInstance() throws SQLException {
 		if (instance == null) {
@@ -47,7 +51,7 @@ public class DaoFavorito {
 	 * Agrega un evento a la lista de favoritos de un usuario.
 	 *
 	 * @param idEvento  El identificador del evento a agregar.
-	 * @param idUsuario El identificador del usuario al que se agrega el favorito.
+	 * @param request   La solicitud HTTP asociada a la acción de agregar favorito.
 	 * @throws SQLException Si ocurre un error al agregar el favorito.
 	 */
 	public void agregarFavoritoEvento(int idEvento, HttpServletRequest request) throws SQLException {
@@ -71,8 +75,8 @@ public class DaoFavorito {
 	/**
 	 * Elimina un evento de la lista de favoritos de un usuario.
 	 *
-	 * @param idEvento  El identificador del evento a eliminar.
-	 * @param idUsuario El identificador del usuario al que se elimina el favorito.
+	 * @param idEvento  El identificador del evento a eliminar de la lista de favoritos.
+	 * @param request   La solicitud HTTP asociada a la acción de eliminar favorito.
 	 * @throws SQLException Si ocurre un error al eliminar el favorito.
 	 */
 	public void eliminarFavoritoEvento(int idEvento, HttpServletRequest request) throws SQLException {
@@ -90,7 +94,6 @@ public class DaoFavorito {
 	/**
 	 * Elimina la lista de favoritos completa de un usuario
 	 *
-	 * @param idEvento  El identificador del evento a eliminar.
 	 * @param idUsuario El identificador del usuario al que se elimina el favorito.
 	 * @throws SQLException Si ocurre un error al eliminar el favorito.
 	 */

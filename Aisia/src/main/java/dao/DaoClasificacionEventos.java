@@ -12,29 +12,33 @@ import com.google.gson.Gson;
 import modelo.Actividad;
 import modelo.Evento;
 import modelo.Evento.motivoFinalizacion;
-import modelo.EventoConActividad;
 
+/**
+ * Clase de Acceso a Datos (DAO) para la gestión de eventos en el sistema.
+ * Implementa el patrón Singleton y utiliza controladores mediante Servlets para
+ * la interacción con la base de datos.
+ *
+ * @author Maitane Ibañez Irazabal
+ * @version 1.0
+ */
 public class DaoClasificacionEventos {
 	private Connection con = null;
 	private static DaoClasificacionEventos instance = null;
 
 	/**
-	 * Clase de Acceso a Datos (DAO) para la gestión de eventos en el sistema.
-	 * Implementa el patrón Singleton y utiliza controladores mediante Servlets para
-	 * la interacción con la base de datos.
-	 * 
-	 * @author Maitane Ibañez Irazabal
-	 * @version 1.0
+	 * Constructor de la clase DaoClasificacionEventos. Establece una conexión con la base de datos.
+	 *
+	 * @throws SQLException Si ocurre un error al establecer la conexión con la base de datos.
 	 */
 	public DaoClasificacionEventos() throws SQLException {
 		con = DBConection.getConection();
 	}
 
 	/**
-	 * Este metodo es el que se utiliza para aplicar el patron SINGLETON  
-	 * 
-	 * @return
-	 * @throws SQLException
+	 * Método que implementa el patrón Singleton para asegurar que solo exista una instancia de esta clase.
+	 *
+	 * @return La única instancia existente de la clase DaoClasificacionEventos.
+	 * @throws SQLException Si ocurre un error al establecer la conexión con la base de datos.
 	 */
 	public static DaoClasificacionEventos getInstance() throws SQLException {
 		if (instance == null) {
@@ -44,12 +48,11 @@ public class DaoClasificacionEventos {
 	}
 
 	/**
-	 * Crear una clasificacion de Eventos vinculandolo a las posibles actividades
-	 * que pueda tener
-	 * 
-	 * @param idActividad idActividad a vincular con el evento
-	 * @param idEvento    idEvento a vincular con la actividad
-	 * @throws SQLException
+	 * Crea una clasificación de eventos vinculándola a las posibles actividades que pueda tener.
+	 *
+	 * @param idActividad  ID de la actividad a vincular con el evento.
+	 * @param idEvento     ID del evento a vincular con la actividad.
+	 * @throws SQLException Si ocurre un error al insertar la clasificación de eventos en la base de datos.
 	 */
 	public void crearClasificacionEventos(int idActividad, int idEvento) throws SQLException {
 		// Preparar la consulta SQL para crear la clasificación de eventos
@@ -62,10 +65,10 @@ public class DaoClasificacionEventos {
 	}
 
 	/**
-	 * Eliminar la clasificación de eventos de la base de datos
-	 * 
-	 * @param idClasificacion
-	 * @throws SQLException
+	 * Elimina la clasificación de eventos de la base de datos.
+	 *
+	 * @param idClasificacion ID de la clasificación de eventos a eliminar.
+	 * @throws SQLException Si ocurre un error al eliminar la clasificación de eventos de la base de datos.
 	 */
 	public void eliminarClasificacionEventos(int idClasificacion) throws SQLException {
 		// Preparar la consulta SQL para eliminar la clasificación de eventos
@@ -78,14 +81,9 @@ public class DaoClasificacionEventos {
 
 	/**
 	 * Obtiene la lista de actividades asociadas a un evento específico.
-	 * 
-	 * Este método recupera la información de las actividades relacionadas con un
-	 * evento en particular desde la base de datos.
-	 * 
-	 * @param idEvento El identificador del evento del que se desean obtener las
-	 *                 actividades.
-	 * @return Una lista de objetos `Actividad` que contienen la información de las
-	 *         actividades asociadas al evento especificado.
+	 *
+	 * @param idEvento El ID del evento del que se desean obtener las actividades.
+* @return Una lista de objetos `Actividad` que contienen la información de las actividades asociadas al evento especificado.
 	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
 	 */
 	public List<Actividad> obtenerActividadesPorEventoID(int idEvento) throws SQLException {
@@ -113,8 +111,8 @@ public class DaoClasificacionEventos {
 
 	/**
 	 * Obtiene la lista de eventos asociados a una actividad específica.
-	 * 
-	 * @param idActividad El identificador de la actividad.
+	 *
+	 * @param idActividad El ID de la actividad.
 	 * @return Lista de eventos asociados a la actividad especificada.
 	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
 	 */
@@ -153,16 +151,14 @@ public class DaoClasificacionEventos {
 
 	// ---------------------------------------------------------------------------------
 	// VOLCADOS JSON
-	// ---------------------------------------------------------------------------------
+	//---------------------------------------------------------------------------------
 
 	/**
-	 * Genera un objeto JSON que representa las actividades asociadas a un evento
-	 * específico.
+	 * Genera un objeto JSON que representa las actividades asociadas a un evento específico.
 	 *
 	 * @param IdEvento El ID del evento.
 	 * @return Una cadena JSON que representa las actividades asociadas al evento.
-	 * @throws SQLException Si ocurre un error al obtener las actividades asociadas
-	 *                      al evento de la base de datos.
+	 * @throws SQLException Si ocurre un error al obtener las actividades asociadas al evento de la base de datos.
 	 */
 	public String listarJsonActividadesPorEventoID(int IdEvento) throws SQLException {
 		String json = "";
@@ -172,13 +168,11 @@ public class DaoClasificacionEventos {
 	}
 
 	/**
-	 * Genera un objeto JSON que representa los eventos asociados a una actividad
-	 * específica.
+	 * Genera un objeto JSON que representa los eventos asociados a una actividad específica.
 	 *
 	 * @param IdActividad El ID de la actividad.
 	 * @return Una cadena JSON que representa los eventos asociados a la actividad.
-	 * @throws SQLException Si ocurre un error al obtener los eventos asociados a la
-	 *                      actividad de la base de datos.
+	 * @throws SQLException Si ocurre un error al obtener los eventos asociados a la actividad de la base de datos.
 	 */
 	public String listarJsonEventosporActividadID(int IdActividad) throws SQLException {
 		String json = "";
