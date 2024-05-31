@@ -56,7 +56,9 @@ function busquedaEventos() {
 }
 
 function evento_obtenerFavoritos() {
+  console.log("FAV_Obteniendo favoritos");
   fetch("GestorFavorito?action=obtenerEventosFavoritos")
+
     .then((response) => response.json())
     .then((data) => {
       console.log(data);

@@ -75,16 +75,16 @@ function asignarUsuarioABorrar() {
             let action = this.textContent.toLowerCase();
 
             if (action === 'borrar') {
-                eliminarUsuario(idUsuario); // Cambiado a eliminarUsuario
+                Admin_eliminarUsuario(idUsuario); // Cambiado a eliminarUsuario
             } else if (action === 'editar') {
                 let tabId = this.dataset.tabId;
-                editarUsuario(idUsuario, tabId); // Cambiado a editarUsuario
+                Admin_editarUsuario(idUsuario, tabId); // Cambiado a editarUsuario
             }
         });
     });
 }
 
-function eliminarUsuario(idUsuario) { 
+function  Admin_eliminarUsuario(idUsuario) { 
     console.log('Eliminando usuario', idUsuario);
     fetch('GestorUsuario', { 
         method: 'POST',
@@ -106,14 +106,14 @@ function eliminarUsuario(idUsuario) {
 
 
 
-function editarUsuario(idUsuario, tabId) {
+function  Admin_editarUsuario(idUsuario, tabId) {
     USmostrarTab(tabId);
     let servlet = "GestorUsuario";
     let action = "obtenerINFOUsuario";
     let op = idUsuario;
     let metodo = "GET";
     let formularioId = "EDITusuariosForm";
-
+console.log('editarUsuario_sacarID', idUsuario, tabId);
     usuario_cargarFormularioDesdeServlet(servlet, action, op, formularioId, metodo);
 }
 

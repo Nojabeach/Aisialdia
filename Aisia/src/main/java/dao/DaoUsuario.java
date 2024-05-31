@@ -237,15 +237,18 @@ public class DaoUsuario {
 	public void eliminarUsuario(int idUsuario) throws Exception {
 		// Eliminar los favoritos del usuario
 		DaoFavorito.getInstance().eliminarFavoritosUsuario(idUsuario);
-
+		//System.out.println("eliminado fav");
 		// Eliminar los accesos del usuario
 		eliminarAccesos(idUsuario);
-
+		//System.out.println("eliminado acc");
+		DaoEvento.getInstance().eliminarEvento(null,idUsuario);
+		//System.out.println("ev eliminado");
 		// Preparar la consulta SQL para eliminar el usuario
 		String sql = "DELETE FROM usuarios WHERE idUsuario = ?";
 		try (PreparedStatement stmt = con.prepareStatement(sql)) {
 			stmt.setInt(1, idUsuario);
 			stmt.executeUpdate();
+			//System.out.println("eliminado user");
 		}
 	}
 

@@ -84,7 +84,7 @@ function asignarEventoFavoritoBorrar() {
 }
 
 function eliminarEventoFavorito(idEvento) {
-    console.log('Eliminando evento', idEvento);
+    console.log('FAV_Eliminando evento', idEvento);
     fetch('GestorFavorito', {
         method: 'POST',
         headers: {
@@ -104,7 +104,7 @@ function eliminarEventoFavorito(idEvento) {
                     perfil_obtenerFavoritos();
                 } else if (currentUrl.pathname === '/Aisia/eventos.html') {
                     // Si estás en eventos.html, ejecutar eventos_obtenerFavoritos
-                    obtenerFavoritos();
+                    PTobtenerFavoritos();
                 } else {
                     // Si no estás en ninguna de las dos páginas, no hacer nada
                     console.warn('No se encontró la función correspondiente para actualizar la lista de favoritos');
@@ -114,7 +114,8 @@ function eliminarEventoFavorito(idEvento) {
             }
         });
 }
-function obtenerFavoritos() {
+function  PTobtenerFavoritos() {
+    console.log("FAV_PT_Obteniendo favoritos");
     fetch("GestorFavorito?action=obtenerEventosFavoritos")
       .then((response) => response.json())
       .then((data) => {

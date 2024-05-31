@@ -18,7 +18,7 @@
   }
   
   function EDITpintarSelect(datos) {
-    let select = document.getElementById("EvEDITtipoActividad");
+    let select = document.getElementById("tipoActividad");
   
   
     select.innerHTML = ""; // Limpiar el select antes de agregar nuevas opciones

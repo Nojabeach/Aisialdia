@@ -75,7 +75,6 @@ function evento_cargarFormularioDesdeServlet(servlet,
 
       // Mostrar el formulario y activar el botón de "Editar"
       document.getElementById(formularioId).style.display = 'block';
-      document.getElementById('crear-evento-button').style.display = 'none';
       document.getElementById('editar-evento-button').style.display = 'block';
     })
     .catch((error) => {

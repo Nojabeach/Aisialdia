@@ -59,6 +59,7 @@ public class DaoFavorito {
 				+ "FROM dual " + "WHERE NOT EXISTS ( " + "    SELECT 1 " + "    FROM gestionfavoritos "
 				+ "    WHERE idEvento = ? AND idUsuario = ? )";
 		int idUsuarioActual = DaoUsuario.getInstance().obtenerIdUsuarioActual(request);
+		//System.out.println(idUsuarioActual);
 		Date fechaCreacion = new Date(System.currentTimeMillis());
 
 		try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -67,7 +68,7 @@ public class DaoFavorito {
 			ps.setDate(3, fechaCreacion);
 			ps.setInt(4, idEvento);
 			ps.setInt(5, idUsuarioActual);
-
+			
 			ps.executeUpdate();
 		}
 	}

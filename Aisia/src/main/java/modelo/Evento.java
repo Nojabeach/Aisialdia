@@ -601,7 +601,7 @@ public class Evento {
 	 * @throws SQLException Si ocurre un error al eliminar el evento.
 	 */
 	public void eliminarEvento(Evento evento) throws SQLException {
-		DaoEvento.getInstance().eliminarEvento(this);
+		DaoEvento.getInstance().eliminarEvento(this,0);
 	}
 
 	/**

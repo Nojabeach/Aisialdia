@@ -85,24 +85,14 @@ function asignarEventoFavoritoAgregar() {
 
 function agregarEventoFavorito(idEvento) {
     console.log('Agregando evento', idEvento);
-    fetch('GestorFavorito', {
-        method: 'POST',
-        body: `action=agregarFavorito&idEvento=${idEvento}`
-    })
-       .then(response => {
-            if (response.ok) {
-                console.log('Evento agregado correctamente, actualizo la lista');
-                // Actualizar la lista después de agregar
-                obtenerFavoritos();
-            } else {
-                console.error('Error al agregar el evento');
-            }
-        })
-       .catch(error => {
-            console.error('Error en la solicitud:', error);
-        });
+    console.log("FAV_Agregando evento");
+    fetch(`GestorFavorito?action=agregarFavorito&idEvento=${idEvento}`, { method: 'POST' })
+        .then(response => response.ok ? console.log('Evento agregado correctamente, actualizo la lista') : console.error('Error al agregar el evento'))
+        .then(obtenerFavoritos)
+        .catch(error => console.error('Error en la solicitud:', error));
 }
 function obtenerFavoritos() {
+    console.log("FAV_Obteniendo favoritos");
     fetch("GestorFavorito?action=obtenerEventosFavoritos")
       .then((response) => response.json())
       .then((data) => {

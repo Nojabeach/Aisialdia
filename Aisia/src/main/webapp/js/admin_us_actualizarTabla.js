@@ -56,9 +56,14 @@ function AD_obtenerUsuarios() {
     AD_obtenerUsuarios();
   }
   
-  // Event listeners para los botones de crear y editar usuario
-  document.getElementById("crear-usuario-button").addEventListener("click", crearUsuario);
-  document.getElementById("editar-usuario-button").addEventListener("click", editarUsuario);
-  
-  // Cargar la tabla de usuarios al inicio
+// Esperar a que el DOM esté completamente cargado
+document.addEventListener("DOMContentLoaded", function() {
+  // Cargar la tabla de usuarios
   AD_obtenerUsuarios();
+  
+  // Asignar event listener para el botón de crear usuario
+  document.getElementById("crear-usuario-button").addEventListener("click", crearUsuario);
+  
+  // Asignar event listener para el botón de editar usuario
+  document.getElementById("editar-usuario-button").addEventListener("click", editarUsuario);
+});

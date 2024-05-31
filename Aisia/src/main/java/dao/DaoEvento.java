@@ -100,31 +100,57 @@ public class DaoEvento {
 	}
 
 	/**
-	 * Elimina un evento de la base de datos, junto con sus favoritos y
-	 * clasificaciones asociadas.
+	 * Elimina un evento junto con sus favoritos y clasificaciones asociadas.
+	 * Si se proporciona un idUsuario mayor que 0, elimina todos los eventos asociados a ese usuario. función recursiva.
 	 *
-	 * @param evento El evento a eliminar.
-	 * @throws SQLException Si ocurre un error al eliminar el evento en la BD.
+	 * @param evento    El evento a eliminar.
+	 * @param idUsuario El ID del usuario cuyos eventos se eliminarán (si es mayor que 0).
+	 * @throws SQLException Si ocurre algún error al interactuar con la base de datos.
 	 */
-	public void eliminarEvento(Evento evento) throws SQLException {
-		// Eliminar los favoritos asociados al evento
-		String sqlFavoritos = "DELETE FROM gestionFavoritos WHERE idEvento = ?";
-		PreparedStatement psFavoritos = con.prepareStatement(sqlFavoritos);
-		psFavoritos.setInt(1, evento.getIdEvento());
-		psFavoritos.executeUpdate();
+	public void eliminarEvento(Evento evento, int idUsuario) throws SQLException {
+	    if (idUsuario > 0) {
+	    	//System.out.println("entro por eliminarEV x idUsuario:"+idUsuario);
+	        // Eliminar todos los eventos del usuario
+	        String sqlEventosUsuario = "SELECT idEvento FROM eventos WHERE idUsuariocreador = ?";
+	        PreparedStatement psEventosUsuario = con.prepareStatement(sqlEventosUsuario);
+	        psEventosUsuario.setInt(1, idUsuario);
+	        ResultSet rsEventosUsuario = psEventosUsuario.executeQuery();
+	        
+	        while (rsEventosUsuario.next()) {
+	            int idEventoUsuario = rsEventosUsuario.getInt("idEvento");
+	           // System.out.println("Eliminando evento con ID: " + idEventoUsuario);
+	            eliminarEvento(new Evento(idEventoUsuario), 0); // Llama a sí misma sin el idUsuario :recursiva
+	        }
+	        
+	        rsEventosUsuario.close();
+	        psEventosUsuario.close();
+	    } else {
+	    	
+	        // Eliminar los favoritos asociados al evento
+	        String sqlFavoritos = "DELETE FROM gestionFavoritos WHERE idEvento = ?";
+	        PreparedStatement psFavoritos = con.prepareStatement(sqlFavoritos);
+	        psFavoritos.setInt(1, evento.getIdEvento());
+	        psFavoritos.executeUpdate();
+	        //System.out.println("Favoritos asociados al evento con ID " + evento.getIdEvento() + " eliminados.");
 
-		// Eliminar la clasificación del evento
-		String sqlClasificacion = "DELETE FROM clasificacionEventos WHERE idEvento = ?";
-		PreparedStatement psClasificacion = con.prepareStatement(sqlClasificacion);
-		psClasificacion.setInt(1, evento.getIdEvento());
-		psClasificacion.executeUpdate();
+	        // Eliminar la clasificación del evento
+	        String sqlClasificacion = "DELETE FROM clasificacionEventos WHERE idEvento = ?";
+	        PreparedStatement psClasificacion = con.prepareStatement(sqlClasificacion);
+	        psClasificacion.setInt(1, evento.getIdEvento());
+	        psClasificacion.executeUpdate();
+	        //System.out.println("Clasificación del evento con ID " + evento.getIdEvento() + " eliminada.");
 
-		// Eliminar el evento en sí
-		String sqlEventos = "DELETE FROM eventos WHERE idEvento = ?";
-		PreparedStatement psEventos = con.prepareStatement(sqlEventos);
-		psEventos.setInt(1, evento.getIdEvento());
-		psEventos.executeUpdate();
+	        // Eliminar el evento en sí
+	        String sqlEventos = "DELETE FROM eventos WHERE idEvento = ?";
+	        PreparedStatement psEventos = con.prepareStatement(sqlEventos);
+	        psEventos.setInt(1, evento.getIdEvento());
+	        psEventos.executeUpdate();
+	        psEventos.close();
+	        //System.out.println("Evento con ID " + evento.getIdEvento() + " eliminado.");
+	    }
 	}
+
+
 
 	/**
 	 * Publica un evento aprobado para su publicación.

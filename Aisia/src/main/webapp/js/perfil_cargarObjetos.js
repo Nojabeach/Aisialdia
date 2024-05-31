@@ -47,6 +47,7 @@ function rellenarFormularioPerfil(idUsuario) {
 }
 
 function perfil_obtenerFavoritos() {
+  console.log("FAV_Obteniendo favoritos");
   fetch("GestorFavorito?action=obtenerEventosFavoritos")
     .then((response) => response.json())
     .then((data) => {

@@ -101,9 +101,11 @@ public class GestorFavorito extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String action = request.getParameter("action");
+		//System.out.println(action);
 		try {
 			switch (action) {
 			case "agregarFavorito":
+				//System.out.println("entro en switch favorito");
 				agregarFavorito(request, response);
 				break;
 			case "eliminarFavorito":
@@ -136,11 +138,14 @@ public class GestorFavorito extends HttpServlet {
 	 */
 	private void agregarFavorito(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, SQLException {
+		//System.out.println("entro");
 		int idEvento = Integer.parseInt(request.getParameter("idEvento"));
+		//System.out.println(idEvento);
 		try {
 			DaoFavorito.getInstance().agregarFavoritoEvento(idEvento, request);
-			response.setStatus(HttpServletResponse.SC_CREATED);
-			response.getWriter().println("Evento agregado a favoritos exitosamente!");
+			//System.out.println("fav agrefado");
+			response.setStatus(HttpServletResponse.SC_OK);
+			//response.getWriter().println("Evento agregado a favoritos exitosamente!");
 		} catch (SQLException e) {
 			ControlErrores.mostrarErrorGenerico("Error al agregar el evento a favoritos. Intente de nuevo.", response);
 		}
