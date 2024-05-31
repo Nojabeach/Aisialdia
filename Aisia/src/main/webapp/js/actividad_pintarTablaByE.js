@@ -69,6 +69,12 @@ function actividad_pintarTablaEditarYBorrar(data, container) {
             console.log('Editar en tab', tabId);
             editarActividad(idActividad, tabId);
         });
+
+        botonBorrar.addEventListener('click', function() {
+            let idActividad = this.dataset.idActividad;
+            console.log('Borrar actividad', idActividad);
+            eliminarActividad(idActividad);
+        });
         
         fila.appendChild(celdaBoton);
         tbody.appendChild(fila);
@@ -85,8 +91,9 @@ function asignarActividadABorrar() {
         boton.addEventListener('click', function() {
             let idActividad = this.dataset.idActividad;
             let action = this.textContent.toLowerCase();
-
+            console.log('Botón', action, 'actividad', idActividad);
             if (action === 'borrar') {
+                console.log('Borrar actividad', idActividad);
                 eliminarActividad(idActividad);
             } else if (action === 'editar') {
                 let tabId = this.dataset.tabId;

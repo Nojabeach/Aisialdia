@@ -18,7 +18,8 @@ function AD_obtenerUsuarios() {
   }
   
   // Función para crear un usuario
-  function crearUsuario() {
+  function adminUS_crearUsuario() {
+    console.log("Entrando en adminUS_crearUsuario()");
     const formData = new FormData(document.getElementById("usuariosForm"));
     fetch("GestorUsuario?action=crearUsuario", {
       method: "POST",
@@ -35,7 +36,8 @@ function AD_obtenerUsuarios() {
   }
   
   // Función para editar un usuario
-  function editarUsuario() {
+  function adminUS_editarUsuario() {
+    console.log("Entrando en adminUS_editarUsuario()");
     const formData = new FormData(document.getElementById("EDITusuariosForm"));
     fetch("GestorUsuario?action=editarUsuarioAdmin", {
       method: "POST",
@@ -62,8 +64,8 @@ document.addEventListener("DOMContentLoaded", function() {
   AD_obtenerUsuarios();
   
   // Asignar event listener para el botón de crear usuario
-  document.getElementById("crear-usuario-button").addEventListener("click", crearUsuario);
+  document.getElementById("crear-usuario-button").addEventListener("click", adminUS_crearUsuario);
   
   // Asignar event listener para el botón de editar usuario
-  document.getElementById("editar-usuario-button").addEventListener("click", editarUsuario);
+  document.getElementById("editar-usuario-button").addEventListener("click", adminUS_editarUsuario);
 });

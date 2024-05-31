@@ -87,7 +87,7 @@ function usuario_cargarFormularioDesdeServlet(servlet,
   formularioId,
   method
 ) {
-  console.log("Realizando llamada a:", servlet);
+  //console.log("Realizando llamada a:", servlet);
 
   console.log("fetch", fetch(`${servlet}?action=${action}&idUsuario=${op}`));
 
@@ -107,7 +107,6 @@ function usuario_cargarFormularioDesdeServlet(servlet,
 
       // Mostrar el formulario y activar el botón de "Editar"
       document.getElementById(formularioId).style.display = 'block';
-      document.getElementById('editar-usuario-button').style.display = 'block';
     })
     .catch((error) => {
       console.error("Error:", error);

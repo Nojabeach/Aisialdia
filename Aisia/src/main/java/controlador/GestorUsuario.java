@@ -541,13 +541,13 @@ public class GestorUsuario extends HttpServlet {
 	private void editarUsuarioAdmin(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, SQLException, ParseException {
 		// Obtener parámetros del formulario
-		System.out.println("e"+request.getParameter("idUsuario"));
-		System.out.println("u"+request.getParameter("idUsuario"));
-		int idUsuarioActual = Integer.parseInt(request.getParameter("EDITidUsuario"));
+		
 
 		String nombre = request.getParameter("EDITnombre");
 		String email = request.getParameter("EDITemail");
-
+		
+		int idUsuarioActual = Integer.parseInt(request.getParameter("idUsuario"));
+		System.out.println(idUsuarioActual);
 		boolean recibeNotificaciones = request.getParameter("EDITrecibeNotificaciones") != null;
 		String intereses = request.getParameter("intereses");
 

@@ -75,10 +75,10 @@ function asignarUsuarioABorrar() {
             let action = this.textContent.toLowerCase();
 
             if (action === 'borrar') {
-                Admin_eliminarUsuario(idUsuario); // Cambiado a eliminarUsuario
+                Admin_eliminarUsuario(idUsuario); 
             } else if (action === 'editar') {
                 let tabId = this.dataset.tabId;
-                Admin_editarUsuario(idUsuario, tabId); // Cambiado a editarUsuario
+                Admin_editarUsuario(idUsuario, tabId); 
             }
         });
     });
