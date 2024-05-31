@@ -22,6 +22,7 @@ public class GestorClasificadorEventos extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Constructor por defecto de la clase
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public GestorClasificadorEventos() {

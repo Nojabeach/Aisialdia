@@ -28,6 +28,8 @@ public class GestorUsuario extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Constructor por defecto de la clase
+	 * 
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public GestorUsuario() {
@@ -442,7 +444,7 @@ public class GestorUsuario extends HttpServlet {
 	private void crearUsuario(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 
-		//System.out.println(request.getHeader("Referer"));
+		// System.out.println(request.getHeader("Referer"));
 		String HtmlOrigen = request.getHeader("Referer");
 
 		if (HtmlOrigen == null) {
@@ -667,12 +669,12 @@ public class GestorUsuario extends HttpServlet {
 			throws IOException, SQLException {
 		// Obtener parámetro del ID del usuario
 		int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
-		//System.out.println("eliminar us"+ idUsuario);
+		// System.out.println("eliminar us"+ idUsuario);
 		// Eliminar el usuario de la base de datos
 		try {
 			DaoUsuario.getInstance().eliminarUsuario(idUsuario);
 			response.sendRedirect("admin.html");
-			//response.getWriter().println("Usuario eliminado exitosamente!");
+			// response.getWriter().println("Usuario eliminado exitosamente!");
 		} catch (Exception e) {
 			ControlErrores.mostrarErrorGenerico("Error al eliminar el usuario. Intente de nuevo.", response);
 		}

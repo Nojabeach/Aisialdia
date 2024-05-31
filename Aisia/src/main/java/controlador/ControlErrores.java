@@ -16,7 +16,12 @@ import modelo.Proyecto;
  * Clase de controlador que se encarga de manejar y mostrar errores en una aplicación web.
  */
 public class ControlErrores {
-
+	 /**
+     *constructor  por defecto de ControlErrores.
+     */
+    public ControlErrores() {
+        // Initialization code, if any
+    }
     /**
      * Muestra un mensaje de error genérico en una página HTML.
      *

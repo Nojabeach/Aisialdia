@@ -19,6 +19,8 @@ public class GestorIntereses extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Constructor por defecto de la clases
+	 * 
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public GestorIntereses() {

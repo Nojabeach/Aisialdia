@@ -310,8 +310,9 @@ public class EventoConActividad {
 	/**
 	 * Edita un evento existente en la base de datos.
 	 * 
-	 * @param evento El evento a editar.
-	 * @throws SQLException Si ocurre un error al editar el evento.
+	 * @param evento        El evento con actividad a editar.
+	 * @param tipoActividad El tipo de actividad asociado al evento.
+	 * @throws SQLException Si ocurre un error al editar el evento en la base de datos.
 	 */
 	public void editarEvento(EventoConActividad evento, String tipoActividad) throws SQLException {
 		DaoEventoConActividad.getInstance().editarEvento(evento, tipoActividad);

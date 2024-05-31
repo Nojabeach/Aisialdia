@@ -43,10 +43,11 @@ public class DaoEventoConActividad {
 	}
 
 	/**
-	 * Este metodo es el que utilizo para implementar el patron singleton
+	 * Este método es el que utilizo para implementar el patrón singleton.
+	 * Proporciona una única instancia de la clase DaoEventoConActividad.
 	 * 
-	 * @return
-	 * @throws SQLException
+	 * @return la única instancia de DaoEventoConActividad
+	 * @throws SQLException si ocurre un error al intentar crear la instancia
 	 */
 	public static DaoEventoConActividad getInstance() throws SQLException {
 		if (instance == null) {

@@ -25,6 +25,8 @@ public class UltimosEventos extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Constructor por defecto de la clase
+	 * 
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public UltimosEventos() {

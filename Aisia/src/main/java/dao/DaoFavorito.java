@@ -114,22 +114,9 @@ public class DaoFavorito {
 	 *                  eventos favoritos (tipo `int`).
 	 * @return Una lista de objetos `Evento` que representan los eventos favoritos
 	 *         del usuario. La lista puede estar vacía si no hay favoritos.
-	 * @throws Exception Si ocurre un error al acceder a la base de datos o procesar
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos o procesar
 	 *                   los resultados.
 	 * 
-	 *                   **Ejemplo de uso:** ```java // En un controlador Servlet:
-	 * 
-	 *                   DaoFavorito daoFavorito = DaoFavorito.getInstance(); int
-	 *                   idUsuario = 10; // ID del usuario
-	 * 
-	 *                   List<Evento> eventosFavoritos =
-	 *                   daoFavorito.obtenerEventosFavoritosUsuario(idUsuario);
-	 * 
-	 *                   if (eventosFavoritos.isEmpty()) { // No hay eventos
-	 *                   favoritos para este usuario } else { // Procesar la lista
-	 *                   de eventos favoritos for (Evento evento : eventosFavoritos)
-	 *                   { System.out.println("Evento Favorito: " +
-	 *                   evento.getNombre()); } } ```
 	 */
 	public List<Evento> obtenerEventosFavoritosUsuario(int idUsuario) throws SQLException {
 

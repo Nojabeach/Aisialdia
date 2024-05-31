@@ -121,12 +121,11 @@ public class Favorito {
 	// --------------------------------------------------------------------------------------------
 
 	/**
-	 * Agrega un favorito a una actividad para un usuario específico.
+	 * Agrega un favorito a un evento para un usuario específico.
 	 *
-	 * @param idEvento  Identificador del evento que se quiere agregar como favorito
-	 * @param idUsuario Identificador del usuario que desea agregar el favorito.
-	 * @throws SQLException Si ocurre un error al agregar el favorito a la base de
-	 *                      datos.
+	 * @param idEvento Identificador del evento que se quiere agregar como favorito.
+	 * @param request  La solicitud HTTP que contiene la información del usuario que agrega el favorito.
+	 * @throws SQLException Si ocurre un error al agregar el favorito a la base de datos.
 	 */
 
 	public void agregarFavorito(int idEvento, HttpServletRequest request) throws SQLException {
@@ -135,12 +134,11 @@ public class Favorito {
 	}
 
 	/**
-	 * Elimina un favorito de una actividad para un usuario específico.
+	 * Elimina un evento de favoritos para un usuario específico.
 	 *
-	 * @param idEvento  Identificador del evento que se quiere eliminar de favorito
-	 * @param idUsuario Identificador del usuario que desea eliminar el favorito.
-	 * @throws Exception Si ocurre un error al eliminar el favorito de la base de
-	 *                   datos.
+	 * @param idEvento Identificador del evento que se quiere eliminar de favoritos.
+	 * @param request  La solicitud HTTP que contiene la información del usuario que quiere eliminar el favorito.
+	 * @throws SQLException Si ocurre un error al eliminar el favorito de la base de datos.
 	 */
 	public void eliminarFavorito(int idEvento, HttpServletRequest request) throws SQLException {
 		DaoFavorito.getInstance().eliminarFavoritoEvento(idEvento, request);

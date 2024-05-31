@@ -115,7 +115,7 @@ public class Usuario {
 	 * @param permiso               Control de permisos de los usuarios en la web.
 	 * @param roles                 Rol del usuario en el sistema (USUARIO,
 	 *                              MODERADOR, ADMINISTRADOR).
-	 * @param consentimientoDatos  Fecha en la que el usuario dio su consentimiento
+	 * @param consentimientoDatos   Fecha en la que el usuario dio su consentimiento
 	 *                              para el uso de sus datos.
 	 * @param aceptacionTerminosWeb Fecha en la que el usuario acepto terminos y
 	 *                              condiciones tras su lectura en la web
@@ -141,10 +141,9 @@ public class Usuario {
 	/**
 	 * Constructor con idUsuario, nombre, email y hashContrasena.
 	 *
-	 * @param idUsuario  Identificador único del usuario.
 	 * @param nombre     Nombre del usuario.
 	 * @param email      Dirección de correo electrónico del usuario.
-	 * @param contrasena Contraseña del usuario.
+	 * @param Contrasena Contraseña del usuario.
 	 */
 	public Usuario(String nombre, String email, String Contrasena) {
 		this.nombre = nombre;
@@ -194,10 +193,10 @@ public class Usuario {
 	 * Crea un nuevo objeto Usuario con el ID, nombre, correo electrónico y
 	 * contraseña especificados.
 	 * 
-	 * @param idUsuario  El ID del usuario.
-	 * @param nombre     El nombre del usuario.
-	 * @param email      El correo electrónico del usuario.
-	 * @param contrasena La contraseña del usuario.
+	 * @param idUsuario El ID del usuario.
+	 * @param nombre    El nombre del usuario.
+	 * @param email     El correo electrónico del usuario.
+	 * @param permiso   El nivel de permiso del usuario.
 	 */
 	public Usuario(int idUsuario, String nombre, String email, int permiso) {
 		this.idUsuario = idUsuario;
@@ -219,8 +218,8 @@ public class Usuario {
 	 * @param permiso              El permiso del usuario.
 	 * @param roles                Los roles del usuario.
 	 */
-	public Usuario(int idUsuario, String nombre, String email, boolean recibeNotificaciones,
-			String intereses, int permiso, Rol roles, Date fechaNacimiento) {
+	public Usuario(int idUsuario, String nombre, String email, boolean recibeNotificaciones, String intereses,
+			int permiso, Rol roles, Date fechaNacimiento) {
 
 		this.idUsuario = idUsuario;
 		this.nombre = nombre;
@@ -411,7 +410,7 @@ public class Usuario {
 	 * Establece la fecha de consentimiento de datos del usuario.
 	 *
 	 * @param consentimientoDatos La nueva fecha de consentimiento de datos del
-	 *                             usuario.
+	 *                            usuario.
 	 */
 	public void setConsentimientoDatos(Date consentimientoDatos) {
 		this.consentimientoDatos = consentimientoDatos;
@@ -477,16 +476,17 @@ public class Usuario {
 	 *
 	 * @param usuario Objeto Usuario con la información del nuevo usuario. No se
 	 *                permiten valores nulos.
+	 * @throws SQLException Si ocurre un error al acceder a la base de datos.
+	 * @throws Exception    Si ocurre un error al registrar el usuario. Las posibles
+	 *                      excepciones incluyen:
+	 *                      <ul>
+	 *                      <li>SQLException: Si ocurre un error al acceder a la
+	 *                      base de datos.</li>
+	 *                      <li>Exception: Si el objeto `usuario` es nulo o contiene
+	 *                      valores nulos.</li>
 	 * 
-	 * @throws Exception Si ocurre un error al registrar el usuario. Las posibles
-	 *                   excepciones incluyen:
-	 *                   <ul>
-	 *                   <li>SQLException: Si ocurre un error al acceder a la base
-	 *                   de datos.</li>
-	 *                   <li>Exception: Si el objeto `usuario` es nulo o contiene
-	 *                   valores nulos.</li>
+	 *                      </ul>
 	 * 
-	 *                   </ul>
 	 */
 	public void registrarUsuario(Usuario usuario) throws SQLException, Exception {
 		DaoUsuario.getInstance().registrarUsuario(usuario);
@@ -623,12 +623,10 @@ public class Usuario {
 	/**
 	 * Permite a un usuario cambiar su contraseña.
 	 *
-	 * @param idUsuario        Identificador del usuario. Debe ser un valor positivo
-	 *                         mayor que 0.
-	 * @param contrasenaActual Contraseña actual del usuario. No puede ser nula ni
-	 *                         vacía.
-	 * @param contrasenaNueva  Nueva contraseña del usuario. No puede ser nula ni
-	 *                         vacía.
+	 * @param idUsuario       Identificador del usuario. Debe ser un valor positivo
+	 *                        mayor que 0.
+	 * @param contrasenaNueva Nueva contraseña del usuario. No puede ser nula ni
+	 *                        vacía.
 	 * @throws Exception Si ocurre un error al cambiar la contraseña. Las posibles
 	 *                   excepciones incluyen:
 	 *                   <ul>
@@ -698,8 +696,6 @@ public class Usuario {
 	public String obtenerContrasena(int idUsuario) throws SQLException {
 		return DaoUsuario.getInstance().obtenerContrasena(idUsuario);
 	}
-
-	
 
 	/**
 	 * Busca el permiso de un usuario en la base de datos.

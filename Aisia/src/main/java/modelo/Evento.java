@@ -131,8 +131,10 @@ public class Evento {
 	 * @param nombre                  Nombre del evento.
 	 * @param detalles                Detalles o descripción del evento.
 	 * @param idUsuarioCreador        Identificador del usuario que creó el evento.
-	 * @param fechaCreacion           Fecha de creacion del evento (formato Date).
+	 * @param fechaCreacion           Fecha de creación del evento (formato Date).
 	 * @param fechaAprobacion         Fecha de aprobación del evento (formato Date).
+	 * @param fechaUltimaModificacion Fecha de la última modificación del evento
+	 *                                (formato Date).
 	 * @param idModeradorAprobacion   Identificador del moderador que aprobó el
 	 *                                evento.
 	 * @param fechaPublicacion        Fecha de publicación del evento (formato
@@ -145,9 +147,8 @@ public class Evento {
 	 *                                evento.
 	 * @param motivoFinalizacion      Motivo por el que se finalizó el evento.
 	 * @param ubicacion               Ubicación del evento.
-	 * @param fechaEvento             Fecha del evento (formato Date)
+	 * @param fechaEvento             Fecha del evento (formato Date).
 	 */
-
 	public Evento(int idEvento, String nombre, String detalles, int idUsuarioCreador, Date fechaCreacion,
 			Date fechaAprobacion, Date fechaUltimaModificacion, int idModeradorAprobacion, Date fechaPublicacion,
 			int idModeradorPublicacion, Date fechaFinalizacion, int idModeradorFinalizacion,
@@ -173,9 +174,10 @@ public class Evento {
 	/**
 	 * Constructor con algunos atributos.
 	 * 
-	 * @param idEvento Identificador único del evento.
-	 * @param nombre   Nombre del evento.
-	 * @param detalles Detalles o descripción del evento.
+	 * @param idEvento    Identificador único del evento.
+	 * @param nombre      Nombre del evento.
+	 * @param detalles    Detalles o descripción del evento.
+	 * @param fechaEvento Fecha del evento (formato Date).
 	 */
 	public Evento(int idEvento, String nombre, String detalles, Date fechaEvento) {
 
@@ -198,10 +200,11 @@ public class Evento {
 	/**
 	 * Constructor con algunos atributos.
 	 * 
-	 * @param idEvento         Identificador único del evento.
 	 * @param nombre           Nombre del evento.
 	 * @param detalles         Detalles o descripción del evento.
-	 * @param idUsuarioCreador Id del usuario creador del evento
+	 * @param fechaEvento      Fecha del evento (formato Date).
+	 * @param idUsuarioCreador Identificador del usuario creador del evento.
+	 * @param ubicacion        Ubicación del evento.
 	 */
 	public Evento(String nombre, String detalles, Date fechaEvento, int idUsuarioCreador, String ubicacion) {
 		super();
@@ -215,10 +218,12 @@ public class Evento {
 	/**
 	 * Constructor con algunos atributos.
 	 * 
-	 * @param idEvento  Identificador único del evento.
-	 * @param nombre    Nombre del evento.
-	 * @param detalles  Detalles o descripción del evento.
-	 * @param ubicacion Detalles de la ubicación del evento.
+	 * @param idEvento      Identificador único del evento.
+	 * @param nombre        Nombre del evento.
+	 * @param detalles      Detalles o descripción del evento.
+	 * @param fechaEvento   Fecha del evento (formato Date).
+	 * @param ubicacion     Detalles de la ubicación del evento.
+	 * @param fechaCreacion Fecha de creación del evento (formato Date).
 	 */
 
 	public Evento(int idEvento, String nombre, String detalles, Date fechaEvento, String ubicacion,
@@ -400,9 +405,10 @@ public class Evento {
 	}
 
 	/**
-	 * Establece la fecha de la ultima modificación del evento
+	 * Establece la fecha de la última modificación del evento.
 	 * 
-	 * @param fechaUltimaModificacion
+	 * @param fechaUltimaModificacion La nueva fecha de la última modificación del
+	 *                                evento (formato Date).
 	 */
 	public void setFechaUltimaModificacion(Date fechaUltimaModificacion) {
 		this.fechaUltimaModificacion = fechaUltimaModificacion;
@@ -576,10 +582,13 @@ public class Evento {
 	// MÉTODOS DE NEGOCIO
 	// --------------------------------------------------------------------------------------------
 	/**
-	 * Crea un nuevo evento en la base de datos.
+	 * Crea un nuevo evento en la base de datos junto con sus actividades.
 	 * 
-	 * @param evento El evento a crear.
-	 * @throws SQLException Si ocurre un error al crear el evento.
+	 * @param evento      El evento a crear.
+	 * @param actividades La lista de actividades asociadas al evento.
+	 * @param timestamp   El timestamp de la creación del evento.
+	 * @throws SQLException Si ocurre un error al crear el evento en la base de
+	 *                      datos.
 	 */
 	public void crearEvento(Evento evento, List<Actividad> actividades, Timestamp timestamp) throws SQLException {
 		DaoEvento.getInstance().crearEvento(evento, actividades, timestamp);
@@ -588,7 +597,7 @@ public class Evento {
 	/**
 	 * Elimina un evento de la base de datos.
 	 * 
-	 * @param idEvento El identificador del evento a eliminar.
+	 * @param evento El objeto Evento a eliminar.
 	 * @throws SQLException Si ocurre un error al eliminar el evento.
 	 */
 	public void eliminarEvento(Evento evento) throws SQLException {
@@ -619,12 +628,11 @@ public class Evento {
 	/**
 	 * Aprueba un evento pendiente de aprobación.
 	 * 
-	 * @param idEvento        ID del evento a aprobar.
-	 * @param idUsuarioActual ID del usuario actual que aprueba el evento.
-	 * @param request         Objeto HttpServletRequest para obtener información
-	 *                        adicional (opcional).
-	 * @throws Exception Si ocurre un error al aprobar el evento o el usuario no
-	 *                   tiene el rol adecuado.
+	 * @param idEvento ID del evento a aprobar.
+	 * @param request  Objeto HttpServletRequest para obtener información adicional
+	 *                 (opcional).
+	 * @throws SQLException Si ocurre un error al aprobar el evento o el usuario no
+	 *                      tiene el rol adecuado.
 	 */
 	public void aprobarPublicacionEvento(int idEvento, HttpServletRequest request) throws SQLException {
 		DaoEvento.getInstance().aprobarPublicacionEvento(idEvento, request);
@@ -633,7 +641,7 @@ public class Evento {
 	/**
 	 * Finaliza la publicación de un evento en la base de datos.
 	 *
-	 * @param idEvento    El ID del evento que se va a finalizar.
+	 * @param evento      El evento que se va a finalizar.
 	 * @param idModerador El ID del moderador que realiza la acción.
 	 * @throws SQLException Si ocurre un error al finalizar la publicación del
 	 *                      evento.
@@ -648,19 +656,19 @@ public class Evento {
 	 * @param idEvento ID del evento a rechazar
 	 * @param request  Objeto HttpServletRequest para obtener el ID del usuario
 	 *                 actual.
-	 * @throws Exception Si ocurre un error al rechazar el evento o el usuario no
-	 *                   tiene el rol adecuado.
+	 * @throws SQLException Si ocurre un error al rechazar el evento o el usuario no
+	 *                      tiene el rol adecuado.
 	 */
 	public void rechazarEvento(int idEvento, HttpServletRequest request) throws SQLException {
 		DaoEvento.getInstance().rechazarEvento(idEvento, request);
 	}
 
 	/**
-	 * Publica un evento aprobado de publicacion
+	 * Publica un evento aprobado de publicación.
 	 * 
-	 * @param idEvento        El identificador del evento a publicar.
-	 * @param idUsuarioActual El identificador del usuario que publica o planifica
-	 *                        la publicacion el evento.
+	 * @param idEvento El identificador del evento a publicar.
+	 * @param request  La solicitud HTTP que contiene la información del usuario que
+	 *                 publica el evento.
 	 * @throws SQLException Si ocurre un error al publicar el evento o el usuario no
 	 *                      tiene el rol adecuado.
 	 */

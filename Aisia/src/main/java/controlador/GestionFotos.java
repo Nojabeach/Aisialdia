@@ -18,7 +18,12 @@ import modelo.Proyecto;
  * @version 1.0
  */
 public class GestionFotos {
-
+	 /**
+     *constructor  por defecto de GestionFotos.
+     */
+    public GestionFotos() {
+        // Initialization code, if any
+    }
 	/** Ruta de los archivos en el servidor. */
 	public static final String PATH_FILES = Proyecto.rutaProyecto + "\\img\\Iconos";
 

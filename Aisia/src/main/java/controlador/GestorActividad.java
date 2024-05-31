@@ -17,13 +17,16 @@ import java.sql.SQLException;
 import dao.DaoActividad;
 
 @MultipartConfig
+
 /**
- * Servlet implementation class GestorActividad
+ * Clase que gestiona las actividades en el sistema.
  */
 public class GestorActividad extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	   // Resto del código de la clase
 	/**
+	 * Constructor por defecto de la clase.
+	 * 
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public GestorActividad() {
@@ -166,11 +169,11 @@ public class GestorActividad extends HttpServlet {
 		Actividad actividad = new Actividad(tipoActividad, fileName);
 
 		try {
-			//System.out.println("crearActividad");
+			// System.out.println("crearActividad");
 			DaoActividad.getInstance().crearActividad(actividad);
-			//System.out.println("actividad creada");
+			// System.out.println("actividad creada");
 			response.setStatus(HttpServletResponse.SC_OK);
-			//response.sendRedirect("admin.html");
+			// response.sendRedirect("admin.html");
 
 			// response.getWriter().println("Actividad creada exitosamente!");
 		} catch (SQLException e) {
@@ -305,32 +308,33 @@ public class GestorActividad extends HttpServlet {
 	 * 
 	 * @param request  la solicitud HTTP que contiene el parámetro "idActividad"
 	 * @param response la respuesta HTTP que se utilizará para enviar el resultado
-	 * @param out      el objeto PrintWriter que se utilizará para escribir la respuesta
-	 * @throws IOException      si ocurre un error de entrada/salida
-	 * @throws SQLException     si ocurre un error al acceder a la base de datos
+	 * @param out      el objeto PrintWriter que se utilizará para escribir la
+	 *                 respuesta
+	 * @throws IOException  si ocurre un error de entrada/salida
+	 * @throws SQLException si ocurre un error al acceder a la base de datos
 	 */
 	private void obtenerActividadporID(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
-				throws IOException, SQLException {
+			throws IOException, SQLException {
 		/**
 		 * Obtiene el parámetro "idActividad" de la solicitud HTTP
 		 */
 		String idActividadStr = request.getParameter("idActividad");
-		
+
 		/**
 		 * Verifica si el parámetro "idActividad" es válido (no nulo y no vacío)
 		 */
-		if (idActividadStr!= null &&!idActividadStr.isEmpty()) {
+		if (idActividadStr != null && !idActividadStr.isEmpty()) {
 			try {
 				/**
 				 * Convierte el parámetro "idActividad" a un entero
 				 */
 				int idActividad = Integer.parseInt(idActividadStr);
-				
+
 				/**
 				 * Crea un objeto DaoActividad para acceder a la base de datos
 				 */
 				DaoActividad actividad = new DaoActividad();
-				
+
 				/**
 				 * Obtiene la actividad por ID y la devuelve en formato JSON
 				 */
@@ -339,7 +343,8 @@ public class GestorActividad extends HttpServlet {
 				/**
 				 * Maneja el error si el parámetro "idActividad" no es un número válido
 				 */
-				ControlErrores.mostrarErrorGenerico("Error al obtener la actividade por ID. El ID debe ser un número válido.", response);
+				ControlErrores.mostrarErrorGenerico(
+						"Error al obtener la actividade por ID. El ID debe ser un número válido.", response);
 			}
 		} else {
 			/**

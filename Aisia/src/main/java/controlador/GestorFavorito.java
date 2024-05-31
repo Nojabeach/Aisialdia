@@ -21,6 +21,8 @@ public class GestorFavorito extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Constructor por defecto de la clase
+	 * 
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public GestorFavorito() {
@@ -181,30 +183,30 @@ public class GestorFavorito extends HttpServlet {
 	 * @throws SQLException Si ocurre un error al interactuar con la base de datos.
 	 */
 	private void obtenerEventosFavoritos(HttpServletRequest request, HttpServletResponse response, PrintWriter out)
-	        throws IOException, SQLException {
+			throws IOException, SQLException {
 
-	    HttpSession session = request.getSession();
-	    Integer idUsuario = (Integer) session.getAttribute("idUsuario");
-	    
-	    if (idUsuario == null) {
-	        idUsuario = DaoUsuario.getInstance().obtenerIdUsuarioActual(request);
-	    }
-	    //System.out.println(idUsuario);
+		HttpSession session = request.getSession();
+		Integer idUsuario = (Integer) session.getAttribute("idUsuario");
 
-	    try {
+		if (idUsuario == null) {
+			idUsuario = DaoUsuario.getInstance().obtenerIdUsuarioActual(request);
+		}
+		// System.out.println(idUsuario);
 
-	        DaoFavorito favorito = new DaoFavorito();
+		try {
 
-	        // Lista los eventos pendientes de aprobación en formato JSON y los envía al
-	        // PrintWriter
-	        out.print(favorito.listarJsonFavoritosUsuario(idUsuario));
+			DaoFavorito favorito = new DaoFavorito();
 
-	    } catch (SQLException e) {
-	        // En caso de error, muestra un mensaje de error genérico y lo envía en formato
-	        // JSON a la respuesta
-	        e.printStackTrace();
-	        ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
-	    }
+			// Lista los eventos pendientes de aprobación en formato JSON y los envía al
+			// PrintWriter
+			out.print(favorito.listarJsonFavoritosUsuario(idUsuario));
+
+		} catch (SQLException e) {
+			// En caso de error, muestra un mensaje de error genérico y lo envía en formato
+			// JSON a la respuesta
+			e.printStackTrace();
+			ControlErrores.mostrarErrorGenerico("{\"error\": \"" + e.getMessage() + "\"}", response);
+		}
 	}
 
 }
