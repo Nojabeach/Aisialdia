@@ -315,7 +315,7 @@ section p {
   }
 }
 @media (max-width: 480px) {
-  /* Agrega aquí tus reglas CSS para dispositivos móviles con ancho máximo de 480px */
+
   #cabecera {
     flex-direction: column;
     align-items: center;

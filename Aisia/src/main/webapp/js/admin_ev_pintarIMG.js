@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function(){
-    document.getElementById('EvEDITtipoActividad').addEventListener('change', function() {
+    document.getElementById('tipoActividad').addEventListener('change', function() {
       var seleccionado = this.value;
       let imgPath = `img/Iconos/`; 
       var imagenUrl = `${imgPath}${seleccionado}.png`; // Asumo que las imágenes están en una carpeta llamada "imagenes"
