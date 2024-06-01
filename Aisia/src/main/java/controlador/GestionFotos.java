@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
-import modelo.Proyecto;
 
 /**
  * Clase que gestiona la subida de fotos al servidor.

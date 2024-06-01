@@ -1,4 +1,4 @@
-package modelo;
+package controlador;
 
 /**
  * La clase Proyecto proporciona la ruta del proyecto.

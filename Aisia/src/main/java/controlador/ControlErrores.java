@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 import jakarta.servlet.http.HttpServletResponse;
-import modelo.Proyecto;
 /**
  * Clase de controlador que se encarga de manejar y mostrar errores en una aplicación web.
  */
